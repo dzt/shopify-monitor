@@ -1,0 +1,13 @@
+{
+    "interval": 1000,
+    "autoRetryOnCrash": true,
+    "notifyWhenNewItemsFound": true,
+    "notifyWhenOnKeywordMatch": true,
+    "keywords": [
+        "Drama",
+        "Better",
+        "NU Korea",
+        "Crewneck",
+        "WEIRD"
+    ]
+}
