@@ -28,7 +28,7 @@ $ node monitor.js
 
 ## Todo List
 - [ ] Integrate restock monitor
-- [ ] Add Sitemap feature to search sitemap instead of site DOM
+- [ ] Add Sitemap feature to search sitemap instead of site DOM for finding early links.
 - [ ] Add Discord and Twitter API Settings to Tweet/Send out notifications to chats/timeline
 
 License
