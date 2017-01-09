@@ -4,16 +4,16 @@
     "notifyWhenNewItemsFound": true,
     "notifyWhenOnKeywordMatch": true,
     "slackBot": {
-      "active": false,
-      "token": "token goes here",
-      "channel": "monitor",
-      "settings": {
-        "username": "ShopifyMonitor",
-        "icon_url": "http://i.imgur.com/zks3PoZ.png"
-      }
+        "active": false,
+        "token": "token goes here",
+        "channel": "monitor",
+        "settings": {
+            "username": "ShopifyMonitor",
+            "icon_url": "http://i.imgur.com/zks3PoZ.png"
+        }
     },
     "sites": [
-      "assc"
+        "assc"
     ],
     "keywords": [
         "Drama",

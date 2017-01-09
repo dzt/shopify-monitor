@@ -32,6 +32,8 @@ $ node monitor.js
 - [ ] Multiple brand support on the demands of the people.
 - [ ] Add Sitemap feature to search sitemap instead of site DOM for finding early links.
 - [ ] Add Discord and Twitter API Settings to Tweet/Send out notifications to chats/timeline.
+- [ ] Slack bot commands.
+- [ ] Better wiki/docs.
 
 ### What does this thing monitor?
 - Newly added items
@@ -44,7 +46,7 @@ $ node monitor.js
 Written by <a href="http://petersoboyejo.com/">@dzt</a>, made better by you.
 
 ### Some more screenshots to flex
-Slack Bot:
+
 ![slack](http://i.imgur.com/4RZGUkt.png)
 
 ## License
