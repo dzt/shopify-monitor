@@ -5,6 +5,8 @@ const request = require('request')
 var api = {};
 const base_url = 'https://antisocial.myshopify.com/'
 
+// TODO: make api take use of lib
+
 api.getItems = function(callback) {
     request(base_url, function(err, resp, html, rrr, body) {
 

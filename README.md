@@ -10,6 +10,7 @@ shopify-monitor requires [Node.js](http://nodejs.org/).
 Setup:
 
 ```sh
+$ git clone https://github.com/dzt/shopify-monitor.git
 $ cd shopify-monitor
 $ npm install
 ```
@@ -27,7 +28,7 @@ $ node monitor.js
 <a href="https://www.youtube.com/watch?v=oirJnCmtfQY&feature=youtu.be">Video Demo</a>
 
 ## Todo List
-- [ ] Integrate restock monitor.
+- [x] Integrate restock monitor.
 - [ ] Multiple brand support on the demands of the people.
 - [ ] Add Sitemap feature to search sitemap instead of site DOM for finding early links.
 - [ ] Add Discord and Twitter API Settings to Tweet/Send out notifications to chats/timeline.
