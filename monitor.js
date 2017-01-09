@@ -1,4 +1,4 @@
-var assc = require('./api')
+var api = require('./api')
 const _ = require('underscore')
 const cheerio = require('cheerio')
 const jsdiff = require('diff')
@@ -15,51 +15,28 @@ const request = require('request').defaults({
 
 var og
 
-var pt_1 = [
-  '{name: "Item 1" status: "Sold Out"}',
-  '{name: "Item 2" status: "Available"}',
-  '{name: "Item 3" status: "Sold Out"}'
-]
-
-var pt_2 = [
-  '{name: "Item 1" status: "Sold Out"}',
-  '{name: "Item 2" status: "Sold Out"}',
-  '{name: "Item 3" status: "Sold Out"}'
-]
-
-var diffTest = jsdiff.diffArrays(pt_1, pt_2)
-
-diffTest.forEach(function(part) {
-    if (part.added) {
-        console.log('added')
-        console.log(part.value)
-    } else if (part.removed) {
-        console.log('removed')
-        console.log(part.value)
-    }
-});
-
 var added = []
 var removed = []
+var matches = []
 
 if (configuration.notifyWhenNewItemsFound) {
-    assc.log('info', 'Looking for new items...')
+    api.log('info', 'Looking for new items...')
 }
 
 if (configuration.notifyWhenOnKeywordMatch) {
-    assc.log('info', 'Looking for items matching your keywords...')
+    api.log('info', 'Looking for items matching your keywords...')
 }
 
 function getInitialData() {
-    assc.log('info', 'Getting initial data...')
-    assc.log('info', `Interval set for every ${configuration.interval}ms`)
-    assc.getItems((response, err) => {
+    api.log('info', 'Getting initial data...')
+    api.log('info', `Interval set for every ${configuration.interval}ms`)
+    api.getItems((response, err) => {
         if (err || response == null) {
             if (configuration.autoRetryOnCrash == true) {
-                assc.log('error', 'Site Crashed, retrying...')
+                api.log('error', 'Site Crashed, retrying...')
                 return getInitialData()
             } else {
-                assc.log('error', err)
+                api.log('error', err)
                 return process.exit()
             }
         }
@@ -75,25 +52,23 @@ function seek() {
     var a = configuration.keywords
     var ending = [a.slice(0, -1).join(', '), a.slice(-1)[0]].join(a.length < 2 ? '' : ' and ');
 
-    assc.log('info', `Now seeking for items with the keywords ${ending}`)
+    api.log('info', `Now seeking for items with the keywords ${ending}`)
 
     var newbatch
 
     var interval = setInterval(function() {
-        assc.getItems((response, err) => {
+        api.getItems((response, err) => {
             if (err || response == null) {
                 if (config.autoRetryOnCrash == true) {
-                    assc.log('error', 'Site Crashed, retrying...')
+                    api.log('error', 'Site Crashed, retrying...')
                     return seek()
                 } else {
-                    assc.log('error', err)
+                    api.log('error', err)
                     return process.exit()
                 }
             }
 
             newbatch = response.productDetails
-
-            var matches = []
 
             // this feature works 100%
             if (configuration.notifyWhenOnKeywordMatch) {
@@ -104,8 +79,13 @@ function seek() {
                         var parsedResult = JSON.parse(result)
                         var productToCompare = parsedResult.name.toLowerCase()
                         if (productToCompare.indexOf(configuration.keywords[x].toLowerCase()) > -1) {
-                            assc.log('success', `Match Found: "${parsedResult.name}"`)
-                            matches.push(parsedResult);
+
+                            var possibleMatch = _.where(matches, parsedResult)
+                            if (possibleMatch.length === 0) {
+                              api.log('success', `Match Found: "${parsedResult.name}"`)
+                              matches.push(parsedResult);
+                            }
+
                         }
                     })
                 }
@@ -113,10 +93,6 @@ function seek() {
 
             // this needs to be enhanced
             if (configuration.notifyWhenNewItemsFound) {
-
-                if (og == newbatch) {
-                    console.log('same')
-                }
 
                 var diff = jsdiff.diffArrays(og, newbatch);
                 var added = []
@@ -132,16 +108,21 @@ function seek() {
                     }
                 });
 
+                var parsedResults = []
+                for (var i = 0; i < newbatch.length; i++) {
+                    parsedResults.push(JSON.parse(newbatch[i]))
+                }
+
                 if (added.length > 0) {
                     var data = {
                         added: added.length,
                         products: added
                     }
-                    assc.log('success', `Newly Added Items (${data.added})`)
+                    api.log('success', `Newly Added Items (${data.added})`)
                         // do something with the data objects...
                         // print all the newly added items, example you can use the Twitter API to tweet the newly added item
                     for (var i = 0; i < products.length; i++) {
-                        assc.log('info', `New Item in stock: "${data.products[i].name}" - ${data.products[i].price} (${data.products[i].link})`)
+                        api.log('info', `New Item in stock: "${data.products[i].name}" - ${data.products[i].price} (${data.products[i].link})`)
                     }
                 }
 
@@ -150,12 +131,12 @@ function seek() {
                         removed: removed.length,
                         products: removed
                     }
-                    assc.log('error', `Items removed (${data.removed})`)
+                    api.log('error', `Items removed (${data.removed})`)
                         // do something with the data objects...
                 }
 
                 if (removed.length == [] && removed.length == []) {
-                    assc.log('warning', 'No removed or newly added items found yet...')
+                    api.log('warning', 'No removed or newly added items found yet...')
                 } else {
                     og = newbatch
                 }
