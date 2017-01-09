@@ -32,9 +32,12 @@ api.getItems = function(callback) {
             var product = {
                 name: $(this).text(),
                 price: $('.grid-link__meta').eq(i).text().replace(/\s{2,}/g, ''),
+                status: status,
                 link: 'https://antisocial.myshopify.com' + $('.grid-link.text-center').eq(i).attr('href')
             }
-            response.productDetails.push(product);
+
+            response.productDetails.push(JSON.stringify(product));
+
         });
 
         return callback(response, null);

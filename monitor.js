@@ -15,6 +15,33 @@ const request = require('request').defaults({
 
 var og
 
+var pt_1 = [
+  '{name: "Item 1" status: "Sold Out"}',
+  '{name: "Item 2" status: "Available"}',
+  '{name: "Item 3" status: "Sold Out"}'
+]
+
+var pt_2 = [
+  '{name: "Item 1" status: "Sold Out"}',
+  '{name: "Item 2" status: "Sold Out"}',
+  '{name: "Item 3" status: "Sold Out"}'
+]
+
+var diffTest = jsdiff.diffArrays(pt_1, pt_2)
+
+diffTest.forEach(function(part) {
+    if (part.added) {
+        console.log('added')
+        console.log(part.value)
+    } else if (part.removed) {
+        console.log('removed')
+        console.log(part.value)
+    }
+});
+
+var added = []
+var removed = []
+
 if (configuration.notifyWhenNewItemsFound) {
     assc.log('info', 'Looking for new items...')
 }
@@ -68,28 +95,30 @@ function seek() {
 
             var matches = []
 
+            // this feature works 100%
             if (configuration.notifyWhenOnKeywordMatch) {
                 var x
                 for (x = 0; x < configuration.keywords.length; x++) {
                     // looks if keywords matches any of the results
                     var products = response.productDetails.map(function(result, i) {
-                        var productToCompare = result.name.toLowerCase()
+                        var parsedResult = JSON.parse(result)
+                        var productToCompare = parsedResult.name.toLowerCase()
                         if (productToCompare.indexOf(configuration.keywords[x].toLowerCase()) > -1) {
-                            assc.log('success', `Match Found: "${result.name}"`)
-                            matches.push(response.productDetails[i]);
+                            assc.log('success', `Match Found: "${parsedResult.name}"`)
+                            matches.push(parsedResult);
                         }
                     })
                 }
             }
 
-
+            // this needs to be enhanced
             if (configuration.notifyWhenNewItemsFound) {
 
                 if (og == newbatch) {
                     console.log('same')
                 }
 
-                var diff = jsdiff.diffArrays(JSON.stringify(og), JSON.stringify(newbatch));
+                var diff = jsdiff.diffArrays(og, newbatch);
                 var added = []
                 var removed = []
 
