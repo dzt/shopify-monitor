@@ -43,6 +43,10 @@ $ node monitor.js
 
 Written by <a href="http://petersoboyejo.com/">@dzt</a>, made better by you.
 
+### Some more screenshots to flex
+Slack Bot:
+![slack](http://i.imgur.com/4RZGUkt.png)
+
 ## License
 
 ```

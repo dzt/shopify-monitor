@@ -27,6 +27,17 @@ if (configuration.notifyWhenOnKeywordMatch) {
     api.log('info', 'Looking for items matching your keywords...')
 }
 
+if (configuration.slackBot.active) {
+    const Bot = require('slackbots')
+    var slackBot = new Bot({
+        name: 'Shopify Monitor',
+        token: configuration.slackBot.token
+    })
+    slackBot.on('start', function() {
+        slackBot.postMessageToChannel(configuration.slackBot.channel, 'Shopify Monitor currently active ◕‿◕', configuration.slackBot.settings);
+    })
+}
+
 function getInitialData() {
     api.log('info', 'Getting initial data...')
     api.log('info', `Interval set for every ${configuration.interval}ms`)
@@ -82,8 +93,38 @@ function seek() {
 
                             var possibleMatch = _.where(matches, parsedResult)
                             if (possibleMatch.length === 0) {
-                              api.log('success', `Match Found: "${parsedResult.name}"`)
-                              matches.push(parsedResult);
+                                api.log('success', `Match Found: "${parsedResult.name}"`)
+                                if (configuration.slackBot.active) {
+                                    var params = {
+                                        username: "ShopifyMonitor",
+                                        icon_url: "http://i.imgur.com/zks3PoZ.png",
+                                        attachments: [{
+                                            "title": parsedResult.name,
+                                            "title_link": parsedResult.link,
+                                            "pretext": "Keyword Match",
+                                            "color": "#36a64f",
+                                            "fields": [{
+                                                    "title": "Product Name",
+                                                    "value": parsedResult.name,
+                                                    "short": "false"
+                                                },
+                                                {
+                                                    "title": "Link",
+                                                    "value": parsedResult.link,
+                                                    "short": "true"
+                                                },
+                                                {
+                                                    "title": "Price",
+                                                    "value": parsedResult.price,
+                                                    "short": "true"
+                                                }
+                                            ],
+                                            "thumb_url": "https://cdn.shopify.com/s/files/1/1246/0173/products/IMG_4376_copy_1024x1024.jpg?v=1477512381"
+                                        }]
+                                    }
+                                    slackBot.postMessageToChannel(configuration.slackBot.channel, null, params);
+                                }
+                                matches.push(parsedResult);
                             }
 
                         }
@@ -94,52 +135,98 @@ function seek() {
             // this needs to be enhanced
             if (configuration.notifyWhenNewItemsFound) {
 
+                // TODO: Convert stuff from test.js
                 var diff = jsdiff.diffArrays(og, newbatch);
-                var added = []
+
+                var parsedOG = []
+                var parsedNew = []
                 var removed = []
 
+                var newItems = []
+                var restockedItems = []
+                var removedItems = []
+                var soldoutItems = []
+
+                for (var i = 0; i < og.length; i++) {
+                    parsedOG.push(JSON.parse(og[i]))
+                }
+
+                for (var i = 0; i < newbatch.length; i++) {
+                    parsedNew.push(JSON.parse(newbatch[i]))
+                }
+
                 diff.forEach(function(part) {
+
                     if (part.added) {
-                        console.log('added')
-                        added.push(part.value)
+                        var item
+                        var diffAdded = []
+
+                        for (var i = 0; i < part.value.length; i++) {
+                            diffAdded.push(JSON.parse(part.value[i]))
+                        }
+
+                        for (var i = 0; i < diffAdded.length; i++) {
+                            item = _.where(parsedOG, {
+                                name: diffAdded[i].name
+                            })
+                            if (item.length === 0) {
+                                // newly added item push to new items array
+                                testNewItems.push(diffAdded[i].name)
+                                console.log(`Item Added to Store: ${diffAdded[i].name}`)
+                            } else if (item.length > 0) {
+                                item = _.where(parsedOG, {
+                                    name: diffAdded[i].name
+                                })
+
+                                if (diffAdded[i].status === "Available" && item[0].status === "Sold Out") {
+                                    testRestockedItems.push(diffAdded[i])
+                                    console.log(`Restocked Item: ${diffAdded[i].name}`)
+                                }
+
+                                if (diffAdded[i].status === "Sold Out" && item[0].status === "Available") {
+                                    testSoldoutItems.push(diffAdded[i])
+                                    console.log(`Item Sold Out: ${diffAdded[i].name}`)
+                                }
+
+                            }
+                        }
+
                     } else if (part.removed) {
-                        console.log('removed')
                         removed.push(part.value)
+                        var diffRemoved = []
+                        for (var i = 0; i < part.value.length; i++) {
+                            diffRemoved.push(JSON.parse(part.value[i]))
+                        }
+
+                        for (var i = 0; i < diffRemoved.length; i++) {
+                            item = _.where(parsedNew, {
+                                name: diffRemoved[i].name
+                            })
+
+                            if (item.length === 0) {
+                                testRemovedItems.push(diffRemoved[i])
+                                console.log(`Item Removed from Store: ${parsedNew[i].name}`)
+                            }
+
+                        }
+
                     }
                 });
 
-                var parsedResults = []
-                for (var i = 0; i < newbatch.length; i++) {
-                    parsedResults.push(JSON.parse(newbatch[i]))
-                }
-
-                if (added.length > 0) {
-                    var data = {
-                        added: added.length,
-                        products: added
-                    }
-                    api.log('success', `Newly Added Items (${data.added})`)
-                        // do something with the data objects...
-                        // print all the newly added items, example you can use the Twitter API to tweet the newly added item
-                    for (var i = 0; i < products.length; i++) {
-                        api.log('info', `New Item in stock: "${data.products[i].name}" - ${data.products[i].price} (${data.products[i].link})`)
-                    }
-                }
-
-                if (removed.length > 0) {
-                    var data = {
-                        removed: removed.length,
-                        products: removed
-                    }
-                    api.log('error', `Items removed (${data.removed})`)
-                        // do something with the data objects...
-                }
-
-                if (removed.length == [] && removed.length == []) {
-                    api.log('warning', 'No removed or newly added items found yet...')
+                if (newItems.length === 0 || restockedItems.length === 0 || removedItems.length === 0 || soldoutItems.length === 0) {
+                    api.log('warning', 'No changes found yet but still looking ヅ')
+                    var parsedOG = []
+                    var parsedNew = []
+                    var removed = []
+                    var newItems = []
+                    var restockedItems = []
+                    var removedItems = []
+                    var soldoutItems = []
                 } else {
                     og = newbatch
                 }
+
+
             }
 
         })

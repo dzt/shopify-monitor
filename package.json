@@ -13,6 +13,7 @@
     "colors": "^1.1.2",
     "diff": "^3.2.0",
     "request": "^2.79.0",
+    "slackbots": "^1.0.2",
     "underscore": "^1.8.3"
   }
 }
