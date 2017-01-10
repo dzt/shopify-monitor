@@ -15,7 +15,7 @@ $ cd shopify-monitor
 $ npm install
 ```
 
-Configure information inside the `config.example.json` be sure to rename it to `config.json` when you're done.
+Configure information inside the `config.example.json` be sure to rename it to `config.json` when you're done. More information about configuring your monitor can be found <a href="https://github.com/dzt/shopify-monitor/wiki/Configuring-your-monitor">here</a>.
 
 <br>
 
