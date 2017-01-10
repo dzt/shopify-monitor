@@ -29,7 +29,7 @@ $ node monitor.js
 
 ## Todo List
 - [x] Integrate restock monitor.
-- [ ] Multiple brand support on the demands of the people.
+- [x] Multiple brand support on the demands of the people.
 - [ ] Add Sitemap feature to search sitemap instead of site DOM for finding early links.
 - [ ] Add Discord and Twitter API Settings to Tweet/Send out notifications to chats/timeline.
 - [ ] Have results return item stock
