@@ -47,7 +47,7 @@ Written by <a href="http://petersoboyejo.com/">@dzt</a>, made better by you.
 
 ### Some more screenshots to flex
 
-![slack](http://i.imgur.com/4RZGUkt.png)
+![slack](http://i.imgur.com/epHUJ.png)
 
 ## License
 
