@@ -19,12 +19,23 @@ var added = []
 var removed = []
 var matches = []
 
+var a = configuration.keywords
+var ending = [a.slice(0, -1).join(', '), a.slice(-1)[0]].join(a.length < 2 ? '' : ' and ');
+
 if (configuration.notifyWhenNewItemsFound) {
     api.log('info', 'Looking for new items...')
 }
 
 if (configuration.notifyWhenOnKeywordMatch) {
     api.log('info', 'Looking for items matching your keywords...')
+}
+
+function convertSecondsToMinutesAndSeconds(seconds) {
+    var minutes;
+    var seconds;
+    minutes = Math.floor(seconds / 60);
+    seconds = seconds % 60;
+    return [minutes, seconds];
 }
 
 if (configuration.slackBot.active) {
@@ -36,6 +47,24 @@ if (configuration.slackBot.active) {
     slackBot.on('start', function() {
         slackBot.postMessageToChannel(configuration.slackBot.channel, 'Shopify Monitor currently active ◕‿◕', configuration.slackBot.settings);
     })
+    slackBot.on('message', function(data) {
+        if (data.text === '!usage') {
+            slackBot.postMessageToChannel(configuration.slackBot.channel, "```Shopify Monitor Usage\n!current: Current Settings```", configuration.slackBot.settings);
+        }
+        if (data.text === '!current') {
+            var current = []
+            var uptime = convertSecondsToMinutesAndSeconds(process.uptime())
+            var uptimeFormatted
+            uptimeFormatted = uptime[0] + ' minutes'
+
+            current.push("```Channel Set too: #" + configuration.slackBot.channel + "\n")
+            current.push(`Current Keyword(s): ${ending}\n`)
+            current.push(`Interval Rate: ${configuration.interval}ms\n`)
+            current.push(`Server Uptime: ${uptimeFormatted}\n`)
+            current.push("```")
+            slackBot.postMessageToChannel(configuration.slackBot.channel, current.join(''), configuration.slackBot.settings);
+        }
+    });
 }
 
 function getInitialData() {
@@ -59,9 +88,6 @@ function getInitialData() {
 getInitialData()
 
 function seek() {
-
-    var a = configuration.keywords
-    var ending = [a.slice(0, -1).join(', '), a.slice(-1)[0]].join(a.length < 2 ? '' : ' and ');
 
     api.log('info', `Now seeking for items with the keywords ${ending}`)
 
@@ -122,7 +148,7 @@ function seek() {
                                             "thumb_url": parsedResult.image
                                         }]
                                     }
-                                    slackBot.postMessageToChannel(configuration.slackBot.channel, null, params);
+                                    slackBot.postMessage(configuration.slackBot.channel, null, params);
                                 }
                                 matches.push(parsedResult);
                             }
@@ -135,7 +161,6 @@ function seek() {
             // this needs to be enhanced
             if (configuration.notifyWhenNewItemsFound) {
 
-                // TODO: Convert stuff from test.js
                 var diff = jsdiff.diffArrays(og, newbatch);
 
                 var parsedOG = []
@@ -171,7 +196,7 @@ function seek() {
                             })
                             if (item.length === 0) {
                                 // newly added item push to new items array
-                                testNewItems.push(diffAdded[i].name)
+                                newItems.push(diffAdded[i].name)
                                 console.log(`Item Added to Store: ${diffAdded[i].name}`)
                             } else if (item.length > 0) {
                                 item = _.where(parsedOG, {
@@ -179,12 +204,12 @@ function seek() {
                                 })
 
                                 if (diffAdded[i].status === "Available" && item[0].status === "Sold Out") {
-                                    testRestockedItems.push(diffAdded[i])
+                                    restockedItems.push(diffAdded[i])
                                     console.log(`Restocked Item: ${diffAdded[i].name}`)
                                 }
 
                                 if (diffAdded[i].status === "Sold Out" && item[0].status === "Available") {
-                                    testSoldoutItems.push(diffAdded[i])
+                                    soldoutItems.push(diffAdded[i])
                                     console.log(`Item Sold Out: ${diffAdded[i].name}`)
                                 }
 
@@ -204,7 +229,7 @@ function seek() {
                             })
 
                             if (item.length === 0) {
-                                testRemovedItems.push(diffRemoved[i])
+                                removedItems.push(diffRemoved[i])
                                 console.log(`Item Removed from Store: ${parsedNew[i].name}`)
                             }
 
