@@ -118,38 +118,10 @@ function seek() {
                         if (productToCompare.indexOf(configuration.keywords[x].toLowerCase()) > -1) {
 
                             var possibleMatch = _.where(matches, parsedResult)
+                                // checks if its already found that match before
                             if (possibleMatch.length === 0) {
                                 api.log('success', `Match Found: "${parsedResult.name}"`)
-                                if (configuration.slackBot.active) {
-                                    var params = {
-                                        username: "ShopifyMonitor",
-                                        icon_url: "http://i.imgur.com/zks3PoZ.png",
-                                        attachments: [{
-                                            "title": parsedResult.name,
-                                            "title_link": parsedResult.link,
-                                            "pretext": "Keyword Match",
-                                            "color": "#36a64f",
-                                            "fields": [{
-                                                    "title": "Product Name",
-                                                    "value": parsedResult.name,
-                                                    "short": "false"
-                                                },
-                                                {
-                                                    "title": "Link",
-                                                    "value": parsedResult.link,
-                                                    "short": "true"
-                                                },
-                                                {
-                                                    "title": "Price",
-                                                    "value": parsedResult.price,
-                                                    "short": "true"
-                                                }
-                                            ],
-                                            "thumb_url": parsedResult.image
-                                        }]
-                                    }
-                                    slackBot.postMessage(configuration.slackBot.channel, null, params);
-                                }
+                                slackNotification(parsedResult, '#F48FB1', 'Keyword Match')
                                 matches.push(parsedResult);
                             }
 
@@ -195,9 +167,9 @@ function seek() {
                                 name: diffAdded[i].name
                             })
                             if (item.length === 0) {
-                                // newly added item push to new items array
                                 newItems.push(diffAdded[i].name)
                                 console.log(`Item Added to Store: ${diffAdded[i].name}`)
+                                slackNotification(diffAdded[i], '#36a64f', 'Newly Added Item')
                             } else if (item.length > 0) {
                                 item = _.where(parsedOG, {
                                     name: diffAdded[i].name
@@ -206,11 +178,13 @@ function seek() {
                                 if (diffAdded[i].status === "Available" && item[0].status === "Sold Out") {
                                     restockedItems.push(diffAdded[i])
                                     console.log(`Restocked Item: ${diffAdded[i].name}`)
+                                    slackNotification(diffAdded[i], '#4FC3F7', 'Restocked Item')
                                 }
 
                                 if (diffAdded[i].status === "Sold Out" && item[0].status === "Available") {
                                     soldoutItems.push(diffAdded[i])
                                     console.log(`Item Sold Out: ${diffAdded[i].name}`)
+                                    slackNotification(diffAdded[i], '#ef5350', 'Sold Out Item')
                                 }
 
                             }
@@ -231,6 +205,7 @@ function seek() {
                             if (item.length === 0) {
                                 removedItems.push(diffRemoved[i])
                                 console.log(`Item Removed from Store: ${parsedNew[i].name}`)
+                                slackNotification(parsedNew[i], '#ef5350', 'Removed Item from Store')
                             }
 
                         }
@@ -239,7 +214,7 @@ function seek() {
                 });
 
                 if (newItems.length === 0 || restockedItems.length === 0 || removedItems.length === 0 || soldoutItems.length === 0) {
-                    api.log('warning', 'No changes found yet but still looking ヅ')
+                    api.log('warning', 'No updates found yet but still looking ヅ')
                     var parsedOG = []
                     var parsedNew = []
                     var removed = []
@@ -247,13 +222,49 @@ function seek() {
                     var restockedItems = []
                     var removedItems = []
                     var soldoutItems = []
-                } else {
-                    og = newbatch
                 }
 
+                og = newbatch
 
             }
 
         })
     }, configuration.interval);
+}
+
+function slackNotification(parsedResult, color, pretext) {
+    if (configuration.slackBot.active) {
+      var params = {
+          username: "ShopifyMonitor",
+          icon_url: "http://i.imgur.com/zks3PoZ.png",
+          attachments: [{
+              "title": parsedResult.name,
+              "title_link": parsedResult.link,
+              "color": color,
+              "fields": [{
+                      "title": "Product Name",
+                      "value": parsedResult.name,
+                      "short": "false"
+                  },
+                  {
+                      "title": "Link",
+                      "value": parsedResult.link,
+                      "short": "false"
+                  },
+                  {
+                      "title": "Notification Type",
+                      "value": pretext,
+                      "short": "false"
+                  },
+                  {
+                      "title": "Price",
+                      "value": parsedResult.price,
+                      "short": "false"
+                  }
+              ],
+              "thumb_url": parsedResult.image
+          }]
+      }
+      slackBot.postMessage(configuration.slackBot.channel, null, params);
+  }
 }
