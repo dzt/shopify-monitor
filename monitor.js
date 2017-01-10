@@ -22,6 +22,8 @@ var matches = []
 
 var a = configuration.keywords
 var ending = [a.slice(0, -1).join(', '), a.slice(-1)[0]].join(a.length < 2 ? '' : ' and ');
+var b = configuration.sites
+var endingSites = [b.slice(0, -1).join(', '), b.slice(-1)[0]].join(b.length < 2 ? '' : ' and ');
 
 if (configuration.notifyWhenNewItemsFound) {
     api.log('info', 'Looking for new items...')
@@ -30,6 +32,8 @@ if (configuration.notifyWhenNewItemsFound) {
 if (configuration.notifyWhenOnKeywordMatch) {
     api.log('info', 'Looking for items matching your keywords...')
 }
+
+api.log('info', `Currently monitoring ${endingSites}`)
 
 function convertSecondsToMinutesAndSeconds(seconds) {
     var minutes;
@@ -45,12 +49,13 @@ if (configuration.slackBot.active) {
         name: 'Shopify Monitor',
         token: configuration.slackBot.token
     })
+    api.log('info', 'SlackBot currently enabled.')
     slackBot.on('start', function() {
         slackBot.postMessageToChannel(configuration.slackBot.channel, 'Shopify Monitor currently active ◕‿◕', configuration.slackBot.settings);
     })
     slackBot.on('error', function() {
-      api.log('error', 'An error occurred while connecting to Slack, please try again.')
-      return process.exit()
+        api.log('error', 'An error occurred while connecting to Slack, please try again.')
+        return process.exit()
     })
     slackBot.on('message', function(data) {
         if (data.text === '!usage') {
@@ -64,6 +69,7 @@ if (configuration.slackBot.active) {
 
             current.push("```Channel Set too: #" + configuration.slackBot.channel + "\n")
             current.push(`Current Keyword(s): ${ending}\n`)
+            current.push(`Currently being monitored: ${endingSites}\n`)
             current.push(`Interval Rate: ${configuration.interval}ms\n`)
             current.push(`Server Uptime: ${uptimeFormatted}\n`)
             current.push("```")
@@ -91,6 +97,8 @@ function getInitialData() {
 }
 
 getInitialData()
+
+var checkCount = 0
 
 function seek() {
 
@@ -175,6 +183,7 @@ function seek() {
                                 newItems.push(diffAdded[i].name)
                                 console.log(`Item Added to Store: ${diffAdded[i].name}`)
                                 slackNotification(diffAdded[i], '#36a64f', 'Newly Added Item')
+                                checkCount = 0
                             } else if (item.length > 0) {
                                 item = _.where(parsedOG, {
                                     name: diffAdded[i].name
@@ -184,12 +193,14 @@ function seek() {
                                     restockedItems.push(diffAdded[i])
                                     console.log(`Restocked Item: ${diffAdded[i].name}`)
                                     slackNotification(diffAdded[i], '#4FC3F7', 'Restocked Item')
+                                    checkCount = 0
                                 }
 
                                 if (diffAdded[i].status === "Sold Out" && item[0].status === "Available") {
                                     soldoutItems.push(diffAdded[i])
                                     console.log(`Item Sold Out: ${diffAdded[i].name}`)
                                     slackNotification(diffAdded[i], '#ef5350', 'Sold Out Item')
+                                    checkCount = 0
                                 }
 
                             }
@@ -211,6 +222,7 @@ function seek() {
                                 removedItems.push(diffRemoved[i])
                                 console.log(`Item Removed from Store: ${parsedNew[i].name}`)
                                 slackNotification(parsedNew[i], '#ef5350', 'Removed Item from Store')
+                                checkCount = 0
                             }
 
                         }
@@ -219,7 +231,10 @@ function seek() {
                 });
 
                 if (newItems.length === 0 || restockedItems.length === 0 || removedItems.length === 0 || soldoutItems.length === 0) {
-                    api.log('warning', 'No new updates found yet but still looking ヅ')
+                    if (checkCount === 0) {
+                        api.log('warning', 'No new updates found yet but still looking ヅ')
+                    }
+                    checkCount++
                     var parsedOG = []
                     var parsedNew = []
                     var removed = []
@@ -239,37 +254,37 @@ function seek() {
 
 function slackNotification(parsedResult, color, pretext) {
     if (configuration.slackBot.active) {
-      var params = {
-          username: "ShopifyMonitor",
-          icon_url: "http://i.imgur.com/zks3PoZ.png",
-          attachments: [{
-              "title": parsedResult.name,
-              "title_link": parsedResult.link,
-              "color": color,
-              "fields": [{
-                      "title": "Full Product Name",
-                      "value": parsedResult.name,
-                      "short": "false"
-                  },
-                  {
-                      "title": "Link",
-                      "value": parsedResult.link,
-                      "short": "false"
-                  },
-                  {
-                      "title": "Notification Type",
-                      "value": pretext,
-                      "short": "false"
-                  },
-                  {
-                      "title": "Price",
-                      "value": parsedResult.price,
-                      "short": "false"
-                  }
-              ],
-              "thumb_url": parsedResult.image
-          }]
-      }
-      slackBot.postMessage(configuration.slackBot.channel, null, params);
-  }
+        var params = {
+            username: "ShopifyMonitor",
+            icon_url: "http://i.imgur.com/zks3PoZ.png",
+            attachments: [{
+                "title": parsedResult.name,
+                "title_link": parsedResult.link,
+                "color": color,
+                "fields": [{
+                        "title": "Full Product Name",
+                        "value": parsedResult.name,
+                        "short": "false"
+                    },
+                    {
+                        "title": "Brand",
+                        "value": parsedResult.brand,
+                        "short": "false"
+                    },
+                    {
+                        "title": "Notification Type",
+                        "value": pretext,
+                        "short": "false"
+                    },
+                    {
+                        "title": "Price",
+                        "value": parsedResult.price,
+                        "short": "false"
+                    }
+                ],
+                "thumb_url": parsedResult.image
+            }]
+        }
+        slackBot.postMessage(configuration.slackBot.channel, null, params);
+    }
 }

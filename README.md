@@ -32,6 +32,7 @@ $ node monitor.js
 - [ ] Multiple brand support on the demands of the people.
 - [ ] Add Sitemap feature to search sitemap instead of site DOM for finding early links.
 - [ ] Add Discord and Twitter API Settings to Tweet/Send out notifications to chats/timeline.
+- [ ] Have results return item stock
 - [ ] Slack bot commands.
 - [ ] Better wiki/docs.
 
