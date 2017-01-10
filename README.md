@@ -1,7 +1,7 @@
 # shopify-monitor
 Monitor for Shopify based brands
 
-![term](http://i.imgur.com/6xzBTEH.png)
+![term](http://i.imgur.com/baiwk9f.png)
 
 ### Installation
 
@@ -42,6 +42,11 @@ $ node monitor.js
 - Items that get restocked
 - Items that get removed from stores.
 - Early Links.
+
+### Brands???
+- Palace USA
+- AntiSocialSocialClub
+- Adding more Soon with Sitemap and custom link support.
 
 ### Who
 
