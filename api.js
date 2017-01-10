@@ -25,28 +25,22 @@ api.getItems = function(sites, callback) {
                         api.log('error', `Error occured while fetching data from "${site}"`)
                         return process.exit()
                     }
-                    cb(response, null)
+                    cb(null, response)
                 })
             })
         }
     })
 
-    async.parallel(tasks, function(res, err) {
-        if (_.where(err, null).length === err.length) {
-          var response = {
-              productDetails: []
+    async.parallel(tasks, function(err, res) {
+        if (!err) {
+          var arrays = []
+          for (var i = 0; i < res.length; i++) {
+              arrays.push.apply(arrays, res[i].productDetails);
           }
-          if (typeof res === 'object') {
-            return callback(res, null)
-          } else if (res instanceof Array) {
-            console.log('response is an array!')
+          var rRes = {
+              productDetails: arrays
           }
-
-          // for (var i = 0; i < res.length; i++) {
-          //     console.log(res[i])
-          //     response.productDetails.push.apply(res.productDetails)
-          // }
-          
+          return callback(rRes, null)
         } else {
           api.log('error', 'Error occured while trying to gather all of your data.')
           return process.exit()
