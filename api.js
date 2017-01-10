@@ -1,52 +1,56 @@
 const cheerio = require('cheerio')
 const colors = require('colors')
+const _ = require('underscore')
 const request = require('request')
+const parallel = require('run-parallel')
+const async = require('async')
+const lib = require('./lib')
 
 var api = {};
 const base_url = 'https://antisocial.myshopify.com/'
 
-// TODO: make api take use of lib
+api.getItems = function(sites, callback) {
 
-api.getItems = function(callback) {
-    request(base_url, function(err, resp, html, rrr, body) {
+    // TODO: Check if site is not an option and throw error until xml feature add
 
-        if (err) {
-            return callback(null, 'No response from website, failed to load data.');
+    const tasks = []
+    sites.map(function(site, i) {
+        if (lib.list.indexOf(site) === -1) {
+            api.log('error', `Could not find brand matching "${site}"`)
+            return process.exit()
         } else {
-            var $ = cheerio.load(html);
+            tasks.push(function(cb) {
+                lib[site]((response, err) => {
+                    if (err) {
+                        api.log('error', `Error occured while fetching data from "${site}"`)
+                        return process.exit()
+                    }
+                    cb(response, null)
+                })
+            })
         }
+    })
 
-        var response = {
-            proudctCount: $('.grid-link.text-center').length,
-            productDetails: []
+    async.parallel(tasks, function(res, err) {
+        if (_.where(err, null).length === err.length) {
+          var response = {
+              productDetails: []
+          }
+          if (typeof res === 'object') {
+            return callback(res, null)
+          } else if (res instanceof Array) {
+            console.log('response is an array!')
+          }
+
+          // for (var i = 0; i < res.length; i++) {
+          //     console.log(res[i])
+          //     response.productDetails.push.apply(res.productDetails)
+          // }
+          
+        } else {
+          api.log('error', 'Error occured while trying to gather all of your data.')
+          return process.exit()
         }
-
-        var matches = [];
-
-        $('.grid-link__title').each(function(i, element) {
-
-            if ($('.badge__text').eq(i).text() == 'Sold Out') {
-                var status = 'Sold Out';
-            } else {
-                var status = 'Available';
-            }
-
-            var price = $('.grid-link__meta').eq(i).text().replace(/\s{2,}/g, '')
-            var name = $(this).text();
-            var product = {
-                name: $(this).text(),
-                price: '$' + price.split(' ')[1],
-                status: status,
-                link: 'https://antisocial.myshopify.com' + $('.grid-link.text-center').eq(i).attr('href'),
-                image: 'http:' + $(`img[alt="${name}"]`).attr('src')
-            }
-
-            response.productDetails.push(JSON.stringify(product));
-
-        });
-
-        return callback(response, null);
-
     });
 }
 

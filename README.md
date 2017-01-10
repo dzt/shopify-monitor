@@ -40,6 +40,7 @@ $ node monitor.js
 - Items that become Sold Out
 - Items that get restocked
 - Items that get removed from stores.
+- Early Links.
 
 ### Who
 

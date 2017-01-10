@@ -6,7 +6,8 @@ var configuration
 try {
     configuration = require('./config.json');
 } catch (e) {
-    return huf.log(null, 'error', 'Missing, config.json file please create your config file before using hufbot.')
+    api.log('error', 'Missing, config.json file please create your config file before using hufbot.')
+    return process.exit()
 }
 
 const request = require('request').defaults({
@@ -47,6 +48,10 @@ if (configuration.slackBot.active) {
     slackBot.on('start', function() {
         slackBot.postMessageToChannel(configuration.slackBot.channel, 'Shopify Monitor currently active ◕‿◕', configuration.slackBot.settings);
     })
+    slackBot.on('error', function() {
+      api.log('error', 'An error occurred while connecting to Slack, please try again.')
+      return process.exit()
+    })
     slackBot.on('message', function(data) {
         if (data.text === '!usage') {
             slackBot.postMessageToChannel(configuration.slackBot.channel, "```Shopify Monitor Usage\n!current: Current Settings```", configuration.slackBot.settings);
@@ -70,7 +75,7 @@ if (configuration.slackBot.active) {
 function getInitialData() {
     api.log('info', 'Getting initial data...')
     api.log('info', `Interval set for every ${configuration.interval}ms`)
-    api.getItems((response, err) => {
+    api.getItems(configuration.sites, (response, err) => {
         if (err || response == null) {
             if (configuration.autoRetryOnCrash == true) {
                 api.log('error', 'Site Crashed, retrying...')
@@ -94,7 +99,7 @@ function seek() {
     var newbatch
 
     var interval = setInterval(function() {
-        api.getItems((response, err) => {
+        api.getItems(configuration.sites, (response, err) => {
             if (err || response == null) {
                 if (config.autoRetryOnCrash == true) {
                     api.log('error', 'Site Crashed, retrying...')
@@ -214,7 +219,7 @@ function seek() {
                 });
 
                 if (newItems.length === 0 || restockedItems.length === 0 || removedItems.length === 0 || soldoutItems.length === 0) {
-                    api.log('warning', 'No updates found yet but still looking ヅ')
+                    api.log('warning', 'No new updates found yet but still looking ヅ')
                     var parsedOG = []
                     var parsedNew = []
                     var removed = []
@@ -242,7 +247,7 @@ function slackNotification(parsedResult, color, pretext) {
               "title_link": parsedResult.link,
               "color": color,
               "fields": [{
-                      "title": "Product Name",
+                      "title": "Full Product Name",
                       "value": parsedResult.name,
                       "short": "false"
                   },
