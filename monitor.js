@@ -119,7 +119,7 @@ function seek() {
                                                     "short": "true"
                                                 }
                                             ],
-                                            "thumb_url": "https://cdn.shopify.com/s/files/1/1246/0173/products/IMG_4376_copy_1024x1024.jpg?v=1477512381"
+                                            "thumb_url": parsedResult.image
                                         }]
                                     }
                                     slackBot.postMessageToChannel(configuration.slackBot.channel, null, params);
