@@ -75,6 +75,12 @@ if (configuration.slackBot.active) {
             current.push("```")
             slackBot.postMessageToChannel(configuration.slackBot.channel, current.join(''), configuration.slackBot.settings);
         }
+        if (data.text === '!current') {
+
+        }
+        if (data.text === '!addKeyword') {
+          
+        }
     });
 }
 

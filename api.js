@@ -6,6 +6,7 @@ const parallel = require('run-parallel')
 const async = require('async')
 const lib = require('./lib')
 const parseUrl = require("parse-url")
+const validUrl = require('valid-url')
 
 var api = {};
 var urlsFound = []
@@ -16,15 +17,15 @@ api.getItems = function(sites, callback) {
 
     sites.map(function(site, i) {
         if (lib.list.indexOf(site) === -1) {
-            if (lib.validateUrl(site)) {
+            if (validUrl.isUri(site)) {
                 var parsedURL = parseUrl(site)
                 if (urlsFound.indexOf(parsedURL.resource) > -1) {
-                  // api.log('success', `URL found (${parsedURL.resource}), checking if website is eligible for monitoring...`)
-                  // console.log(urlsFound)
-                  // urlsFound.push(parsedURL.resource)
+                    // api.log('success', `URL found (${parsedURL.resource}), checking if website is eligible for monitoring...`)
+                    // console.log(urlsFound)
+                    // urlsFound.push(parsedURL.resource)
                 } else {
-                  api.log('success', `URL found: (${parsedURL.resource}), checking if website is eligible for monitoring...`)
-                  urlsFound.push(parsedURL.resource)
+                    api.log('success', `URL found: (${parsedURL.resource}), checking if website is eligible for monitoring...`)
+                    urlsFound.push(parsedURL.resource)
                 }
                 api.validateUrl(parsedURL.resource, (response, err) => {
                     if (err) {
