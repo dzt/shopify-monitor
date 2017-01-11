@@ -133,7 +133,7 @@ function seek() {
                             var possibleMatch = _.where(matches, parsedResult)
                                 // checks if its already found that match before
                             if (possibleMatch.length === 0) {
-                                api.log('success', `Match Found: "${parsedResult.name}"`)
+                                api.log('success', `Match Found:\nProduct Name: "${parsedResult.name}"\nLink: ${parsedResult.link}\n`)
                                 slackNotification(parsedResult, '#F48FB1', 'Keyword Match')
                                 matches.push(parsedResult);
                             }
