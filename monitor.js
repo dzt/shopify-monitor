@@ -6,7 +6,7 @@ const jsdiff = require('diff')
 try {
     var configuration = require('./config.json');
 } catch (e) {
-    api.log('error', 'Missing, config.json file please create your config file before using hufbot.')
+    api.log('error', 'Missing, config.json file or invalid json syntax.')
     return process.exit()
 }
 
