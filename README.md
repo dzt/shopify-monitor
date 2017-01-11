@@ -47,7 +47,7 @@ $ node monitor.js
 ### Brands???
 - Palace USA
 - AntiSocialSocialClub
-- Adding more Soon with Sitemap and custom link support.
+- More to come soon inside of the box, but you can simply add a site domain into the `sites` array in your `config.json` file.
 
 ### Who
 
