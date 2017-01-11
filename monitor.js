@@ -2,9 +2,9 @@ var api = require('./api')
 const _ = require('underscore')
 const cheerio = require('cheerio')
 const jsdiff = require('diff')
-var configuration
+
 try {
-    configuration = require('./config.json');
+    var configuration = require('./config.json');
 } catch (e) {
     api.log('error', 'Missing, config.json file please create your config file before using hufbot.')
     return process.exit()
