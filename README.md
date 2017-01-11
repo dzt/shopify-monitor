@@ -43,7 +43,7 @@ $ node monitor.js
 - Items that get restocked
 - Items that get removed from stores.
 - Early Links.
-*Note: If you add a site link to your config you will only be updated on newly dropped items. I'm working on finding a way to add all functionality to people using links instead of built in brands.*
+**Note: If you add a site link to your config you will only be updated on newly dropped items. I'm working on finding a way to add all functionality to people using links instead of built in brands.**
 
 ### Brands???
 - Palace USA
