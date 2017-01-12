@@ -79,7 +79,7 @@ if (configuration.slackBot.active) {
 
         }
         if (data.text === '!addKeyword') {
-          
+
         }
     });
 }
@@ -260,6 +260,7 @@ function seek() {
 
 function slackNotification(parsedResult, color, pretext) {
     if (configuration.slackBot.active) {
+
         var params = {
             username: "ShopifyMonitor",
             icon_url: "http://i.imgur.com/zks3PoZ.png",
@@ -268,8 +269,8 @@ function slackNotification(parsedResult, color, pretext) {
                 "title_link": parsedResult.link,
                 "color": color,
                 "fields": [{
-                        "title": "Full Product Name",
-                        "value": parsedResult.name,
+                        "title": "ID",
+                        "value": parsedResult.id,
                         "short": "false"
                     },
                     {
