@@ -26,6 +26,7 @@ api.getItems = function(sites, callback) {
                 } else {
                     api.log('success', `URL found: (${parsedURL.resource}), checking if website is eligible for monitoring...`)
                     urlsFound.push(parsedURL.resource)
+                    /*
                     api.validateUrl('http://' + parsedURL.resource, (response, err) => {
                         if (err) {
                             api.log('error', err)
@@ -33,6 +34,7 @@ api.getItems = function(sites, callback) {
                             return process.exit()
                         }
                     })
+                    */
                 }
                 tasks.push(function(cb) {
                     lib.shopify(parsedURL.resource, (response, err) => {

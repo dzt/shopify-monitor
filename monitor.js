@@ -46,8 +46,8 @@ app.post('/command/status', function(req, res) {
     let data = {
         response_type: 'in_channel',
         text: 'Shopify Monitor Status',
-        color: '#7E57C2',
         attachments: [{
+            color: '#7E57C2',
             fields: [{
                     "title": "Current Keyword(s)",
                     "value": ending,
@@ -67,7 +67,8 @@ app.post('/command/status', function(req, res) {
                     "title": "Server Uptime",
                     "value": uptimeFormatted,
                     "short": "false"
-                }]
+                }
+            ]
         }]
     };
     return res.json(data)
