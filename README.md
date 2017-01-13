@@ -19,6 +19,9 @@ Configure information inside the `config.example.json` be sure to rename it to `
 
 <br>
 
+<a href="https://github.com/dzt/shopify-monitor/wiki/Configuring-your-monitor">General Gonfiguration Guide</a>
+<a href="https://github.com/dzt/shopify-monitor/wiki/Slack">Slack Gonfiguration Guide</a>
+
 Run After Setup:
 
 ```sh
