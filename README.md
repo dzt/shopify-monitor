@@ -51,6 +51,8 @@ $ node monitor.js
 - AntiSocialSocialClub
 - More to come soon inside of the box, but you can simply add a site domain into the `sites` array in your `config.json` file.
 
+**Note: each site link should have http:// or https:// at the beginning or shopify-monitor won't pick it up.**
+
 ### Who
 
 Written by <a href="http://petersoboyejo.com/">@dzt</a>, made better by you.

@@ -261,6 +261,12 @@ function seek() {
 function slackNotification(parsedResult, color, pretext) {
     if (configuration.slackBot.active) {
 
+        if (parsedResult.image === undefined) {
+          var img = 'http://i.imgur.com/MdsG0Po.png'
+        } else {
+          var img = parsedResult.image
+        }
+
         var params = {
             username: "ShopifyMonitor",
             icon_url: "http://i.imgur.com/zks3PoZ.png",
@@ -289,7 +295,7 @@ function slackNotification(parsedResult, color, pretext) {
                         "short": "false"
                     }
                 ],
-                "thumb_url": parsedResult.image
+                "thumb_url": img
             }]
         }
         slackBot.postMessage(configuration.slackBot.channel, null, params);
