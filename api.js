@@ -26,13 +26,14 @@ api.getItems = function(sites, callback) {
                 } else {
                     api.log('success', `URL found: (${parsedURL.resource}), checking if website is eligible for monitoring...`)
                     urlsFound.push(parsedURL.resource)
+                    api.validateUrl('http://' + parsedURL.resource, (response, err) => {
+                        if (err) {
+                            api.log('error', err)
+                            api.log('error', `URL found, isn\'t eligible for monitoring. (${site})`)
+                            return process.exit()
+                        }
+                    })
                 }
-                api.validateUrl(parsedURL.resource, (response, err) => {
-                    if (err) {
-                        api.log('error', `URL found, isn\'t eligible for monitoring. (${site})`)
-                        return process.exit()
-                    }
-                })
                 tasks.push(function(cb) {
                     lib.shopify(parsedURL.resource, (response, err) => {
                         if (err) {
@@ -101,24 +102,24 @@ api.log = function(type, text) {
 
 api.validateUrl = function(url, callback) {
     request({
-        url: 'http://' + url + '/products.json',
+        url: 'https://' + url + '/products.json',
         method: 'get',
         headers: {
             'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.98 Safari/537.36'
         }
     }, function(err, res, body) {
         if (err || body === undefined) {
-            return callback(null, 'No response data was sent back.');
+            return callback(null, `No response data was sent back, try increasing your interval rate to prevent rate limiting (${url})`);
         }
         if (tryParseJSON(body)) {
             var jsonBody = JSON.parse(body)
             if (jsonBody.products) {
                 return callback(true, null)
             } else {
-                return callback(null, 'Invalid Format')
+                return callback(null, `Invalid Format (${url})`)
             }
         } else {
-            return callback(null, 'Invalid JSON.')
+            return callback(null, `Invalid JSON. (${url})`)
         }
     })
 }

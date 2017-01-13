@@ -2,6 +2,8 @@ var api = require('./api')
 const _ = require('underscore')
 const cheerio = require('cheerio')
 const jsdiff = require('diff')
+const express = require('express')
+const app = express()
 
 try {
     var configuration = require('./config.json');
@@ -24,6 +26,52 @@ var a = configuration.keywords
 var ending = [a.slice(0, -1).join(', '), a.slice(-1)[0]].join(a.length < 2 ? '' : ' and ');
 var b = configuration.sites
 var endingSites = [b.slice(0, -1).join(', '), b.slice(-1)[0]].join(b.length < 2 ? '' : ' and ');
+
+// Web Server
+
+var uptime = convertSecondsToMinutesAndSeconds(process.uptime())
+var uptimeFormatted
+uptimeFormatted = uptime[0] + ' minutes'
+
+app.listen(configuration.serverPort)
+app.set('port', configuration.serverPort)
+api.log('success', `Local server started on port ${configuration.serverPort}`)
+
+app.get('/', function(req, res) {
+    res.send('Shopify Monitor v1')
+})
+
+// slash commands
+app.post('/command/status', function(req, res) {
+    let data = {
+        response_type: 'in_channel',
+        text: 'Shopify Monitor Status',
+        color: '#7E57C2',
+        attachments: [{
+            fields: [{
+                    "title": "Current Keyword(s)",
+                    "value": ending,
+                    "short": "false"
+                },
+                {
+                    "title": "Sites being monitored",
+                    "value": endingSites,
+                    "short": "false"
+                },
+                {
+                    "title": "Interval Rate",
+                    "value": configuration.interval,
+                    "short": "false"
+                },
+                {
+                    "title": "Server Uptime",
+                    "value": uptimeFormatted,
+                    "short": "false"
+                }]
+        }]
+    };
+    return res.json(data)
+})
 
 if (configuration.notifyWhenNewItemsFound) {
     api.log('info', 'Looking for new items...')
@@ -57,31 +105,6 @@ if (configuration.slackBot.active) {
         api.log('error', 'An error occurred while connecting to Slack, please try again.')
         return process.exit()
     })
-    slackBot.on('message', function(data) {
-        if (data.text === '!usage') {
-            slackBot.postMessageToChannel(configuration.slackBot.channel, "```Shopify Monitor Usage\n!current: Current Settings```", configuration.slackBot.settings);
-        }
-        if (data.text === '!current') {
-            var current = []
-            var uptime = convertSecondsToMinutesAndSeconds(process.uptime())
-            var uptimeFormatted
-            uptimeFormatted = uptime[0] + ' minutes'
-
-            current.push("```Channel Set too: #" + configuration.slackBot.channel + "\n")
-            current.push(`Current Keyword(s): ${ending}\n`)
-            current.push(`Currently being monitored: ${endingSites}\n`)
-            current.push(`Interval Rate: ${configuration.interval}ms\n`)
-            current.push(`Server Uptime: ${uptimeFormatted}\n`)
-            current.push("```")
-            slackBot.postMessageToChannel(configuration.slackBot.channel, current.join(''), configuration.slackBot.settings);
-        }
-        if (data.text === '!current') {
-
-        }
-        if (data.text === '!addKeyword') {
-
-        }
-    });
 }
 
 function getInitialData() {
@@ -137,7 +160,7 @@ function seek() {
                         if (productToCompare.indexOf(configuration.keywords[x].toLowerCase()) > -1) {
 
                             var possibleMatch = _.where(matches, parsedResult)
-                                // checks if its already found that match before
+                            // checks if its already found that match before
                             if (possibleMatch.length === 0) {
                                 api.log('success', `Match Found:\nProduct Name: "${parsedResult.name}"\nLink: ${parsedResult.link}\n`)
                                 slackNotification(parsedResult, '#F48FB1', 'Keyword Match')
@@ -262,9 +285,9 @@ function slackNotification(parsedResult, color, pretext) {
     if (configuration.slackBot.active) {
 
         if (parsedResult.image === undefined) {
-          var img = 'http://i.imgur.com/MdsG0Po.png'
+            var img = 'http://i.imgur.com/MdsG0Po.png'
         } else {
-          var img = parsedResult.image
+            var img = parsedResult.image
         }
 
         var params = {

@@ -36,6 +36,7 @@ $ node monitor.js
 - [ ] Slack bot commands.
 - [x] Add Brands via main link.
 - [ ] Better wiki/docs.
+- [ ] Web Interface to modify sites, keywords, etc. (config)
 
 ### What does this thing monitor?
 - Newly added items
@@ -47,8 +48,8 @@ $ node monitor.js
 **Note: If you add a site link to your config you will only be updated on newly dropped items. I'm working on finding a way to add all functionality to people using links instead of built in brands.**
 
 ### Brands???
-- Palace USA
-- AntiSocialSocialClub
+- Palace USA (`palace`)
+- AntiSocialSocialClub (`assc`)
 - More to come soon inside of the box, but you can simply add a site domain into the `sites` array in your `config.json` file.
 
 **Note: each site link should have http:// or https:// at the beginning or shopify-monitor won't pick it up.**
