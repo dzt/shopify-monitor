@@ -18,9 +18,9 @@ $ npm install
 Configure information inside the `config.example.json` be sure to rename it to `config.json` when you're done. More information about configuring your monitor can be found <a href="https://github.com/dzt/shopify-monitor/wiki/Configuring-your-monitor">here</a>.
 
 
-<a href="https://github.com/dzt/shopify-monitor/wiki/Configuring-your-monitor">General Gonfiguration Guide</a>
+<a href="https://github.com/dzt/shopify-monitor/wiki/Configuring-your-monitor">General Configuration Guide</a>
 
-<a href="https://github.com/dzt/shopify-monitor/wiki/Slack">Slack Gonfiguration Guide</a>
+<a href="https://github.com/dzt/shopify-monitor/wiki/Slack">Slack Configuration Guide</a>
 
 
 Run After Setup:
@@ -37,9 +37,9 @@ $ node monitor.js
 - [x] Add Sitemap feature to search sitemap instead of site DOM for finding early links.
 - [ ] Add Discord and Twitter API Settings to Tweet/Send out notifications to chats/timeline.
 - [ ] Have results return item stock
-- [ ] Slack bot commands.
+- [x] Slack bot commands.
 - [x] Add Brands via main link.
-- [ ] Better wiki/docs.
+- [x] Better wiki/docs.
 - [ ] Web Interface to modify sites, keywords, etc. (config)
 
 ### What does this thing monitor?
