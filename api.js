@@ -40,6 +40,7 @@ api.getItems = function(sites, callback) {
                     lib.shopify(parsedURL.resource, (response, err) => {
                         if (err) {
                             api.log('error', `Error occured while fetching data from "${site}"`)
+                            api.log('error', err)
                             return process.exit()
                         }
                         cb(null, response)

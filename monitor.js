@@ -30,8 +30,7 @@ var endingSites = [b.slice(0, -1).join(', '), b.slice(-1)[0]].join(b.length < 2 
 // Web Server
 
 var uptime = convertSecondsToMinutesAndSeconds(process.uptime())
-var uptimeFormatted
-uptimeFormatted = uptime[0] + ' minutes'
+var uptimeFormatted = uptime[0] + ' minutes'
 
 app.listen(configuration.serverPort)
 app.set('port', configuration.serverPort)
