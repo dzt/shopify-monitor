@@ -285,7 +285,6 @@ function seek() {
 function slackNotification(parsedResult, color, pretext) {
     if (configuration.slackBot.active) {
 
-        console.log('img', parsedResult.image)
         if (parsedResult.image === undefined) {
             var img = 'http://i.imgur.com/MdsG0Po.png'
         } else {
