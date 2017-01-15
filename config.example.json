@@ -5,6 +5,7 @@
     "notifyWhenNewItemsFound": true,
     "notifyWhenOnKeywordMatch": true,
     "pickupStockCount": true,
+    "noImageURL": "http://i.imgur.com/MdsG0Po.png",
     "slackBot": {
         "active": false,
         "token": "token goes here",

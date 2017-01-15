@@ -299,7 +299,7 @@ function slackNotification(parsedResult, color, pretext) {
     if (configuration.slackBot.active) {
 
         if (parsedResult.image === undefined || parsedResult.image === null) {
-            var img = 'http://i.imgur.com/MdsG0Po.png'
+            var img = configuration.noImageURL
         } else {
             var img = parsedResult.image
         }
@@ -343,7 +343,7 @@ function twitterNotification(parsedResult, type) {
     if (configuration.twitter.active) {
 
         if (parsedResult.image === undefined || parsedResult.image === null) {
-            var img = 'http://i.imgur.com/MdsG0Po.png'
+            var img = configuration.noImageURL
         } else {
             var img = parsedResult.image
         }
