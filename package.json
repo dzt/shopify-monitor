@@ -21,6 +21,7 @@
     "slackbots": "^1.0.2",
     "twit": "^2.2.5",
     "underscore": "^1.8.3",
-    "valid-url": "^1.0.9"
+    "valid-url": "^1.0.9",
+    "xml2json": "^0.11.0"
   }
 }
