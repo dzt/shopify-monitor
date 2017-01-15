@@ -38,7 +38,7 @@ $ node monitor.js
 - [x] Multiple brand support on the demands of the people.
 - [x] Add Sitemap feature to search sitemap instead of site DOM for finding early links.
 - [x] Add Twitter API Settings to Tweet/Send out notifications to timeline.
-- [ ] Have results return item stock
+- [x] Have results return item stock
 - [x] Slack bot commands.
 - [x] Add Brands via main link.
 - [x] Better wiki/docs.

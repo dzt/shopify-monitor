@@ -4,6 +4,7 @@ const cheerio = require('cheerio')
 const jsdiff = require('diff')
 const express = require('express')
 const base64 = require('node-base64-image')
+const lib = require('./lib')
 const app = express()
 
 try {
@@ -304,38 +305,56 @@ function slackNotification(parsedResult, color, pretext) {
             var img = parsedResult.image
         }
 
-        var params = {
-            username: "ShopifyMonitor",
-            icon_url: "http://i.imgur.com/zks3PoZ.png",
-            attachments: [{
-                "title": parsedResult.name,
-                "title_link": parsedResult.link,
-                "color": color,
-                "fields": [{
-                        "title": "ID",
-                        "value": parsedResult.id,
-                        "short": "false"
-                    },
-                    {
-                        "title": "Brand",
-                        "value": parsedResult.brand,
-                        "short": "false"
-                    },
-                    {
-                        "title": "Notification Type",
-                        "value": pretext,
-                        "short": "false"
-                    },
-                    {
-                        "title": "Price",
-                        "value": parsedResult.price,
-                        "short": "false"
-                    }
-                ],
-                "thumb_url": img
-            }]
+        var stockCount
+        lib.getStockData(parsedResult.link, (res, err) => {
+            if (err) {
+                api.log('error', `Error occured while fetching stock data from ${parsedResult.link}`)
+                return process.exit()
+            }
+
+            send(res)
+
+        })
+
+        function send(res) {
+            if (res.stock === NaN || res.stock === undefined) {
+                var stock = 0
+            } else {
+                var stock = res.stock
+            }
+            var params = {
+                username: "ShopifyMonitor",
+                icon_url: "http://i.imgur.com/zks3PoZ.png",
+                attachments: [{
+                    "title": parsedResult.name,
+                    "title_link": parsedResult.link,
+                    "color": color,
+                    "fields": [{
+                            "title": "Stock Count",
+                            "value": stock,
+                            "short": "false"
+                        },
+                        {
+                            "title": "Brand",
+                            "value": parsedResult.brand,
+                            "short": "false"
+                        },
+                        {
+                            "title": "Notification Type",
+                            "value": pretext,
+                            "short": "false"
+                        },
+                        {
+                            "title": "Price",
+                            "value": parsedResult.price,
+                            "short": "false"
+                        }
+                    ],
+                    "thumb_url": img
+                }]
+            }
+            slackBot.postMessage(configuration.slackBot.channel, null, params);
         }
-        slackBot.postMessage(configuration.slackBot.channel, null, params);
     }
 }
 
@@ -348,51 +367,75 @@ function twitterNotification(parsedResult, type) {
             var img = parsedResult.image
         }
 
-        var name = parsedResult.name
-        var url = parsedResult.link
-        var price = parsedResult.price
+        var stockCount
+        lib.getStockData(parsedResult.link, (res, err) => {
+            if (err) {
+                api.log('error', `Error occured while fetching stock data from ${parsedResult.link}`)
+                return process.exit()
+            }
+            sendTweet(res)
+        })
 
-        if (type === 'new') {
-            var altText = `Just Added:\n${name}\n${price}\n${url}`
-        }
+        function sendTweet(res) {
+            if (res.stock === NaN || res.stock === undefined) {
+                var stock = 0
+            } else {
+                var stock = res.stock
+            }
 
-        base64.encode(img, {
-            string: true
-        }, function(err, image) {
-            post(image)
-        });
+            var name = parsedResult.name
+            var url = parsedResult.link
+            var price = parsedResult.price
 
-        function post(img) {
-            T.post('media/upload', {
-                media_data: img,
-                alt_text: {
-                    text: altText
-                }
-            }, function(err, data, response) {
+            if (type === 'new') {
+                var altText = `Just Added:\n${name}\n${price}\nStock Count: ${stock}\n${url}`
+            }
 
-                var mediaIdStr = data.media_id_string
-                var meta_params = {
-                    media_id: mediaIdStr,
+            base64.encode(img, {
+                string: true
+            }, function(err, image) {
+                post(image)
+            });
+
+            function post(img) {
+                T.post('media/upload', {
+                    media_data: img,
                     alt_text: {
                         text: altText
                     }
-                }
+                }, function(err, data, response) {
 
-                T.post('media/metadata/create', meta_params, function(err, data, response) {
-                    if (!err) {
-                        var params = {
-                            status: altText,
-                            media_ids: [mediaIdStr]
+                    var mediaIdStr = data.media_id_string
+                    var meta_params = {
+                        media_id: mediaIdStr,
+                        alt_text: {
+                            text: altText
                         }
-
-                        T.post('statuses/update', params, function(err, data, response) {
-                            api.log('success', `Tweet Sent: https://twitter.com/${data.user.screen_name}/status/${data.id_str}`)
-                        })
                     }
+
+                    T.post('media/metadata/create', meta_params, function(err, data, response) {
+                        if (!err) {
+                            var params = {
+                                status: altText,
+                                media_ids: [mediaIdStr]
+                            }
+
+                            T.post('statuses/update', params, function(err, data, response) {
+                                api.log('success', `Tweet Sent: https://twitter.com/${data.user.screen_name}/status/${data.id_str}`)
+                            })
+                        }
+                    })
+
                 })
+            }
 
-            })
         }
-
     }
 }
+
+// twitterNotification({
+//     name: 'ADIDAS NMD XR1 camo',
+//     price: '$120.00',
+//     link: 'https://www.oneness287.com/products/adidas-nmd-xr1-camo-1',
+//     image: 'https://cdn.shopify.com/s/files/1/0187/5180/products/DSC08111_6fc9da4f-597a-476a-b736-48b4c2547440_1024x1024.JPG?v=1483769738'
+// }, 'new')
