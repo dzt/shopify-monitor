@@ -4,6 +4,7 @@
     "autoRetryOnCrash": true,
     "notifyWhenNewItemsFound": true,
     "notifyWhenOnKeywordMatch": true,
+    "pickupStockCount": true,
     "slackBot": {
         "active": false,
         "token": "token goes here",
@@ -12,6 +13,13 @@
             "username": "ShopifyMonitor",
             "icon_url": "http://i.imgur.com/zks3PoZ.png"
         }
+    },
+    "twitter": {
+        "active": false,
+        "consumer_key": "consumer key goes here",
+        "consumer_secret": "consumer secret goes here",
+        "access_token": "access token over here",
+        "access_token_secret": "access token secret here"
     },
     "sites": [
         "palace",

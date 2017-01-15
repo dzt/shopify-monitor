@@ -3,6 +3,7 @@ const _ = require('underscore')
 const cheerio = require('cheerio')
 const jsdiff = require('diff')
 const express = require('express')
+const base64 = require('node-base64-image')
 const app = express()
 
 try {
@@ -97,7 +98,7 @@ if (configuration.slackBot.active) {
         name: 'Shopify Monitor',
         token: configuration.slackBot.token
     })
-    api.log('info', 'SlackBot currently enabled.')
+    api.log('info', 'Slack Bot currently enabled.')
     slackBot.on('start', function() {
         slackBot.postMessageToChannel(configuration.slackBot.channel, 'Shopify Monitor currently active ◕‿◕', configuration.slackBot.settings);
     })
@@ -106,6 +107,18 @@ if (configuration.slackBot.active) {
         return process.exit()
     })
 }
+
+if (configuration.twitter.active) {
+    api.log('info', 'Twitter service is currently enabled.')
+    var Twit = require('twit')
+    var T = new Twit({
+        consumer_key: configuration.twitter.consumer_key,
+        consumer_secret: configuration.twitter.consumer_secret,
+        access_token: configuration.twitter.access_token,
+        access_token_secret: configuration.twitter.access_token_secret
+    })
+}
+
 
 function getInitialData() {
     api.log('info', 'Getting initial data...')
@@ -212,6 +225,7 @@ function seek() {
                                 newItems.push(diffAdded[i].name)
                                 console.log(`Item Added to Store: ${diffAdded[i].name}`)
                                 slackNotification(diffAdded[i], '#36a64f', 'Newly Added Item')
+                                twitterNotification(diffAdded[i], 'new')
                                 checkCount = 0
                             } else if (item.length > 0) {
                                 item = _.where(parsedOG, {
@@ -284,7 +298,7 @@ function seek() {
 function slackNotification(parsedResult, color, pretext) {
     if (configuration.slackBot.active) {
 
-        if (parsedResult.image === undefined) {
+        if (parsedResult.image === undefined || parsedResult.image === null) {
             var img = 'http://i.imgur.com/MdsG0Po.png'
         } else {
             var img = parsedResult.image
@@ -322,5 +336,63 @@ function slackNotification(parsedResult, color, pretext) {
             }]
         }
         slackBot.postMessage(configuration.slackBot.channel, null, params);
+    }
+}
+
+function twitterNotification(parsedResult, type) {
+    if (configuration.twitter.active) {
+
+        if (parsedResult.image === undefined || parsedResult.image === null) {
+            var img = 'http://i.imgur.com/MdsG0Po.png'
+        } else {
+            var img = parsedResult.image
+        }
+
+        var name = parsedResult.name
+        var url = parsedResult.link
+        var price = parsedResult.price
+
+        if (type === 'new') {
+            var altText = `Just Added:\n${name}\n${price}\n${url}`
+        }
+
+        base64.encode(img, {
+            string: true
+        }, function(err, image) {
+            post(image)
+        });
+
+        function post(img) {
+            T.post('media/upload', {
+                media_data: img,
+                alt_text: {
+                    text: altText
+                }
+            }, function(err, data, response) {
+
+                var mediaIdStr = data.media_id_string
+                var meta_params = {
+                    media_id: mediaIdStr,
+                    alt_text: {
+                        text: altText
+                    }
+                }
+
+                T.post('media/metadata/create', meta_params, function(err, data, response) {
+                    if (!err) {
+                        var params = {
+                            status: altText,
+                            media_ids: [mediaIdStr]
+                        }
+
+                        T.post('statuses/update', params, function(err, data, response) {
+                            api.log('success', `Tweet Sent: https://twitter.com/${data.user.screen_name}/status/${data.id_str}`)
+                        })
+                    }
+                })
+
+            })
+        }
+
     }
 }
