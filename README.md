@@ -20,6 +20,8 @@ Configure information inside the `config.example.json` be sure to rename it to `
 
 <a href="https://github.com/dzt/shopify-monitor/wiki/Configuring-your-monitor">General Configuration Guide</a>
 
+<a href="https://github.com/dzt/shopify-monitor/wiki/Twitter">Twitter Configuration Guide</a>
+
 <a href="https://github.com/dzt/shopify-monitor/wiki/Slack">Slack Configuration Guide</a>
 
 
@@ -35,7 +37,7 @@ $ node monitor.js
 - [x] Integrate restock monitor.
 - [x] Multiple brand support on the demands of the people.
 - [x] Add Sitemap feature to search sitemap instead of site DOM for finding early links.
-- [ ] Add Discord and Twitter API Settings to Tweet/Send out notifications to chats/timeline.
+- [x] Add Twitter API Settings to Tweet/Send out notifications to timeline.
 - [ ] Have results return item stock
 - [x] Slack bot commands.
 - [x] Add Brands via main link.
