@@ -56,7 +56,7 @@ $ node monitor.js
 ### Brands???
 - Palace USA (`palace`)
 - AntiSocialSocialClub (`assc`)
-- More to come soon inside of the box, but you can simply add a site domain into the `sites` array in your `config.json` file.
+- More to come soon inside of the box, but you can simply add a site domain into the `sites` array in your `config.json` file or you can add a sitemap url that ends in `.xml`.
 
 **Note: each site link should have http:// or https:// at the beginning or shopify-monitor won't pick it up.**
 
