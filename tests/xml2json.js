@@ -1,8 +1,7 @@
-const parser = require('xml2json')
 const request = require('request')
-const fs = require('fs')
-var iconv = require('iconv-lite');
-var parseString = require('xml2js').parseString
+const iconv = require('iconv-lite')
+const parseUrl = require("parse-url")
+const parseString = require('xml2js').parseString
 
 request({
     url: 'https://kithnyc.com/sitemap_products_1.xml',
@@ -19,20 +18,41 @@ request({
     }
 
     var bodyWithCorrectEncoding = iconv.decode(body, 'iso-8859-1');
-    //console.log(bodyWithCorrectEncoding);
 
     parseString(bodyWithCorrectEncoding, function(err, result) {
-        console.dir(result);
-        console.log(result.urlset.url)
-        // console.log(result)
-    });
+        if (err) {
+            return console.log('Invalid XML Output')
+        }
+        var response = {
+            productDetails: []
+        }
+        var products = result.urlset.url
+        for (var i = 0; i < products.length; i++) {
 
-    /*
-    fs.writeFile('test.json', json, (err) => {
-        if (err) throw err;
-        console.log('It\'s saved!');
+            if (products[i]['image:image'] === undefined) {
+                var name = undefined
+                var image = undefined
+            } else {
+                var name = products[i]['image:image'][0]['image:title'][0]
+                var image = products[i]['image:image'][0]['image:loc'][0]
+            }
+
+            var parsedDroduct = {
+                name: name,
+                price: 'Unvailable',
+                status: 'Unavailable',
+                link: products[i].loc[0],
+                image: image,
+                brand: parseUrl(products[i].loc[0]).resource,
+                id: 'Unvailable'
+            }
+
+            if (name === undefined) {
+                response.productDetails.push(JSON.stringify(parsedDroduct))
+            }
+        }
+        return callback(response, null)
     });
-    */
 
 
 });

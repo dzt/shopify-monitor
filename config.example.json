@@ -22,16 +22,22 @@
         "access_token_secret": "access token secret here"
     },
     "sites": [
-        "palace",
+        "https://shop-usa.palaceskateboards.com/sitemap_products_1.xml",
         "assc",
-        "https://superrradical.store",
-        "http://fuckingawesomestore.com"
+        "http://superrradical.store"
     ],
     "keywords": [
-        "Mind Games Zip Up Hoodie",
-        "Rack Shell",
-        "2 WAYZZ Crewneck",
-        "Dill Towers",
-        "WHERE IS MY MIND"
+        "nmd",
+        "ultraboost",
+        "ultra-boost",
+        "S79168",
+        "yeezy",
+        "consortium",
+        "ub-mid",
+        "air-jordan",
+        "jordan-retro",
+        "ralph-lauren",
+        "CARABINER",
+        "PALACE"
     ]
 }

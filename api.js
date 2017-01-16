@@ -36,16 +36,30 @@ api.getItems = function(sites, callback) {
                     })
                     */
                 }
-                tasks.push(function(cb) {
-                    lib.shopify(parsedURL.resource, (response, err) => {
-                        if (err) {
-                            api.log('error', `Error occured while fetching data from "${site}"`)
-                            api.log('error', err)
-                            return process.exit()
-                        }
-                        cb(null, response)
+                // conditional check if indexOF ending xml or just shopify link without xml
+                if (site.endsWith(".xml")) {
+                  tasks.push(function(cb) {
+                      lib.shopifyXML(site, (response, err) => {
+                          if (err) {
+                              api.log('error', `Error occured while fetching data from XML link "${site}"`)
+                              api.log('error', err)
+                              return process.exit()
+                          }
+                          cb(null, response)
+                      })
+                  })
+                } else {
+                    tasks.push(function(cb) {
+                        lib.shopify(parsedURL.resource, (response, err) => {
+                            if (err) {
+                                api.log('error', `Error occured while fetching data from "${site}"`)
+                                api.log('error', err)
+                                return process.exit()
+                            }
+                            cb(null, response)
+                        })
                     })
-                })
+                }
             } else {
                 api.log('error', `Could not find brand matching "${site}"`)
                 return process.exit()
@@ -72,6 +86,7 @@ api.getItems = function(sites, callback) {
             var rRes = {
                 productDetails: arrays
             }
+
             return callback(rRes, null)
         } else {
             api.log('error', 'Error occured while trying to gather all of your data.')
