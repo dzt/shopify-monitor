@@ -317,8 +317,8 @@ function slackNotification(parsedResult, color, pretext) {
         })
 
         function send(res) {
-            if (res.stock === NaN || res.stock === undefined) {
-                var stock = 0
+            if (isNaN(res.stock)) {
+                var stock = 'Unavailable'
             } else {
                 var stock = res.stock
             }
