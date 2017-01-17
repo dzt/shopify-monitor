@@ -322,6 +322,13 @@ function slackNotification(parsedResult, color, pretext) {
             } else {
                 var stock = res.stock
             }
+
+            if (stock === 'Unavailable') {
+              var price = parsedResult.price
+            } else {
+              var price = res.price
+            }
+
             var params = {
                 username: "ShopifyMonitor",
                 icon_url: "http://i.imgur.com/zks3PoZ.png",
@@ -346,7 +353,7 @@ function slackNotification(parsedResult, color, pretext) {
                         },
                         {
                             "title": "Price",
-                            "value": parsedResult.price,
+                            "value": price,
                             "short": "false"
                         }
                     ],
