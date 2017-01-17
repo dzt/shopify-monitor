@@ -364,6 +364,8 @@ function slackNotification(parsedResult, color, pretext) {
 function twitterNotification(parsedResult, type) {
     if (configuration.twitter.active) {
 
+        api.log('info', 'Tweeting...')
+
         if (parsedResult.image === undefined || parsedResult.image === null) {
             var img = configuration.noImageURL
         } else {
