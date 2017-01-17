@@ -5,6 +5,8 @@ Monitor for Shopify based brands
 
 ### Installation
 
+<a href="https://youtu.be/oIDPuyMBwvI">Screencast</a>
+
 shopify-monitor requires [Node.js](http://nodejs.org/).
 
 Setup:
