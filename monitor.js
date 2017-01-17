@@ -131,7 +131,7 @@ function getInitialData() {
                 return getInitialData()
             } else {
                 api.log('error', err)
-                return process.exit()
+                //return process.exit()
             }
         }
         og = response.productDetails
@@ -151,6 +151,7 @@ function seek() {
 
     var interval = setInterval(function() {
         api.getItems(configuration.sites, (response, err) => {
+
             if (err || response == null) {
                 if (config.autoRetryOnCrash == true) {
                     api.log('error', 'Site Crashed, retrying...')
@@ -171,9 +172,11 @@ function seek() {
                     var products = response.productDetails.map(function(result, i) {
                         var parsedResult = JSON.parse(result)
                         var productToCompare = parsedResult.name.toLowerCase()
+
                         if (productToCompare.indexOf(configuration.keywords[x].toLowerCase()) > -1) {
 
                             var possibleMatch = _.where(matches, parsedResult)
+
                             // checks if its already found that match before
                             if (possibleMatch.length === 0) {
                                 api.log('success', `Match Found:\nProduct Name: "${parsedResult.name}"\nLink: ${parsedResult.link}\n`)
@@ -309,11 +312,8 @@ function slackNotification(parsedResult, color, pretext) {
         lib.getStockData(parsedResult.link, (res, err) => {
             if (err) {
                 api.log('error', `Error occured while fetching stock data from ${parsedResult.link}`)
-                return process.exit()
             }
-
             send(res)
-
         })
 
         function send(res) {

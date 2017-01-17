@@ -9,14 +9,25 @@ const parseUrl = require("parse-url")
 const validUrl = require('valid-url')
 
 var api = {};
-var urlsFound = []
 
 api.getItems = function(sites, callback) {
 
-    const tasks = []
+    var urlsFound = []
+    var tasks = []
 
     sites.map(function(site, i) {
-        if (lib.list.indexOf(site) === -1) {
+        if (lib.list.indexOf(site) > -1) {
+            tasks.push(function(cb) {
+                lib[site]((response, err) => {
+                    if (err) {
+                        api.log('error', `Error occured while fetching data from "${site}"`)
+                        return process.exit()
+                    }
+                    cb(null, response)
+                })
+            })
+        } else {
+
             if (validUrl.isUri(site)) {
                 var parsedURL = parseUrl(site)
                 if (urlsFound.indexOf(parsedURL.resource) > -1) {
@@ -24,7 +35,7 @@ api.getItems = function(sites, callback) {
                     // console.log(urlsFound)
                     // urlsFound.push(parsedURL.resource)
                 } else {
-                    api.log('success', `URL found: (${parsedURL.resource}), checking if website is eligible for monitoring...`)
+                    //api.log('success', `URL found: (${parsedURL.resource}), checking if website is eligible for monitoring...`)
                     urlsFound.push(parsedURL.resource)
                     /*
                     api.validateUrl('http://' + parsedURL.resource, (response, err) => {
@@ -38,16 +49,16 @@ api.getItems = function(sites, callback) {
                 }
                 // conditional check if indexOF ending xml or just shopify link without xml
                 if (site.endsWith(".xml")) {
-                  tasks.push(function(cb) {
-                      lib.shopifyXML(site, (response, err) => {
-                          if (err) {
-                              api.log('error', `Error occured while fetching data from XML link "${site}"`)
-                              api.log('error', err)
-                              return process.exit()
-                          }
-                          cb(null, response)
-                      })
-                  })
+                    tasks.push(function(cb) {
+                        lib.shopifyXML(site, (response, err) => {
+                            if (err) {
+                                api.log('error', `Error occured while fetching data from XML link "${site}"`)
+                                api.log('error', err)
+                                return process.exit()
+                            }
+                            cb(null, response)
+                        })
+                    })
                 } else {
                     tasks.push(function(cb) {
                         lib.shopify(parsedURL.resource, (response, err) => {
@@ -64,16 +75,7 @@ api.getItems = function(sites, callback) {
                 api.log('error', `Could not find brand matching "${site}"`)
                 return process.exit()
             }
-        } else {
-            tasks.push(function(cb) {
-                lib[site]((response, err) => {
-                    if (err) {
-                        api.log('error', `Error occured while fetching data from "${site}"`)
-                        return process.exit()
-                    }
-                    cb(null, response)
-                })
-            })
+
         }
     })
 
@@ -86,11 +88,7 @@ api.getItems = function(sites, callback) {
             var rRes = {
                 productDetails: arrays
             }
-
             return callback(rRes, null)
-        } else {
-            api.log('error', 'Error occured while trying to gather all of your data.')
-            return process.exit()
         }
     });
 }
