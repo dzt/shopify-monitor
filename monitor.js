@@ -323,11 +323,7 @@ function slackNotification(parsedResult, color, pretext) {
                 var stock = res.stock
             }
 
-            if (stock === 'Unavailable') {
-              var price = parsedResult.price
-            } else {
-              var price = res.price
-            }
+            var price = res.price
 
             var params = {
                 username: "ShopifyMonitor",
