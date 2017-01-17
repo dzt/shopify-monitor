@@ -176,7 +176,6 @@ function seek() {
                         if (productToCompare.indexOf(configuration.keywords[x].toLowerCase()) > -1) {
 
                             var possibleMatch = _.where(matches, parsedResult)
-                            console.log(possibleMatch)
                             // checks if its already found that match before
                             if (possibleMatch.length === 0) {
                                 api.log('success', `Match Found:\nProduct Name: "${parsedResult.name}"\nLink: ${parsedResult.link}\n`)
