@@ -388,10 +388,10 @@ function twitterNotification(parsedResult, type) {
 
             var name = parsedResult.name
             var url = parsedResult.link
-            var price = parsedResult.price
+            var price = res.price
 
             if (type === 'new') {
-                var altText = `Just Added:\n${name}\n${price}\nStock Count: ${stock}\n${url}`
+              var altText = `Just Added:\n${name}\n${price}\nStock Count: ${stock}\n${url}`
             }
 
             base64.encode(img, {
