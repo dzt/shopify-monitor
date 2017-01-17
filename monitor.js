@@ -267,7 +267,8 @@ function seek() {
 
                             if (item.length === 0) {
                                 removedItems.push(diffRemoved[i])
-                                console.log(`Item Removed from Store: ${parsedNew[i].name}`)
+                                // TODO: Bug Spot
+                                // console.log(`Item Removed from Store: ${parsedNew[i].name}`)
                                 slackNotification(parsedNew[i], '#ef5350', 'Removed Item from Store')
                                 checkCount = 0
                             }
