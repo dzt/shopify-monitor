@@ -364,8 +364,6 @@ function slackNotification(parsedResult, color, pretext) {
 function twitterNotification(parsedResult, type) {
     if (configuration.twitter.active) {
 
-        api.log('info', 'Tweeting...')
-
         if (parsedResult.image === undefined || parsedResult.image === null) {
             var img = configuration.noImageURL
         } else {
@@ -393,9 +391,10 @@ function twitterNotification(parsedResult, type) {
             var price = res.price
 
             if (type === 'new') {
-              var altText = `Just Added:\n${name}\n${price}\nStock Count: ${stock}\n${url}`
+                var altText = `Just Added:\n${name}\n${price}\nStock Count: ${stock}\n${url}`
             }
 
+            api.log('info', 'Encoding image for Tweet...')
             base64.encode(img, {
                 string: true
             }, function(err, image) {
@@ -403,6 +402,7 @@ function twitterNotification(parsedResult, type) {
             });
 
             function post(img) {
+                api.log('info', 'Tweeting...')
                 T.post('media/upload', {
                     media_data: img,
                     alt_text: {
@@ -426,7 +426,10 @@ function twitterNotification(parsedResult, type) {
                             }
 
                             T.post('statuses/update', params, function(err, data, response) {
-                                api.log('success', `Tweet Sent: https://twitter.com/${data.user.screen_name}/status/${data.id_str}`)
+                                if (err) {
+                                  return api.log('error', err)
+                                }
+                                return api.log('success', `Tweet Sent: https://twitter.com/${data.user.screen_name}/status/${data.id_str}`)
                             })
                         }
                     })
