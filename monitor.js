@@ -48,7 +48,7 @@ app.post('/command/status', function(req, res) {
         response_type: 'in_channel',
         text: 'Shopify Monitor Status',
         attachments: [{
-            fallback: "Shopify Monitor Status"
+            fallback: "Shopify Monitor Status",
             color: '#7E57C2',
             fields: [{
                     "title": "Current Keyword(s)",
@@ -330,7 +330,7 @@ function slackNotification(parsedResult, color, pretext) {
                 username: "ShopifyMonitor",
                 icon_url: "http://i.imgur.com/zks3PoZ.png",
                 attachments: [{
-                    "fallback": `${pretext}: ${parsedResult.name}`
+                    "fallback": `${pretext}: ${parsedResult.name}`,
                     "title": parsedResult.name,
                     "title_link": parsedResult.link,
                     "color": color,
