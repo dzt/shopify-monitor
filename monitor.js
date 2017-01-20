@@ -48,6 +48,7 @@ app.post('/command/status', function(req, res) {
         response_type: 'in_channel',
         text: 'Shopify Monitor Status',
         attachments: [{
+            fallback: "Shopify Monitor Status"
             color: '#7E57C2',
             fields: [{
                     "title": "Current Keyword(s)",
@@ -329,6 +330,7 @@ function slackNotification(parsedResult, color, pretext) {
                 username: "ShopifyMonitor",
                 icon_url: "http://i.imgur.com/zks3PoZ.png",
                 attachments: [{
+                    "fallback": `${pretext}: ${parsedResult.name}`
                     "title": parsedResult.name,
                     "title_link": parsedResult.link,
                     "color": color,
@@ -410,6 +412,10 @@ function twitterNotification(parsedResult, type) {
                     }
                 }, function(err, data, response) {
 
+                    if (err) {
+                        return api.log('error', err)
+                    }
+
                     var mediaIdStr = data.media_id_string
                     var meta_params = {
                         media_id: mediaIdStr,
@@ -427,10 +433,12 @@ function twitterNotification(parsedResult, type) {
 
                             T.post('statuses/update', params, function(err, data, response) {
                                 if (err) {
-                                  return api.log('error', err)
+                                    return api.log('error', err)
                                 }
                                 return api.log('success', `Tweet Sent: https://twitter.com/${data.user.screen_name}/status/${data.id_str}`)
                             })
+                        } else {
+                            return api.log('error', err)
                         }
                     })
 
@@ -440,10 +448,3 @@ function twitterNotification(parsedResult, type) {
         }
     }
 }
-
-// twitterNotification({
-//     name: 'ADIDAS NMD XR1 camo',
-//     price: '$120.00',
-//     link: 'https://www.oneness287.com/products/adidas-nmd-xr1-camo-1',
-//     image: 'https://cdn.shopify.com/s/files/1/0187/5180/products/DSC08111_6fc9da4f-597a-476a-b736-48b4c2547440_1024x1024.JPG?v=1483769738'
-// }, 'new')
