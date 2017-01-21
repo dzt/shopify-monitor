@@ -393,15 +393,22 @@ function twitterNotification(parsedResult, type) {
             var price = res.price
 
             if (type === 'new') {
-                var altText = `Just Added:\n${name}\n${price}\nStock Count: ${stock}\n${url}`
+                var altText = `Added:\n${name}\n${price}\nStock Count: ${stock}\n${url}`
             }
 
-            api.log('info', 'Encoding image for Tweet...')
-            base64.encode(img, {
-                string: true
-            }, function(err, image) {
-                post(image)
-            });
+            if (configuration.twitter.encodeImages) {
+                api.log('info', 'Encoding image for Tweet...')
+                base64.encode(img, {
+                    string: true
+                }, function(err, image) {
+                    if (err) {
+                        api.log('error', err)
+                    }
+                    post(image)
+                });
+            } else {
+                postWithoutImg()
+            }
 
             function post(img) {
                 api.log('info', 'Tweeting...')
@@ -442,6 +449,18 @@ function twitterNotification(parsedResult, type) {
                         }
                     })
 
+                })
+            }
+
+            function postWithoutImg() {
+                var params = {
+                    status: altText
+                }
+                T.post('statuses/update', params, function(err, data, response) {
+                    if (err) {
+                        return api.log('error', err)
+                    }
+                    return api.log('success', `Tweet Sent: https://twitter.com/${data.user.screen_name}/status/${data.id_str}`)
                 })
             }
 

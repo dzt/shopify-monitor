@@ -16,6 +16,7 @@
     },
     "twitter": {
         "active": false,
+        "encodeImages": false,
         "consumer_key": "consumer key goes here",
         "consumer_secret": "consumer secret goes here",
         "access_token": "access token over here",
