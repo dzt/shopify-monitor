@@ -68,6 +68,8 @@ Written by <a href="http://petersoboyejo.com/">@dzt</a>, made better by you.
 
 ### Some more screenshots to flex
 
+![new](https://i.imgur.com/pOvdInJ.jpg)
+
 ![slack](http://i.imgur.com/h7Jt0wT.png)
 
 ![hyper](http://i.imgur.com/TME8GvF.png)
