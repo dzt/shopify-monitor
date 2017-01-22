@@ -48,7 +48,7 @@ api.getItems = function(sites, callback) {
                     */
                 }
                 // conditional check if indexOF ending xml or just shopify link without xml
-                if (site.endsWith(".xml")) {
+                if (site.endsWith(".xml") || site.endsWith(".xml/")) {
                     tasks.push(function(cb) {
                         lib.shopifyXML(site, (response, err) => {
                             if (err) {

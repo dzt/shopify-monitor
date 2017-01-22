@@ -474,3 +474,9 @@ function twitterNotification(parsedResult, type) {
         }
     }
 }
+
+twitterNotification({
+  image: 'https://cdn.shopify.com/s/files/1/0094/2252/products/Adidas_Superstar_Foundation_FtwWhtCBurgGoldMt_BY3713_7722-1.progressive.jpg',
+  link: 'https://kith.com/products/adidas-originals-superstar-burgundy',
+  name: 'ADIDAS ORIGINALS SUPERSTAR'
+}, 'new')
