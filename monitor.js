@@ -326,6 +326,8 @@ function slackNotification(parsedResult, color, pretext) {
 
             var price = res.price
 
+            var links = res.links.join('\n')
+
             var params = {
                 username: "ShopifyMonitor",
                 icon_url: "http://i.imgur.com/zks3PoZ.png",
@@ -352,6 +354,11 @@ function slackNotification(parsedResult, color, pretext) {
                         {
                             "title": "Price",
                             "value": price,
+                            "short": "false"
+                        },
+                        {
+                            "title": "Add Cart Links 🚪",
+                            "value": links,
                             "short": "false"
                         }
                     ],
