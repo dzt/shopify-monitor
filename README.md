@@ -68,7 +68,8 @@ Written by <a href="http://petersoboyejo.com/">@dzt</a>, made better by you.
 
 ### Some more screenshots to flex
 
-![new](https://i.imgur.com/pOvdInJ.jpg)
+![new](https://i.imgur.com/86GnKHD.jpg)
+- Shout out to [@lucidhyped](https://twitter.com/lucidhyped) who helped me spot a minor bug and suggested adding the add cart stock.
 
 ![slack](http://i.imgur.com/h7Jt0wT.png)
 
