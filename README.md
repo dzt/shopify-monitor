@@ -45,6 +45,7 @@ $ node monitor.js
 - [x] Add Brands via main link.
 - [x] Better wiki/docs.
 - [ ] Web Interface to modify sites, keywords, etc. (config)
+- [ ] Garbage collection to prevent heap error after running the monitor over time.
 
 ### What does this thing monitor?
 - Newly added items
