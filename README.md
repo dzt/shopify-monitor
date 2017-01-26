@@ -46,6 +46,7 @@ $ node monitor.js
 - [x] Better wiki/docs.
 - [ ] Web Interface to modify sites, keywords, etc. (config)
 - [ ] Garbage collection to prevent heap error after running the monitor over time.
+- [ ] Proxy Support
 
 ### What does this thing monitor?
 - Newly added items
