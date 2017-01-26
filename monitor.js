@@ -293,6 +293,7 @@ function seek() {
                 }
 
                 og = newbatch
+                newbatch = null
 
             }
 
