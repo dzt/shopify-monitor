@@ -2,9 +2,12 @@
     "interval": 60000,
     "serverPort": 1337,
     "autoRetryOnCrash": true,
-    "notifyWhenNewItemsFound": true,
-    "notifyWhenOnKeywordMatch": true,
     "noImageURL": "http://i.imgur.com/MdsG0Po.png",
+    "notify": {
+        "new": true,
+        "restocks": true,
+        "keywords": true
+    },
     "slackBot": {
         "active": false,
         "token": "token goes here",
