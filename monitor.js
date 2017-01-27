@@ -166,7 +166,7 @@ function seek() {
             newbatch = response.productDetails
 
             // this feature works 100%
-            if (configuration.notifyWhenOnKeywordMatch) {
+            if (configuration.notify.keywords) {
                 var x
                 for (x = 0; x < configuration.keywords.length; x++) {
                     // looks if keywords matches any of the results
@@ -190,7 +190,7 @@ function seek() {
             }
 
             // this needs to be enhanced
-            if (configuration.notifyWhenNewItemsFound) {
+            if (configuration.notify.new || configuration.notify.restocks) {
 
                 var diff = jsdiff.diffArrays(og, newbatch);
 
