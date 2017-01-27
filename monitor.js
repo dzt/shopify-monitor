@@ -181,6 +181,7 @@ function seek() {
                             if (possibleMatch.length === 0) {
                                 api.log('success', `Match Found:\nProduct Name: "${parsedResult.name}"\nLink: ${parsedResult.link}\n`)
                                 slackNotification(parsedResult, '#F48FB1', 'Keyword Match')
+                                twitterNotification(parsedResult, 'match')
                                 matches.push(parsedResult);
                             }
 
@@ -402,6 +403,10 @@ function twitterNotification(parsedResult, type) {
 
             if (type === 'new') {
                 var altText = `Added:\n${name}\n${price}\nStock Count: ${stock}\n${url}`
+            }
+
+            if (type === 'match') {
+              var altText = `${name}\n${price}\nStock Count: ${stock}\n${url}`
             }
 
             if (configuration.twitter.encodeImages) {
