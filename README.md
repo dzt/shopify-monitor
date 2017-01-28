@@ -47,6 +47,7 @@ $ node monitor.js
 - [ ] Web Interface to modify sites, keywords, etc. (config)
 - [ ] Garbage collection to prevent heap error after running the monitor over time.
 - [ ] Proxy Support
+- [ ] Price Comapre
 
 ### What does this thing monitor?
 - Newly added items
