@@ -180,20 +180,19 @@ function seek() {
                             var possibleMatch = _.where(matches, parsedResult)
                             // checks if its already found that match before
                             if (possibleMatch.length === 0) {
+                                matches.push(parsedResult);
                                 if (pickupFirst === false) {
-                                  pickupFirst = true
-                                  matches.push(parsedResult);
+                                    // does nothing
                                 } else {
-                                  api.log('success', `Match Found:\nProduct Name: "${parsedResult.name}"\nLink: ${parsedResult.link}\n`)
-                                  slackNotification(parsedResult, '#F48FB1', 'Keyword Match')
-                                  twitterNotification(parsedResult, 'match')
-                                  matches.push(parsedResult);
+                                    api.log('success', `Match Found:\nProduct Name: "${parsedResult.name}"\nLink: ${parsedResult.link}\n`)
+                                    slackNotification(parsedResult, '#F48FB1', 'Keyword Match')
+                                    twitterNotification(parsedResult, 'match')
                                 }
                             }
-
                         }
                     })
                 }
+                pickupFirst = true
             }
 
             // this needs to be enhanced
@@ -412,7 +411,7 @@ function twitterNotification(parsedResult, type) {
             }
 
             if (type === 'match') {
-              var altText = `${name}\n${price}\nStock Count: ${stock}\n${url}`
+                var altText = `${name}\n${price}\nStock Count: ${stock}\n${url}`
             }
 
             if (configuration.twitter.encodeImages) {
