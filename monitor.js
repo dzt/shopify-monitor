@@ -126,6 +126,7 @@ if (configuration.twitter.active) {
 function getInitialData() {
     api.log('info', 'Getting initial data...')
     api.log('info', `Interval set for every ${configuration.interval}ms`)
+    var start = +new Date();
     api.getItems(configuration.sites, (response, err) => {
         if (err || response == null) {
             if (configuration.autoRetryOnCrash == true) {
@@ -137,6 +138,8 @@ function getInitialData() {
             }
         }
         og = response.productDetails
+        var end = +new Date();
+        api.log('success', `Time elapsed to gather inital data: ${end-start}ms`)
         return seek()
     })
 }
@@ -152,6 +155,7 @@ function seek() {
     var newbatch
 
     var interval = setInterval(function() {
+        var startSeek = +new Date();
         api.getItems(configuration.sites, (response, err) => {
 
             if (err || response == null) {
@@ -304,6 +308,8 @@ function seek() {
             }
 
         })
+        var endSeek = +new Date();
+        api.log('success', `Interval completion time: ${endSeek-startSeek}ms`)
     }, configuration.interval);
 }
 
