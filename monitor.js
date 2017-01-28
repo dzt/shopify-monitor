@@ -157,7 +157,6 @@ function seek() {
     var interval = setInterval(function() {
         var startSeek = +new Date();
         api.getItems(configuration.sites, (response, err) => {
-
             if (err || response == null) {
                 if (config.autoRetryOnCrash == true) {
                     api.log('error', 'Site Crashed, retrying...')
