@@ -4,9 +4,9 @@
     "autoRetryOnCrash": true,
     "noImageURL": "http://i.imgur.com/MdsG0Po.png",
     "notify": {
-        "new": true,
+        "new": false,
         "restocks": true,
-        "keywords": true
+        "keywords": false
     },
     "slackBot": {
         "active": false,
@@ -32,13 +32,6 @@
     "keywords": [
         "nmd",
         "ultraboost",
-        "ultra-boost",
-        "yeezy",
-        "consortium",
-        "ub-mid",
-        "air-jordan",
-        "jordan-retro",
-        "ralph lauren",
-        "air force"
+        "yeezy"
     ]
 }

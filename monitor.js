@@ -19,6 +19,7 @@ const request = require('request').defaults({
 })
 
 var og
+var pickupFirst = false
 
 var added = []
 var removed = []
@@ -179,10 +180,14 @@ function seek() {
                             var possibleMatch = _.where(matches, parsedResult)
                             // checks if its already found that match before
                             if (possibleMatch.length === 0) {
-                                api.log('success', `Match Found:\nProduct Name: "${parsedResult.name}"\nLink: ${parsedResult.link}\n`)
-                                slackNotification(parsedResult, '#F48FB1', 'Keyword Match')
-                                twitterNotification(parsedResult, 'match')
-                                matches.push(parsedResult);
+                                if (pickupFirst === false) {
+                                  pickupFirst = true
+                                } else {
+                                  api.log('success', `Match Found:\nProduct Name: "${parsedResult.name}"\nLink: ${parsedResult.link}\n`)
+                                  slackNotification(parsedResult, '#F48FB1', 'Keyword Match')
+                                  twitterNotification(parsedResult, 'match')
+                                  matches.push(parsedResult);
+                                }
                             }
 
                         }
