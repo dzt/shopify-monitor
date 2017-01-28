@@ -182,6 +182,7 @@ function seek() {
                             if (possibleMatch.length === 0) {
                                 if (pickupFirst === false) {
                                   pickupFirst = true
+                                  matches.push(parsedResult);
                                 } else {
                                   api.log('success', `Match Found:\nProduct Name: "${parsedResult.name}"\nLink: ${parsedResult.link}\n`)
                                   slackNotification(parsedResult, '#F48FB1', 'Keyword Match')
