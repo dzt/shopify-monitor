@@ -77,11 +77,11 @@ app.post('/command/status', function(req, res) {
     return res.json(data)
 })
 
-if (configuration.notifyWhenNewItemsFound) {
+if (configuration.notify.new) {
     api.log('info', 'Looking for new items...')
 }
 
-if (configuration.notifyWhenOnKeywordMatch) {
+if (configuration.notify.keywords) {
     api.log('info', 'Looking for items matching your keywords...')
 }
 
