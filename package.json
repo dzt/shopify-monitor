@@ -4,7 +4,8 @@
   "description": "",
   "main": "monitor.js",
   "scripts": {
-    "dev": "node monitor"
+    "dev": "node monitor",
+    "start": "node --expose_gc monitor.js"
   },
   "author": "Peter Soboyejo <thepcmrtim@gmail.com>",
   "license": "ISC",

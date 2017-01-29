@@ -30,7 +30,7 @@ Configure information inside the `config.example.json` be sure to rename it to `
 Run After Setup:
 
 ```sh
-$ node monitor.js
+$ npm start
 ```
 
 <a href="https://www.youtube.com/watch?v=oirJnCmtfQY&feature=youtu.be">Video Demo</a>
