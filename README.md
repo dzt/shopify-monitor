@@ -45,10 +45,12 @@ $ npm start
 - [x] Add Brands via main link.
 - [x] Better wiki/docs.
 - [ ] Web Interface to modify sites, keywords, etc. (config)
-- [ ] Garbage collection to prevent heap error after running the monitor over time.
+- [x] Garbage collection to prevent heap error after running the monitor over time.
 - [ ] Proxy Support
 - [ ] Price Comapre
 - [ ] Redis Storage for Cache
+
+
 ### What does this thing monitor?
 - Newly added items
 - Items that become Sold Out
