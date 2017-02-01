@@ -198,7 +198,12 @@ function seek() {
                         var parsedResult = JSON.parse(result)
                         var productToCompare = parsedResult.name.toLowerCase()
                         if (productToCompare.indexOf(configuration.keywords[x].toLowerCase()) > -1) {
+
                             var possibleMatch = _.where(matches, parsedResult)
+                            // TODO check for restock
+                            var possibleRestock = _.findWhere(matches, {name: parsedResult.name, brand: parsedResult.brand});
+                            
+
                             // checks if its already found that match before
                             if (possibleMatch.length === 0) {
                                 matches.push(parsedResult);
