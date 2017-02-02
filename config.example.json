@@ -5,8 +5,8 @@
     "noImageURL": "http://i.imgur.com/MdsG0Po.png",
     "notify": {
         "new": false,
-        "restocks": true,
-        "keywords": false
+        "restocks": false,
+        "keywords": true
     },
     "slackBot": {
         "active": false,
