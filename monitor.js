@@ -368,8 +368,6 @@ function seek() {
                     var soldoutItems = []
                 }
 
-                console.log('hi')
-
                 og = newbatch
                 newbatch = null
 
