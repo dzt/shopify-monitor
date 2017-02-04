@@ -47,7 +47,6 @@ $ npm start
 - [ ] Web Interface to modify sites, keywords, etc. (config)
 - [x] Garbage collection to prevent heap error after running the monitor over time.
 - [ ] Proxy Support
-- [ ] Price Comapre
 - [ ] Redis Storage for Cache
 
 
