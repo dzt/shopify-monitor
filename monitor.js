@@ -27,12 +27,16 @@ function scheduleGc() {
 // call this in the startup script of your app (once per process)
 scheduleGc();
 
-try {
-    var configuration = require('./config.json');
-} catch (e) {
-    api.log('error', 'Missing, config.json file or invalid json syntax.')
-    return process.exit()
+function loadFile() {
+    try {
+        var configuration = require('./config.json');
+    } catch (e) {
+        api.log('error', 'Missing, config.json file or invalid json syntax.')
+        return process.exit()
+    }
 }
+
+loadFile()
 
 const request = require('request').defaults({
     timeout: 30000
