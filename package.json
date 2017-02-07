@@ -8,7 +8,7 @@
     "start": "node --expose_gc monitor.js"
   },
   "author": "Peter Soboyejo <thepcmrtim@gmail.com>",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "async": "^2.1.4",
     "cheerio": "^0.22.0",
