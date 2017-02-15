@@ -7,18 +7,39 @@ const base64 = require('node-base64-image')
 const lib = require('./lib')
 const app = express()
 
-try {
-    var configuration = require('./config.json');
-} catch (e) {
-    api.log('error', 'Missing, config.json file or invalid json syntax.')
-    return process.exit()
+function scheduleGc() {
+    if (!global.gc) {
+        console.log('Garbage collection is not exposed');
+        return;
+    }
+
+    // schedule next gc within a random interval (e.g. 15-45 minutes)
+    // tweak this based on your app's memory usage
+    var nextMinutes = Math.random() * 30 + 15;
+
+    setTimeout(function() {
+        global.gc();
+        console.log('Manual gc', process.memoryUsage());
+        scheduleGc();
+    }, nextMinutes * 60 * 1000);
 }
+
+// call this in the startup script of your app (once per process)
+scheduleGc();
+
+    try {
+        var configuration = require('./config.json');
+    } catch (e) {
+        api.log('error', 'Missing, config.json file or invalid json syntax.')
+        return process.exit()
+    }
 
 const request = require('request').defaults({
     timeout: 30000
 })
 
 var og
+var pickupFirst = false
 
 var added = []
 var removed = []
@@ -76,11 +97,11 @@ app.post('/command/status', function(req, res) {
     return res.json(data)
 })
 
-if (configuration.notifyWhenNewItemsFound) {
+if (configuration.notify.new) {
     api.log('info', 'Looking for new items...')
 }
 
-if (configuration.notifyWhenOnKeywordMatch) {
+if (configuration.notify.keywords) {
     api.log('info', 'Looking for items matching your keywords...')
 }
 
@@ -125,6 +146,7 @@ if (configuration.twitter.active) {
 function getInitialData() {
     api.log('info', 'Getting initial data...')
     api.log('info', `Interval set for every ${configuration.interval}ms`)
+    var start = +new Date();
     api.getItems(configuration.sites, (response, err) => {
         if (err || response == null) {
             if (configuration.autoRetryOnCrash == true) {
@@ -136,6 +158,8 @@ function getInitialData() {
             }
         }
         og = response.productDetails
+        var end = +new Date();
+        api.log('success', `Time elapsed to gather inital data: ${end-start}ms`)
         return seek()
     })
 }
@@ -151,8 +175,8 @@ function seek() {
     var newbatch
 
     var interval = setInterval(function() {
+        var startSeek = +new Date();
         api.getItems(configuration.sites, (response, err) => {
-
             if (err || response == null) {
                 if (config.autoRetryOnCrash == true) {
                     api.log('error', 'Site Crashed, retrying...')
@@ -166,31 +190,83 @@ function seek() {
             newbatch = response.productDetails
 
             // this feature works 100%
-            if (configuration.notifyWhenOnKeywordMatch) {
+            if (configuration.notify.keywords) {
                 var x
                 for (x = 0; x < configuration.keywords.length; x++) {
                     // looks if keywords matches any of the results
                     var products = response.productDetails.map(function(result, i) {
                         var parsedResult = JSON.parse(result)
                         var productToCompare = parsedResult.name.toLowerCase()
-
                         if (productToCompare.indexOf(configuration.keywords[x].toLowerCase()) > -1) {
 
                             var possibleMatch = _.where(matches, parsedResult)
-                            // checks if its already found that match before
-                            if (possibleMatch.length === 0) {
-                                api.log('success', `Match Found:\nProduct Name: "${parsedResult.name}"\nLink: ${parsedResult.link}\n`)
-                                slackNotification(parsedResult, '#F48FB1', 'Keyword Match')
-                                matches.push(parsedResult);
-                            }
 
+                            // checks if its already found that match before and if not it pushes it to slack or whatever
+                            if (possibleMatch.length === 0) {
+
+                                var newMatch = parsedResult
+                                lib.getStockData(parsedResult.link, (res, err) => {
+                                    if (err) {
+                                        api.log('error', `Error occured while fetching stock data from ${parsedResult.link}`)
+                                    }
+                                    newMatch.stock = res.stock
+                                    matches.push(newMatch)
+                                })
+
+                                if (pickupFirst === false) {
+                                    // does nothing
+                                    //api.log('success', `Match Found:\nProduct Name: "${parsedResult.name}"\nLink: ${parsedResult.link}\n`)
+                                } else {
+                                    api.log('success', `Match Found:\nProduct Name: "${parsedResult.name}"\nLink: ${parsedResult.link}\n`)
+                                    slackNotification(parsedResult, '#F48FB1', 'Keyword Match')
+                                    twitterNotification(parsedResult, 'match')
+                                }
+                            } else {
+                                var possibleRestock = _.findWhere(matches, {
+                                    name: parsedResult.name,
+                                    brand: parsedResult.brand
+                                });
+
+                                if (possibleRestock === undefined) {
+                                    // do nothing
+                                } else {
+                                    // compare stock
+                                    if (possibleRestock.stock === 'Unavailable') {
+
+                                    } else {
+                                        if (possibleRestock.stock === 0) {
+                                            // find match stock
+                                            lib.getStockData(parsedResult.link, (res, err) => {
+                                                if (err) {
+                                                    api.log('error', `Error occured while fetching stock data from ${parsedResult.link}`)
+                                                }
+                                                if (Number.isInteger(res.stock)) {
+                                                    if (res.stock > 0) {
+
+                                                        var newRestock = parsedResult
+                                                        console.log('splicing')
+                                                        matches.splice(matches.indexOf(possibleRestock), 1);
+                                                        newRestock.stock = res.stock
+                                                        matches.push(newRestock)
+
+                                                        slackNotification(parsedResult, '#4FC3F7', 'Restock')
+                                                        twitterNotification(parsedResult, 'restock')
+                                                    }
+                                                }
+                                            })
+                                        }
+                                    }
+                                }
+
+                            }
                         }
                     })
                 }
+                pickupFirst = true
             }
 
             // this needs to be enhanced
-            if (configuration.notifyWhenNewItemsFound) {
+            if (configuration.notify.new || configuration.notify.restocks) {
 
                 var diff = jsdiff.diffArrays(og, newbatch);
 
@@ -268,7 +344,7 @@ function seek() {
                             if (item.length === 0) {
                                 removedItems.push(diffRemoved[i])
                                 // TODO: Bug Spot
-                                // console.log(`Item Removed from Store: ${parsedNew[i].name}`)
+                                //api.log('error', `Item Removed from Store: ${parsedNew[i].name}`)
                                 //slackNotification(parsedNew[i], '#ef5350', 'Removed Item from Store')
                                 checkCount = 0
                             }
@@ -293,10 +369,13 @@ function seek() {
                 }
 
                 og = newbatch
+                newbatch = null
 
             }
 
         })
+        // var endSeek = +new Date();
+        //api.log('success', `Interval completion time: ${endSeek-startSeek}ms`)
     }, configuration.interval);
 }
 
@@ -401,6 +480,14 @@ function twitterNotification(parsedResult, type) {
 
             if (type === 'new') {
                 var altText = `Added:\n${name}\n${price}\nStock Count: ${stock}\n${url}`
+            }
+
+            if (type === 'match') {
+                var altText = `${name}\n${price}\nStock Count: ${stock}\n${url}`
+            }
+
+            if (type === 'restock') {
+                var altText = `Restock:\n${name}\n${price}\nStock Count: ${stock}\n${url}`
             }
 
             if (configuration.twitter.encodeImages) {

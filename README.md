@@ -30,7 +30,7 @@ Configure information inside the `config.example.json` be sure to rename it to `
 Run After Setup:
 
 ```sh
-$ node monitor.js
+$ npm start
 ```
 
 <a href="https://www.youtube.com/watch?v=oirJnCmtfQY&feature=youtu.be">Video Demo</a>
@@ -45,6 +45,10 @@ $ node monitor.js
 - [x] Add Brands via main link.
 - [x] Better wiki/docs.
 - [ ] Web Interface to modify sites, keywords, etc. (config)
+- [x] Garbage collection to prevent heap error after running the monitor over time.
+- [ ] Proxy Support
+- [ ] Redis Storage for Cache
+
 
 ### What does this thing monitor?
 - Newly added items
