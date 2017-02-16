@@ -26,6 +26,8 @@ Configure information inside the `config.example.json` be sure to rename it to `
 
 <a href="https://github.com/dzt/shopify-monitor/wiki/Slack">Slack Configuration Guide</a>
 
+<a href="https://github.com/dzt/shopify-monitor/wiki/Slack">Deploying on a Linux Server</a>
+
 
 Run After Setup:
 
