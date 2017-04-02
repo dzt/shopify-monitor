@@ -8,7 +8,14 @@
     "start": "node --expose_gc monitor.js"
   },
   "author": "Peter Soboyejo <thepcmrtim@gmail.com>",
-  "license": "ISC",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/dzt/shopify-monitor.git"
+  },
+  "bugs": {
+    "url": "https://github.com/dzt/shopify-monitor/issues"
+  },
   "dependencies": {
     "async": "^2.1.4",
     "cheerio": "^0.22.0",

@@ -26,6 +26,8 @@ Configure information inside the `config.example.json` be sure to rename it to `
 
 <a href="https://github.com/dzt/shopify-monitor/wiki/Slack">Slack Configuration Guide</a>
 
+<a href="https://github.com/dzt/shopify-monitor/wiki/Slack">Deploying on a Linux Server</a>
+
 
 Run After Setup:
 
@@ -47,7 +49,6 @@ $ npm start
 - [ ] Web Interface to modify sites, keywords, etc. (config)
 - [x] Garbage collection to prevent heap error after running the monitor over time.
 - [ ] Proxy Support
-- [ ] Price Comapre
 - [ ] Redis Storage for Cache
 
 
