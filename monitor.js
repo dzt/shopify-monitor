@@ -401,7 +401,14 @@ function slackNotification(parsedResult, color, pretext) {
 
       var price = res.price
 
-      var links = res.links.join('\n')
+
+      var links;
+
+      if (Array.isArray(res.links)) {
+        links = res.links.join('\n');
+      } else {
+        links = 'Unavailable'
+      }
 
       var params = {
         username: "ShopifyMonitor",
