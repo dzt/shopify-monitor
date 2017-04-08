@@ -351,7 +351,8 @@ function seek() {
           if (checkCount === 0) {
             api.log('warning', 'No new updates found yet but still looking ヅ')
           }
-          checkCount++ var parsedOG = []
+          checkCount++;
+          var parsedOG = []
           var parsedNew = []
           var removed = []
           var newItems = []
