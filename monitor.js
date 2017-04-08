@@ -19,7 +19,7 @@ function scheduleGc() {
 
   setTimeout(function() {
     global.gc();
-    //console.log('Manual gc', process.memoryUsage());
+    console.log('Manual gc', process.memoryUsage());
     scheduleGc();
   }, nextMinutes * 60 * 1000);
 }
@@ -36,17 +36,14 @@ try {
   return process.exit()
 }
 
-// const db = require('knex')()();
-
 const request = require('request').defaults({timeout: 30000})
-const Dequeue = require('dequeue')
 
 var og
 var pickupFirst = false
 
-var added = new Dequeue()
-var removed = new Dequeue()
-var matches = new Dequeue()
+var added = []
+var removed = []
+var matches = []
 
 var a = configuration.keywords
 var ending = [
@@ -246,7 +243,7 @@ function seek() {
                           if (res.stock > 0) {
 
                             var newRestock = parsedResult
-                            //console.log('splicing')
+                            console.log('splicing')
                             matches.splice(matches.indexOf(possibleRestock), 1);
                             newRestock.stock = res.stock
                             matches.push(newRestock)
@@ -272,14 +269,14 @@ function seek() {
 
         var diff = jsdiff.diffArrays(og, newbatch);
 
-        var parsedOG = new Dequeue()
-        var parsedNew = new Dequeue()
-        var removed = new Dequeue()
+        var parsedOG = []
+        var parsedNew = []
+        var removed = []
 
-        var newItems = new Dequeue()
-        var restockedItems = new Dequeue()
-        var removedItems = new Dequeue()
-        var soldoutItems = new Dequeue()
+        var newItems = []
+        var restockedItems = []
+        var removedItems = []
+        var soldoutItems = []
 
         for (var i = 0; i < og.length; i++) {
           parsedOG.push(JSON.parse(og[i]))
@@ -293,7 +290,7 @@ function seek() {
 
           if (part.added) {
             var item
-            var diffAdded = new Dequeue()
+            var diffAdded = []
 
             for (var i = 0; i < part.value.length; i++) {
               diffAdded.push(JSON.parse(part.value[i]))
@@ -329,7 +326,7 @@ function seek() {
 
           } else if (part.removed) {
             removed.push(part.value)
-            var diffRemoved = new Dequeue()
+            var diffRemoved = []
             for (var i = 0; i < part.value.length; i++) {
               diffRemoved.push(JSON.parse(part.value[i]))
             }
@@ -354,14 +351,13 @@ function seek() {
           if (checkCount === 0) {
             api.log('warning', 'No new updates found yet but still looking ヅ')
           }
-          checkCount++;
-          var parsedOG = new Dequeue()
-          var parsedNew = new Dequeue()
-          var removed = new Dequeue()
-          var newItems = new Dequeue()
-          var restockedItems = new Dequeue()
-          var removedItems = new Dequeue()
-          var soldoutItems = new Dequeue()
+          checkCount++ var parsedOG = []
+          var parsedNew = []
+          var removed = []
+          var newItems = []
+          var restockedItems = []
+          var removedItems = []
+          var soldoutItems = []
         }
 
         og = newbatch
@@ -401,9 +397,7 @@ function slackNotification(parsedResult, color, pretext) {
 
       var price = res.price
 
-
       var links;
-
       if (Array.isArray(res.links)) {
         links = res.links.join('\n');
       } else {
