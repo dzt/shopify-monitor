@@ -50,7 +50,7 @@ $ npm start
 - [x] Garbage collection to prevent heap error after running the monitor over time.
 - [ ] Proxy Support
 - [ ] Redis Storage for Cache
-
+- [ ] Unique Panel to access stock data, graphs, etc.
 
 ### What does this thing monitor?
 - Newly added items
