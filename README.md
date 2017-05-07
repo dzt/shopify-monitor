@@ -1,7 +1,11 @@
+# I AM AWARE OF THE BUGS AND PLANNING ON FIXING THEM I HAVE A LIFE AND SCHOOL TO TAKE CARE OF SO BE PATIENT OR SOMEBODY SHOULD CONTRIBUTE FOR A CHANGE
+
 # shopify-monitor
 Monitor for Shopify based brands
 
 ![term](http://i.imgur.com/baiwk9f.png)
+
+
 
 ### Installation
 
