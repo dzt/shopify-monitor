@@ -127,7 +127,7 @@ function convertSecondsToMinutesAndSeconds(seconds) {
 
 if (configuration.slackBot.active) {
   const Bot = require('slackbots')
-  var slackBot = new Bot({name: 'Shopify Monitor', token: configuration.slackBot.token})
+  var slackBot = new Bot({name: configuration.slackBot.settings.username, token: configuration.slackBot.token})
   api.log('info', 'Slack Bot currently enabled.')
   slackBot.on('start', function() {
     slackBot.postMessageToChannel(configuration.slackBot.channel, 'Shopify Monitor currently active ◕‿◕', configuration.slackBot.settings);
