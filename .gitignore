@@ -1,5 +1,6 @@
 config.json
 proxies.txt
+monitor-database.sqlite3
 gs
 logs
 *.log
