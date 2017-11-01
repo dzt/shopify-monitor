@@ -130,7 +130,7 @@ events.on('restock', (data) => {
   slackNotification(res, '#4FC3F7', 'Restock', data.base)
 });
 
-slackNotification("https://shop-usa.palaceskateboards.com/products/at-pants-black", '#36a64f', 'Newly Added Item', "nigga");
+//slackNotification("https://shop-usa.palaceskateboards.com/products/at-pants-black", '#36a64f', 'Newly Added Item', "nigga");
 
 function slackNotification(url, color, pretext, base) {
     if (config.slackBot.active) {
@@ -139,7 +139,7 @@ function slackNotification(url, color, pretext, base) {
             if (err) {
                 log('error', `Error occured while fetching stock data from ${parsedResult.link}`)
             }
-            console.log('res: ' + JSON.stringify(res));
+            //console.log('res: ' + JSON.stringify(res));
             send(res)
         })
 
@@ -191,7 +191,10 @@ function slackNotification(url, color, pretext, base) {
                                 "short": "false"
                             }
                         ],
-                        "thumb_url": res.img
+                        "thumb_url": res.img,
+                        "footer": "Shopify Monitor",
+                        "ts": Math.floor(Date.now() / 1000),
+                        "footer_icon": "https://platform.slack-edge.com/img/default_application_icon.png"
                     }
                 ]
             }
