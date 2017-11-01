@@ -15,9 +15,7 @@ rl.on('line', function(line, lineCount, byteCount) {
   // do something with the line of text
   proxies.push(formatProxy(line));
 })
-.on('error', function(e) {
-  console.log('proxy read error');
-});
+.on('error', function(e) {});
 
 function formatProxy(str) {
   // TODO: format is ip:port:user:pass
