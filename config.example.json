@@ -1,20 +1,13 @@
 {
-    "interval": 60000,
-    "serverPort": 1337,
-    "autoRetryOnCrash": true,
-    "noImageURL": "http://i.imgur.com/MdsG0Po.png",
-    "notify": {
-        "new": false,
-        "restocks": false,
-        "keywords": true
-    },
+    "pollTimeMs": 30000,
+    "proxies": false,
     "slackBot": {
-        "active": false,
-        "token": "token goes here",
-        "channel": "monitor",
+        "active": true,
+        "token": "slack token here",
+        "channel": "shopify-monitor",
         "settings": {
-            "username": "ShopifyMonitor",
-            "icon_url": "http://i.imgur.com/zks3PoZ.png"
+            "username": "Monitor",
+            "icon_url": "https://i.imgur.com/E0BubGr.png"
         }
     },
     "twitter": {
@@ -25,20 +18,35 @@
         "access_token": "access token over here",
         "access_token_secret": "access token secret here"
     },
-    "sites": [
-        "https://shop-usa.palaceskateboards.com/sitemap_products_1.xml",
-        "http://kithnyc.com/sitemap_products_1.xml"
-    ],
-    "keywords": [
-        "nmd",
-        "ultraboost",
-        "yeezy"
-    ],
     "database": {
-      "client": "sqlite3",
-      "connection": {
-        "filename": "./database/db"
-      },
-      "useNullAsDefault": true
-    }
+        "client": "sqlite3",
+        "connection": {
+            "filename": "./monitor-database.sqlite3"
+        },
+        "useNullAsDefault": true
+    },
+    "sites": [
+        "fuckthepopulation.com",
+        "fuckingawesomestore.com",
+        "store.illegalcivilization.com",
+        "shop.dertbag.us",
+        "shop-usa.palaceskateboards.com",
+        "offthehook.ca",
+        "shop.extrabutterny.com",
+        "shop.bdgastore.com",
+        "commonwealth-ftgg.com",
+        "kith.com",
+        "sneakerpolitics.com",
+        "notre-shop.com",
+        "rockcitykicks.com",
+        "rsvpgallery.com",
+        "saintalfred.com",
+        "wishatl.com",
+        "xhibition.co",
+        "beatniconline.com",
+        "lapstoneandhammer.com",
+        "shop.exclucitylife.com",
+        "burnrubbersneakers.com",
+        "socialstatusupgh.com"
+    ]
 }

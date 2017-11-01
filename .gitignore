@@ -1,4 +1,5 @@
 config.json
+proxies.txt
 gs
 logs
 *.log
@@ -45,4 +46,3 @@ out
 
 # SQLite Stuff
 database
-

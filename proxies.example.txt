@@ -1,0 +1,8 @@
+Important: Each proxies must be defined line by line so clear all the text in this file and add them.
+When you do so rename this file to proxies.txt
+
+host:port:username:password
+
+or
+
+host:port
