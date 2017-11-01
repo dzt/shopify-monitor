@@ -24,8 +24,6 @@ Run After Setup:
 $ npm start
 ```
 
-<a href="https://www.youtube.com/watch?v=oirJnCmtfQY&feature=youtu.be">Video Demo</a>
-
 ## Todo List
 - [ ] Twitter.
 - [ ] Discord
