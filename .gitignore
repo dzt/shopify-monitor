@@ -44,6 +44,3 @@ out
 
 # macOS
 .DS_Store
-
-# SQLite Stuff
-database
