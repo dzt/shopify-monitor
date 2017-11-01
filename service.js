@@ -55,13 +55,14 @@ var init = function(og, siteName, firstRun) {
         method: 'get',
         url: url,
         proxy: proxy,
+        gzip: true,
         headers: {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3107.4 Safari/537.36'
         }
     }, (err, resp, body) => {
 
         if (err) {
-            log(chalk.bgBlack.red(`Connection Error @ ${siteName}, polling again in ${ 300000}ms`));
+            log(chalk.bgBlack.red(`Connection Error @ ${siteName}, polling again in ${config.pollTimeMs}ms`));
             if (firstRun) {
                 return finalizeCheck(false);
             } else {
@@ -74,7 +75,7 @@ var init = function(og, siteName, firstRun) {
 
             if (err) {
                 // TODO: Unable to Parse, then retry request
-                log(chalk.bgBlack.red(`Parsing Error @ ${siteName}, polling again in ${ 300000}ms`));
+                log(chalk.bgBlack.red(`Parsing Error @ ${siteName}, polling again in ${config.pollTimeMs}ms`));
                 if (firstRun) {
                     return finalizeCheck(false);
                 } else {
