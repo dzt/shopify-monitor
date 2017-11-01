@@ -72,12 +72,17 @@ var getStockData = function(url, callback) {
               var finalStock = totalStock
             }
 
+            var image = null;
+            if (jsonBodyProduct.product.image != null) {
+              image = jsonBodyProduct.product.image.src
+            }
+
             var data = {
                 title: jsonBodyProduct.product.title,
                 stock: finalStock,
                 status: status,
                 links: data,
-                img: jsonBodyProduct.product.images[0].src,
+                img: image,
                 price: '$' + jsonBodyProduct.product.variants[0].price
             }
 
