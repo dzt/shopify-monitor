@@ -122,12 +122,12 @@ events.on('initCheck', (data) => {});
 
 events.on('newItem', (data) => {
     console.log(`new item: \n ${JSON.stringify(data)}`);
-    slackNotification(res.url[0], '#36a64f', 'Newly Added Item', data.base)
+    slackNotification(data.url[0], '#36a64f', 'Newly Added Item', data.base)
 });
 
 events.on('restock', (data) => {
   console.log(`restock: \n ${JSON.stringify(data)}`);
-  slackNotification(res.url[0], '#4FC3F7', 'Restock', data.base)
+  slackNotification(data.url[0], '#4FC3F7', 'Restock', data.base)
 });
 
 //slackNotification("https://shop-usa.palaceskateboards.com/products/at-pants-black", '#36a64f', 'Newly Added Item', "nigga");
