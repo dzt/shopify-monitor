@@ -138,7 +138,6 @@ var init = function(og, siteName, firstRun) {
                     for (var i = 0; i < ret.length; i++) {
 
                         if (ret[i] == null) {
-                            console.log('new item')
                             // TODO: Check if its actually new item (seeing if it doessnt exist)
                             // by seeing SQLIte3 File for testing
                             events.emit('newItem', {

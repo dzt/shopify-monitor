@@ -126,8 +126,8 @@ events.on('newItem', (data) => {
         if (err) {
             log('error', `Error occured while fetching stock data from ${data.url}`)
         }
-        slackNotification(res, '#36a64f', 'Newly Added Item', data.base);
-        discordNotification(res, "Newly Added Item", data.base);
+        slackNotification(res.url[0], '#36a64f', 'Newly Added Item', data.base);
+        discordNotification(res.url[0], "Newly Added Item", data.base);
     })
 });
 
@@ -136,8 +136,8 @@ events.on('restock', (data) => {
       if (err) {
           log('error', `Error occured while fetching stock data from ${data.url}`)
       }
-      slackNotification(res, '#4FC3F7', 'Restock', data.base)
-      discordNotification(res, "Restock", data.base);
+      slackNotification(res.url[0], '#4FC3F7', 'Restock', data.base)
+      discordNotification(res.url[0], "Restock", data.base);
   })
 });
 
@@ -237,12 +237,12 @@ async function discordNotification(url, pretext, base) {
 
 function slackNotification(url, color, pretext, base) {
     if (config.slackBot.active) {
-
         var stockCount
         api.getStockData(url, (res, err) => {
             if (err) {
-                api.log('error', `Error occured while fetching stock data from ${parsedResult.link}`)
+                log('error', `Error occured while fetching stock data from ${parsedResult.link}`)
             }
+            //console.log('res: ' + JSON.stringify(res));
             send(res)
         })
 
@@ -294,7 +294,10 @@ function slackNotification(url, color, pretext, base) {
                                 "short": "false"
                             }
                         ],
-                        "thumb_url": res.img
+                        "thumb_url": res.img,
+                        "footer": "Shopify Monitor",
+                        "ts": Math.floor(Date.now() / 1000),
+                        "footer_icon": "https://platform.slack-edge.com/img/default_application_icon.png"
                     }
                 ]
             }
