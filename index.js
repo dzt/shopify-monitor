@@ -7,6 +7,7 @@ require('console-stamp')(console, {
     }
 });
 
+const request = require('request-promise');
 const async = require('async');
 const config = require('./config');
 const log = require('./utils/log');
@@ -125,7 +126,8 @@ events.on('newItem', (data) => {
         if (err) {
             log('error', `Error occured while fetching stock data from ${data.url}`)
         }
-        slackNotification(res, '#36a64f', 'Newly Added Item', data.base)
+        slackNotification(res, '#36a64f', 'Newly Added Item', data.base);
+        discordNotification(res, "Newly Added Item", data.base);
     })
 });
 
@@ -135,8 +137,103 @@ events.on('restock', (data) => {
           log('error', `Error occured while fetching stock data from ${data.url}`)
       }
       slackNotification(res, '#4FC3F7', 'Restock', data.base)
+      discordNotification(res, "Restock", data.base);
   })
 });
+
+// TODO: Flow type checking ?
+async function discordNotification(url, pretext, base) {
+    if (config.discord.active) {
+        var stockCount
+        api.getStockData(url, async (res, err) => {
+            if (err) {
+                api.log('error', `Error occured while fetching stock data from ${parsedResult.link}`)
+            }
+            await send(res);
+        });
+
+        async function send(res) {
+            if (isNaN(res.stock)) {
+                var stock = 'Unavailable'
+            } else {
+                var stock = res.stock
+            }
+
+            var price = res.price
+
+            var links;
+            if (Array.isArray(res.links)) {
+                links = res.links.join('\n');
+            } else {
+                links = 'Unavailable'
+            }
+
+            const embed = {
+                "title": res.title,
+                "url": url,
+                "color": 1609224, // green
+                "timestamp": "2017-11-01T15:05:47.276Z",
+                "footer": {
+                    "icon_url": "https://cdn.discordapp.com/embed/avatars/0.png",
+                    "text": "Shopify Monitor by dzt"
+                },
+                "thumbnail": {
+                    "url": res.img
+                },
+                "author": {
+                    "name": "Shopify Monitor",
+                    "url": "https://discordapp.com",
+                    "icon_url": "https://cdn.discordapp.com/embed/avatars/0.png"
+                },
+                "fields": [
+                    { "name": "Notification Type", "value": pretext, "inline": true },
+                    { "name": "Stock Count", "value": stock, "inline": true },
+                    { "name": "Brand", "value": base, "inline": true },
+                    { "name": "Price", "value": price, "inline": true }
+                ]
+            };
+
+            const message = {
+                embeds: [embed]
+            };
+
+            const opts = {
+                url: config.discord.webhook_url,
+                method: 'POST',
+                body: message,
+                json: true,
+                resolveWithFullResponse: true,
+                simple: false
+            }
+
+            try {
+                const response = await request(opts);
+
+                if ((/^2/.test('' + response.statusCode))) {
+                    // response was successful
+                    console.log('Sent webhook request successfully.');
+                }
+
+                if(repsonse.statusCode === 429) {
+                    console.log(`Discord ratelimit, sending in ${response.body.retry_after}ms`);
+                    setTimeout(async () => {
+                        return await send(res);
+                    }, response.body.retry_after);
+                }
+
+                console.log('Error sending webhook: ', e);
+                setTimeout(async () => {
+                    return await send(res);
+                }, 1500);
+            } catch (e) {
+                console.log('Error sending webhook: ', e);
+                setTimeout(async () => {
+                    return await send(res);
+                }, 1500);
+            }
+        }
+    }
+}
 
 function slackNotification(url, color, pretext, base) {
     if (config.slackBot.active) {
