@@ -72,7 +72,8 @@ var getStockData = function(url, callback) {
               var finalStock = totalStock
             }
 
-            var image = null;
+            var image = "https://i.imgur.com/FpYrCaS.png";
+
             if (jsonBodyProduct.product.image != null) {
               image = jsonBodyProduct.product.image.src
             }
