@@ -121,31 +121,25 @@ function init() {
 events.on('initCheck', (data) => {});
 
 events.on('newItem', (data) => {
-    api.getStockData(data.url, (res, err) => {
-        if (err) {
-            log('error', `Error occured while fetching stock data from ${data.url}`)
-        }
-        slackNotification(res, '#36a64f', 'Newly Added Item', data.base)
-    })
+    console.log(`new item: \n ${JSON.stringify(data)}`);
+    slackNotification(res, '#36a64f', 'Newly Added Item', data.base)
 });
 
 events.on('restock', (data) => {
-  api.getStockData(data.url, (res, err) => {
-      if (err) {
-          log('error', `Error occured while fetching stock data from ${data.url}`)
-      }
-      slackNotification(res, '#4FC3F7', 'Restock', data.base)
-  })
+  console.log(`restock: \n ${JSON.stringify(data)}`);
+  slackNotification(res, '#4FC3F7', 'Restock', data.base)
 });
+
+slackNotification("https://shop-usa.palaceskateboards.com/products/at-pants-black", '#36a64f', 'Newly Added Item', "nigga");
 
 function slackNotification(url, color, pretext, base) {
     if (config.slackBot.active) {
-
         var stockCount
         api.getStockData(url, (res, err) => {
             if (err) {
-                api.log('error', `Error occured while fetching stock data from ${parsedResult.link}`)
+                log('error', `Error occured while fetching stock data from ${parsedResult.link}`)
             }
+            console.log('res: ' + JSON.stringify(res));
             send(res)
         })
 
