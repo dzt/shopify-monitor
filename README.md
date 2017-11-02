@@ -5,6 +5,8 @@ Monitor for Shopify based brands
 
 shopify-monitor requires [Node.js (LTS Version)](http://nodejs.org/).
 
+![slack](https://i.imgur.com/34ziNVQ.png)
+
 Setup:
 
 ```sh
