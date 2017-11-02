@@ -86,7 +86,7 @@ var init = function(og, siteName, firstRun) {
                 return finalizeCheck(false);
             }
 
-            const products = result['urlset']['url'];
+            var products = result['urlset']['url'];
             productCount = products.length;
 
             if (productCount <= 1) {
@@ -128,7 +128,7 @@ var init = function(og, siteName, firstRun) {
                 }
 
                 Promise.all(queryPromises).then((ret) => {
-                    execPersistent(ret)
+                    execPersistent(ret);
                 }).catch((e) => {
                     console.log('err', e);
                 });
