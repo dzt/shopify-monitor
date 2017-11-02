@@ -86,7 +86,7 @@ var init = function(og, siteName, firstRun) {
                 return finalizeCheck(false);
             }
 
-            var products = result['urlset']['url'];
+            const products = result['urlset']['url'];
             productCount = products.length;
 
             if (productCount <= 1) {
@@ -120,7 +120,7 @@ var init = function(og, siteName, firstRun) {
             function persistentRun(products) {
                 for (var i = 0; i < products.length; i++) {
                     if (i != 0) {
-                        queryURLs.push(products[i].loc[0]);
+                        // TODO: if +1 doesnt work try -1
                         queryPromises.push(db('products').where({
                             productURL: products[i].loc[0]
                         }).first());
@@ -133,7 +133,11 @@ var init = function(og, siteName, firstRun) {
                     console.log('err', e);
                 });
 
+
                 function execPersistent(ret) {
+
+                  // console.log('products length: ' + products.length);
+                  // console.log('ret length: ' + ret.length);
 
                     var finalPromises = [];
 
@@ -145,14 +149,14 @@ var init = function(og, siteName, firstRun) {
                         if (ret[i] == null) {
 
                             events.emit('newItem', {
-                                url: products[i].loc,
+                                url: products[i+1].loc,
                                 base: og
                             });
 
                             finalPromises.push(db.table('products').insert({
                                 'site': og,
-                                'productURL': products[i].loc[0],
-                                'lastmod': products[i].lastmod[0]
+                                'productURL': products[i+1].loc[0],
+                                'lastmod': products[i+1].lastmod[0]
                             }));
 
                         } else {
