@@ -36,7 +36,7 @@ if (config.slackBot.active) {
     slackBot.postMessageToChannel(config.slackBot.channel, 'Shopify Monitor currently active ◕‿◕', config.slackBot.settings);
   })
   slackBot.on('error', function() {
-    log('error', 'An error occurred while connecting to Slack, please try again.')
+    log('An error occurred while connecting to Slack, please try again.', 'error');
     return process.exit()
   })
 }
@@ -137,7 +137,7 @@ function slackNotification(url, color, pretext, base) {
         var stockCount
         api.getStockData(url, (res, err) => {
             if (err) {
-                log('error', `Error occured while fetching stock data from ${parsedResult.link}`)
+                return log(`Error occured while fetching stock data from ${parsedResult.link}`, 'error');
             }
             //console.log('res: ' + JSON.stringify(res));
             send(res)
