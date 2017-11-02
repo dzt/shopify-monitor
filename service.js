@@ -135,28 +135,25 @@ var init = function(og, siteName, firstRun) {
 
                 function execPersistent(ret) {
 
+                    var finalPromises = [];
+
                     for (var i = 0; i < ret.length; i++) {
 
+                        // TODO: Check if its actually new item (seeing if it doessnt exist)
+                        // by seeing SQLIte3 File for testing
+
                         if (ret[i] == null) {
-                            // TODO: Check if its actually new item (seeing if it doessnt exist)
-                            // by seeing SQLIte3 File for testing
+
                             events.emit('newItem', {
                                 url: products[i].loc,
                                 base: og
                             });
 
-                            /*
-                            db.table('products').insert({
+                            finalPromises.push(db.table('products').insert({
                                 'site': og,
-                                'productURL': products[i].loc,
+                                'productURL': products[i].loc[0],
                                 'lastmod': products[i].lastmod[0]
-                            }).then((ret) => {
-                          		continue;
-                          	}).catch(function(error) {
-                              console.error(error);
-                              continue;
-                            })
-                            */
+                            }));
 
                         } else {
 
@@ -172,18 +169,25 @@ var init = function(og, siteName, firstRun) {
                                 });
 
                                 // TODO: Update Database with latest mod!!!!
-                                db('products').where({
+
+                                finalPromises.push(db('products').where({
                                     productURL: products[i].loc
                                 }).update({
                                     mod: products[i].lastmod
-                                })
+                                }));
 
                             }
 
                         }
 
                     }
-                    return finalizeCheck(true);
+
+                    Promise.all(finalPromises).then((ret) => {
+                        return finalizeCheck(true);
+                    }).catch((e) => {
+                        return finalizeCheck(true);
+                    });
+
                 }
 
 
