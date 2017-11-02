@@ -168,16 +168,16 @@ var init = function(og, siteName, firstRun) {
                             if (ret[i].productURL != compare.loc[0]) {
 
                                 events.emit('restock', {
-                                    url: products[i].loc,
+                                    url: products[i+1].loc,
                                     base: og
                                 });
 
                                 // TODO: Update Database with latest mod!!!!
 
                                 finalPromises.push(db('products').where({
-                                    productURL: products[i].loc
+                                    productURL: products[i+1].loc
                                 }).update({
-                                    mod: products[i].lastmod
+                                    mod: products[i+1].lastmod
                                 }));
 
                             }
