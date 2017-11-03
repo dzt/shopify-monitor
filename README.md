@@ -28,7 +28,7 @@ $ npm start
 
 ## Todo List
 - [ ] Twitter.
-- [ ] Discord
+- [x] Discord
 - [ ] Removed/Sold Out Items.
 - [ ] Better Docs
 
