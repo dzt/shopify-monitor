@@ -57,7 +57,8 @@ var getStockData = function(url, callback) {
             var data = []
             for (var i = 0; i < jsonBodyProduct.product.variants.length; i++) {
                 totalStock += jsonBodyProduct.product.variants[i].inventory_quantity
-                data.push('<' + url + '/cart/' + jsonBodyProduct.product.variants[i].id + ':1' + '|' + jsonBodyProduct.product.variants[i].option1 +'>')
+                const baseUrl = url.split('/products')[0] // remove the product path from url
+                data.push('<' + baseUrl + '/cart/' + jsonBodyProduct.product.variants[i].id + ':1' + '|' + jsonBodyProduct.product.variants[i].option1 +'>')
             }
 
             if (totalStock > 0) {
