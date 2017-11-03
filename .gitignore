@@ -6,6 +6,7 @@ gs
 logs
 *.log
 npm-debug.log*
+config.json
 
 # Runtime data
 pids
