@@ -13,6 +13,7 @@ const config = require('./config');
 const log = require('./utils/log');
 const chalk = require('chalk');
 const taskLib = require('./task');
+const fs = require('fs');
 const api = require('./utils/api')
 
 const db = require('knex')(config.database);
@@ -49,17 +50,17 @@ if (config.slackBot.active) {
 log(chalk.bgBlack.green('config.json file has been loaded'));
 
 if (config.proxies) {
-    var readline = require('linebyline'),
-        rl = readline('./proxies.txt');
-    rl.on('line', function(line, lineCount, byteCount) {
-        proxyCount++;
-        console.log(line);
-    }).on('error', function(e) {});
+  fs.readFile('./proxies.txt', function read(err, data) {
+    if (err) {
+        log(err)
+        throw err;
+    }
+    log(chalk.bgBlack.blueBright(`Proxies: ${data.toString().split(/\r\n|\r|\n/).length - 1}`));
+    log(chalk.bgBlack.blueBright(`Site Count: ${config["sites"].length}`));
+    log('------------------------------------------------');
+  });
 }
 
-log(chalk.bgBlack.blueBright(`Proxies: ${proxyCount}`));
-log(chalk.bgBlack.blueBright(`Site Count: ${config["sites"].length}`));
-log('------------------------------------------------');
 
 tranformConfig();
 
