@@ -121,7 +121,7 @@ var init = function(og, siteName, firstRun) {
             function persistentRun(products) {
                 for (var i = 0; i < products.length; i++) {
                     if (i != 0) {
-                        queryURLs.push(products[i].loc[0]);
+                        // TODO: if +1 doesnt work try -1
                         queryPromises.push(db('products').where({
                             productURL: products[i].loc[0]
                         }).first());
@@ -129,35 +129,33 @@ var init = function(og, siteName, firstRun) {
                 }
 
                 Promise.all(queryPromises).then((ret) => {
-                    execPersistent(ret)
+                    execPersistent(ret);
                 }).catch((e) => {
                     console.log('err', e);
                 });
 
+
                 function execPersistent(ret) {
+
+                    var finalPromises = [];
 
                     for (var i = 0; i < ret.length; i++) {
 
+                        // TODO: Check if its actually new item (seeing if it doessnt exist)
+                        // by seeing SQLIte3 File for testing
+
                         if (ret[i] == null) {
-                            // TODO: Check if its actually new item (seeing if it doessnt exist)
-                            // by seeing SQLIte3 File for testing
+
                             events.emit('newItem', {
-                                url: products[i].loc,
+                                url: products[i + 1].loc,
                                 base: og
                             });
 
-                            /*
-                            db.table('products').insert({
+                            finalPromises.push(db.table('products').insert({
                                 'site': og,
-                                'productURL': products[i].loc,
-                                'lastmod': products[i].lastmod[0]
-                            }).then((ret) => {
-                          		continue;
-                          	}).catch(function(error) {
-                              console.error(error);
-                              continue;
-                            })
-                            */
+                                'productURL': products[i + 1].loc[0],
+                                'lastmod': products[i + 1].lastmod[0]
+                            }));
 
                         } else {
 
@@ -168,23 +166,30 @@ var init = function(og, siteName, firstRun) {
                             if (ret[i].productURL != compare.loc[0]) {
 
                                 events.emit('restock', {
-                                    url: products[i].loc,
+                                    url: products[i + 1].loc,
                                     base: og
                                 });
 
                                 // TODO: Update Database with latest mod!!!!
-                                db('products').where({
-                                    productURL: products[i].loc
+
+                                finalPromises.push(db('products').where({
+                                    productURL: products[i + 1].loc
                                 }).update({
-                                    mod: products[i].lastmod
-                                })
+                                    mod: products[i + 1].lastmod
+                                }));
 
                             }
 
                         }
 
                     }
-                    return finalizeCheck(true);
+
+                    Promise.all(finalPromises).then((ret) => {
+                        return finalizeCheck(true);
+                    }).catch((e) => {
+                        return finalizeCheck(true);
+                    });
+
                 }
 
 

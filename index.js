@@ -37,7 +37,7 @@ if (config.slackBot.active) {
     slackBot.postMessageToChannel(config.slackBot.channel, 'Shopify Monitor currently active ◕‿◕', config.slackBot.settings);
   })
   slackBot.on('error', function() {
-    log('error', 'An error occurred while connecting to Slack, please try again.')
+    log('An error occurred while connecting to Slack, please try again.', 'error');
     return process.exit()
   })
 }
@@ -122,23 +122,15 @@ function init() {
 events.on('initCheck', (data) => {});
 
 events.on('newItem', (data) => {
-    api.getStockData(data.url, (res, err) => {
-        if (err) {
-            log('error', `Error occured while fetching stock data from ${data.url}`)
-        }
-        slackNotification(res.url[0], '#36a64f', 'Newly Added Item', data.base);
-        discordNotification(res.url[0], "Newly Added Item", data.base);
-    })
+    console.log(`new item: \n ${JSON.stringify(data)}`);
+    slackNotification(data.url[0], '#36a64f', 'Newly Added Item', data.base);
+    discordNotification(data.url[0], "Newly Added Item", data.base);
 });
 
 events.on('restock', (data) => {
-  api.getStockData(data.url, (res, err) => {
-      if (err) {
-          log('error', `Error occured while fetching stock data from ${data.url}`)
-      }
-      slackNotification(res.url[0], '#4FC3F7', 'Restock', data.base)
-      discordNotification(res.url[0], "Restock", data.base);
-  })
+  console.log(`restock: \n ${JSON.stringify(data)}`);
+  slackNotification(data.url[0], '#4FC3F7', "Restock", data.base);
+  discordNotification(data.url[0], "Restock", data.base);
 });
 
 // TODO: Flow type checking ?
@@ -240,7 +232,7 @@ function slackNotification(url, color, pretext, base) {
         var stockCount
         api.getStockData(url, (res, err) => {
             if (err) {
-                log('error', `Error occured while fetching stock data from ${parsedResult.link}`)
+                return log(`Error occured while fetching stock data from ${parsedResult.link}`, 'error');
             }
             //console.log('res: ' + JSON.stringify(res));
             send(res)
