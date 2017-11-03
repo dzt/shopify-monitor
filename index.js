@@ -156,7 +156,16 @@ async function discordNotification(url, pretext, base) {
 
             var links;
             if (Array.isArray(res.links)) {
-                links = res.links.join('\n');
+                const set = [];
+                for (let i = 0; i < res.links.length; i++) {
+                    const variant = res.links[i];
+                    let baseUrl = parsedResult.link;
+                    if(baseUrl.endsWith('/')) {
+                        baseUrl = baseUrl.substring(0, baseUrl.length - 1);
+                    }
+                    set.push(`[${variant.title}](${baseUrl}/cart/${variant.id}:1)`);
+                }
+                links = set.join('\n');
             } else {
                 links = 'Unavailable'
             }
@@ -197,6 +206,10 @@ async function discordNotification(url, pretext, base) {
                         "name": "Price",
                         "value": price,
                         "inline": true
+                    },
+                    {
+                        "name": "Links",
+                        
                     }
                 ]
             };
@@ -265,7 +278,16 @@ function slackNotification(url, color, pretext, base) {
 
             var links;
             if (Array.isArray(res.links)) {
-                links = res.links.join('\n');
+                const set = [];
+                for (let i = 0; i < res.links.length; i++) {
+                    const variant = res.links[i];
+                    let baseUrl = parsedResult.link;
+                    if(baseUrl.endsWith('/')) {
+                        baseUrl = baseUrl.substring(0, baseUrl.length - 1);
+                    }
+                    set.push(`<${baseUrl}/cart/${variant.id}:1|${variant.title}>`);
+                }
+                links = set.join('\n');
             } else {
                 links = 'Unavailable'
             }
