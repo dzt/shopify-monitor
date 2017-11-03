@@ -18,6 +18,7 @@ const api = require('./utils/api')
 const db = require('knex')(config.database);
 require('./database/db.js')(db);
 
+var proxyCount = 0;
 var events = require('./events');
 
 var proxies = [];
@@ -31,34 +32,34 @@ log('                Developed by dzt');
 log('------------------------------------------------');
 
 if (config.slackBot.active) {
-  const Bot = require('slackbots')
-  var slackBot = new Bot({name: config.slackBot.settings.username, token: config.slackBot.token})
-  slackBot.on('start', function() {
-    slackBot.postMessageToChannel(config.slackBot.channel, 'Shopify Monitor currently active ◕‿◕', config.slackBot.settings);
-  })
-  slackBot.on('error', function() {
-    log('An error occurred while connecting to Slack, please try again.', 'error');
-    return process.exit()
-  })
+    const Bot = require('slackbots')
+    var slackBot = new Bot({
+        name: config.slackBot.settings.username,
+        token: config.slackBot.token
+    })
+    slackBot.on('start', function() {
+        slackBot.postMessageToChannel(config.slackBot.channel, 'Shopify Monitor currently active ◕‿◕', config.slackBot.settings);
+    })
+    slackBot.on('error', function() {
+        log('An error occurred while connecting to Slack, please try again.', 'error');
+        return process.exit()
+    })
 }
 
 log(chalk.bgBlack.green('config.json file has been loaded'));
-
-var proxyCount = 0;
 
 if (config.proxies) {
     var readline = require('linebyline'),
         rl = readline('./proxies.txt');
     rl.on('line', function(line, lineCount, byteCount) {
         proxyCount++;
+        console.log(line);
     }).on('error', function(e) {});
 }
 
-setTimeout(function() {
-    log(chalk.bgBlack.blueBright(`Proxies: ${proxyCount}`));
-    log(chalk.bgBlack.blueBright(`Site Count: ${config["sites"].length}`));
-    log('------------------------------------------------');
-}, 500);
+log(chalk.bgBlack.blueBright(`Proxies: ${proxyCount}`));
+log(chalk.bgBlack.blueBright(`Site Count: ${config["sites"].length}`));
+log('------------------------------------------------');
 
 tranformConfig();
 
@@ -128,9 +129,9 @@ events.on('newItem', (data) => {
 });
 
 events.on('restock', (data) => {
-  console.log(`restock: \n ${JSON.stringify(data)}`);
-  slackNotification(data.url[0], '#4FC3F7', "Restock", data.base);
-  discordNotification(data.url[0], "Restock", data.base);
+    console.log(`restock: \n ${JSON.stringify(data)}`);
+    slackNotification(data.url[0], '#4FC3F7', "Restock", data.base);
+    discordNotification(data.url[0], "Restock", data.base);
 });
 
 // TODO: Flow type checking ?
@@ -177,11 +178,26 @@ async function discordNotification(url, pretext, base) {
                     "url": "https://discordapp.com",
                     "icon_url": "https://cdn.discordapp.com/embed/avatars/0.png"
                 },
-                "fields": [
-                    { "name": "Notification Type", "value": pretext, "inline": true },
-                    { "name": "Stock Count", "value": stock, "inline": true },
-                    { "name": "Brand", "value": base, "inline": true },
-                    { "name": "Price", "value": price, "inline": true }
+                "fields": [{
+                        "name": "Notification Type",
+                        "value": pretext,
+                        "inline": true
+                    },
+                    {
+                        "name": "Stock Count",
+                        "value": stock,
+                        "inline": true
+                    },
+                    {
+                        "name": "Brand",
+                        "value": base,
+                        "inline": true
+                    },
+                    {
+                        "name": "Price",
+                        "value": price,
+                        "inline": true
+                    }
                 ]
             };
 
@@ -206,7 +222,7 @@ async function discordNotification(url, pretext, base) {
                     console.log('Sent webhook request successfully.');
                 }
 
-                if(repsonse.statusCode === 429) {
+                if (repsonse.statusCode === 429) {
                     console.log(`Discord ratelimit, sending in ${response.body.retry_after}ms`);
                     setTimeout(async () => {
                         return await send(res);
@@ -257,41 +273,37 @@ function slackNotification(url, color, pretext, base) {
             var params = {
                 username: config.slackBot.settings.username,
                 icon_url: config.slackBot.settings.icon_url,
-                attachments: [
-                    {
-                        "fallback": `${res.title}`,
-                        "title": res.title,
-                        "title_link": url,
-                        "color": color,
-                        "fields": [
-                            {
-                                "title": "Stock Count",
-                                "value": stock,
-                                "short": "false"
-                            }, {
-                                "title": "Brand",
-                                "value": base,
-                                "short": "false"
-                            }, {
-                                "title": "Notification Type",
-                                "value": pretext,
-                                "short": "false"
-                            }, {
-                                "title": "Price",
-                                "value": price,
-                                "short": "false"
-                            }, {
-                                "title": "Add Cart Links 🚪",
-                                "value": links,
-                                "short": "false"
-                            }
-                        ],
-                        "thumb_url": res.img,
-                        "footer": "Shopify Monitor",
-                        "ts": Math.floor(Date.now() / 1000),
-                        "footer_icon": "https://platform.slack-edge.com/img/default_application_icon.png"
-                    }
-                ]
+                attachments: [{
+                    "fallback": `${res.title}`,
+                    "title": res.title,
+                    "title_link": url,
+                    "color": color,
+                    "fields": [{
+                        "title": "Stock Count",
+                        "value": stock,
+                        "short": "false"
+                    }, {
+                        "title": "Brand",
+                        "value": base,
+                        "short": "false"
+                    }, {
+                        "title": "Notification Type",
+                        "value": pretext,
+                        "short": "false"
+                    }, {
+                        "title": "Price",
+                        "value": price,
+                        "short": "false"
+                    }, {
+                        "title": "Add Cart Links 🚪",
+                        "value": links,
+                        "short": "false"
+                    }],
+                    "thumb_url": res.img,
+                    "footer": "Shopify Monitor",
+                    "ts": Math.floor(Date.now() / 1000),
+                    "footer_icon": "https://platform.slack-edge.com/img/default_application_icon.png"
+                }]
             }
             slackBot.postMessage(config.slackBot.channel, null, params);
         }
