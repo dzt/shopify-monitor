@@ -159,7 +159,7 @@ async function discordNotification(url, pretext, base) {
                 const set = [];
                 for (let i = 0; i < res.links.length; i++) {
                     const variant = res.links[i];
-                    let baseUrl = parsedResult.link;
+                    let baseUrl = url;
                     if(baseUrl.endsWith('/')) {
                         baseUrl = baseUrl.substring(0, baseUrl.length - 1);
                     }
@@ -209,7 +209,7 @@ async function discordNotification(url, pretext, base) {
                     },
                     {
                         "name": "Links",
-                        
+
                     }
                 ]
             };
@@ -281,7 +281,7 @@ function slackNotification(url, color, pretext, base) {
                 const set = [];
                 for (let i = 0; i < res.links.length; i++) {
                     const variant = res.links[i];
-                    let baseUrl = parsedResult.link;
+                    let baseUrl = url;
                     if(baseUrl.endsWith('/')) {
                         baseUrl = baseUrl.substring(0, baseUrl.length - 1);
                     }
