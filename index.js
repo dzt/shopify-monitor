@@ -157,12 +157,18 @@ async function discordNotification(url, pretext, base) {
 
             var links;
             if (Array.isArray(res.links)) {
-                links = res.links.join('\n');
+                const set = [];
+                for (let i = 0; i < res.links.length; i++) {
+                    const variant = res.links[i];
+                    let baseUrl = variant.baseUrl;
+                    set.push(`[${variant.title}](${baseUrl}/cart/${variant.id}:1)`);
+                }
+                links = set.join('\n');
             } else {
                 links = 'Unavailable'
             }
 
-            const embed = {
+            const embeds = [{
                 "title": res.title,
                 "url": url,
                 "color": 1609224, // green
@@ -198,13 +204,19 @@ async function discordNotification(url, pretext, base) {
                         "name": "Price",
                         "value": price,
                         "inline": true
+                    },
+                    {
+                        "name": "Links",
+                        "value": links
                     }
                 ]
-            };
+            }];
 
             const message = {
-                embeds: [embed]
+                embeds
             };
+
+            console.log(JSON.stringify(message));
 
             const opts = {
                 url: config.discord.webhook_url,
@@ -215,25 +227,27 @@ async function discordNotification(url, pretext, base) {
                 simple: false
             }
 
+            console.log('sending webhook');
+
             try {
                 const response = await request(opts);
+
+                console.log(response.statusCode);
 
                 if ((/^2/.test('' + response.statusCode))) {
                     // response was successful
                     console.log('Sent webhook request successfully.');
+                    return;
                 }
 
-                if (repsonse.statusCode === 429) {
+                if (response.statusCode === 429) {
                     console.log(`Discord ratelimit, sending in ${response.body.retry_after}ms`);
                     setTimeout(async () => {
                         return await send(res);
                     }, response.body.retry_after);
                 }
 
-                console.log('Error sending webhook: ', e);
-                setTimeout(async () => {
-                    return await send(res);
-                }, 1500);
+                console.log('Unable to send webhook: ', response.body);
             } catch (e) {
                 console.log('Error sending webhook: ', e);
                 setTimeout(async () => {
@@ -266,7 +280,13 @@ function slackNotification(url, color, pretext, base) {
 
             var links;
             if (Array.isArray(res.links)) {
-                links = res.links.join('\n');
+                const set = [];
+                for (let i = 0; i < res.links.length; i++) {
+                    const variant = res.links[i];
+                    let baseUrl = variant.baseUrl;
+                    set.push(`<${baseUrl}/cart/${variant.id}:1|${variant.title}>`);
+                }
+                links = set.join('\n');
             } else {
                 links = 'Unavailable'
             }
