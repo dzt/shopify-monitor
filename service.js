@@ -24,7 +24,6 @@ rl.on('line', function(line, lineCount, byteCount) {
     .on('error', function(e) {});
 
 function formatProxy(str) {
-    // TODO: format is ip:port:user:pass
     let data = str.split(':');
 
     if (data.length === 2) {
@@ -74,7 +73,6 @@ var init = function(og, siteName, firstRun) {
         const parsed = xml2js.parseString(body, (err, result) => {
 
             if (err) {
-                // TODO: Unable to Parse, then retry request
                 log(chalk.bgBlack.red(`Parsing Error @ ${siteName}, polling again in ${config.pollTimeMs}ms`));
                 if (firstRun) {
                     return finalizeCheck(false);
@@ -121,7 +119,6 @@ var init = function(og, siteName, firstRun) {
             function persistentRun(products) {
                 for (var i = 0; i < products.length; i++) {
                     if (i != 0) {
-                        // TODO: if +1 doesnt work try -1
                         queryPromises.push(db('products').where({
                             productURL: products[i].loc[0]
                         }).first());
@@ -141,8 +138,8 @@ var init = function(og, siteName, firstRun) {
 
                     for (var i = 0; i < ret.length; i++) {
 
-                        // TODO: Check if its actually new item (seeing if it doessnt exist)
-                        // by seeing SQLIte3 File for testing
+                        /* Check if its actually a new item (seeing if it doessnt exist in database)
+                        by seeing SQLIte3 File for testing */
 
                         if (ret[i] == null) {
 
