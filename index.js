@@ -114,6 +114,10 @@ function init() {
                 log(chalk.bgBlack.redBright('Slack Bot Enabled'));
             }
 
+            if (config.discord.active) {
+                log(chalk.bgBlack.cyanBright('Discord Bot Enabled'));
+            }
+
             log('------------------------------------------------');
 
         }
