@@ -206,7 +206,7 @@ async function discordNotification(url, pretext, base) {
                     },
                     {
                         "name": "Links",
-
+                        "value": links
                     }
                 ]
             }];
@@ -214,6 +214,8 @@ async function discordNotification(url, pretext, base) {
             const message = {
                 embeds
             };
+
+            console.log(JSON.stringify(message));
 
             const opts = {
                 url: config.discord.webhook_url,
