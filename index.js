@@ -238,11 +238,6 @@ async function discordNotification(url, pretext, base) {
                         return await send(res);
                     }, response.body.retry_after);
                 }
-
-                console.log('Error sending webhook: ', e);
-                setTimeout(async () => {
-                    return await send(res);
-                }, 1500);
             } catch (e) {
                 console.log('Error sending webhook: ', e);
                 setTimeout(async () => {
