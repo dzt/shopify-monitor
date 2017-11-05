@@ -53,7 +53,7 @@ if (config.proxies) {
         rl = readline('./proxies.txt');
     rl.on('line', function(line, lineCount, byteCount) {
         proxyCount++;
-        console.log(line);
+        // console.log(line);
     }).on('error', function(e) {});
 }
 
@@ -232,7 +232,7 @@ async function discordNotification(url, pretext, base) {
                     console.log('Sent webhook request successfully.');
                 }
 
-                if (repsonse.statusCode === 429) {
+                if (response.statusCode === 429) {
                     console.log(`Discord ratelimit, sending in ${response.body.retry_after}ms`);
                     setTimeout(async () => {
                         return await send(res);
