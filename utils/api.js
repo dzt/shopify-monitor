@@ -60,6 +60,7 @@ var getStockData = function(url, callback) {
                 const baseUrl = url.split('/products')[0] // remove the product path from url
 
                 const variantData = {
+                    baseUrl,
                     id: jsonBodyProduct.product.variants[i].id,
                     title: jsonBodyProduct.product.variants[i].option1
                 };
