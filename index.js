@@ -167,7 +167,7 @@ async function discordNotification(url, pretext, base) {
                 links = 'Unavailable'
             }
 
-            const embed = {
+            const embeds = [{
                 "title": res.title,
                 "url": url,
                 "color": 1609224, // green
@@ -209,10 +209,10 @@ async function discordNotification(url, pretext, base) {
 
                     }
                 ]
-            };
+            }];
 
             const message = {
-                embeds: [embed]
+                embeds
             };
 
             const opts = {
