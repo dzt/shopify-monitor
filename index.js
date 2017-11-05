@@ -224,6 +224,8 @@ async function discordNotification(url, pretext, base) {
                 simple: false
             }
 
+            console.log('sending webhook');
+
             try {
                 const response = await request(opts);
 
