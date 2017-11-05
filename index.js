@@ -229,9 +229,12 @@ async function discordNotification(url, pretext, base) {
             try {
                 const response = await request(opts);
 
+                console.log(response.statusCode);
+
                 if ((/^2/.test('' + response.statusCode))) {
                     // response was successful
                     console.log('Sent webhook request successfully.');
+                    return;
                 }
 
                 if (response.statusCode === 429) {
