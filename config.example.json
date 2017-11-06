@@ -27,6 +27,7 @@
         "connection": {
             "filename": "./monitor-database.sqlite3"
         },
+        "acquireConnectionTimeout": 600000,
         "useNullAsDefault": true
     },
     "sites": [
