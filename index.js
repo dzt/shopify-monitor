@@ -34,10 +34,7 @@ log('------------------------------------------------');
 
 if (config.slackBot.active) {
     const Bot = require('slackbots')
-    var slackBot = new Bot({
-        name: config.slackBot.settings.username,
-        token: config.slackBot.token
-    })
+    var slackBot = new Bot({name: config.slackBot.settings.username, token: config.slackBot.token})
     slackBot.on('start', function() {
         slackBot.postMessageToChannel(config.slackBot.channel, 'Shopify Monitor currently active ◕‿◕', config.slackBot.settings);
     })
@@ -50,17 +47,16 @@ if (config.slackBot.active) {
 log(chalk.bgBlack.green('config.json file has been loaded'));
 
 if (config.proxies) {
-  fs.readFile('./proxies.txt', function read(err, data) {
-    if (err) {
-        log(err)
-        throw err;
-    }
-    log(chalk.bgBlack.blueBright(`Proxies: ${data.toString().split(/\r\n|\r|\n/).length - 1}`));
-    log(chalk.bgBlack.blueBright(`Site Count: ${config["sites"].length}`));
-    log('------------------------------------------------');
-  });
+    fs.readFile('./proxies.txt', function read(err, data) {
+        if (err) {
+            log(err)
+            throw err;
+        }
+        log(chalk.bgBlack.blueBright(`Proxies: ${data.toString().split(/\r\n|\r|\n/).length - 1}`));
+        log(chalk.bgBlack.blueBright(`Site Count: ${config["sites"].length}`));
+        log('------------------------------------------------');
+    });
 }
-
 
 tranformConfig();
 
@@ -143,7 +139,7 @@ events.on('restock', (data) => {
 async function discordNotification(url, pretext, base) {
     if (config.discord.active) {
         var stockCount
-        api.getStockData(url, async (res, err) => {
+        api.getStockData(url, async(res, err) => {
             if (err) {
                 api.log('error', `Error occured while fetching stock data from ${parsedResult.link}`)
             }
@@ -172,55 +168,52 @@ async function discordNotification(url, pretext, base) {
                 links = 'Unavailable'
             }
 
-            const embeds = [{
-                "title": res.title,
-                "url": url,
-                "color": 1609224, // green
-                "timestamp": "2017-11-01T15:05:47.276Z",
-                "footer": {
-                    "icon_url": "https://cdn.discordapp.com/embed/avatars/0.png",
-                    "text": "Shopify Monitor by dzt"
-                },
-                "thumbnail": {
-                    "url": res.img
-                },
-                "author": {
-                    "name": "Shopify Monitor",
-                    "url": "https://discordapp.com",
-                    "icon_url": "https://cdn.discordapp.com/embed/avatars/0.png"
-                },
-                "fields": [{
-                        "name": "Notification Type",
-                        "value": pretext,
-                        "inline": true
+            const embeds = [
+                {
+                    "title": res.title,
+                    "url": url,
+                    "color": 1609224, // green
+                    "timestamp": new Date().toISOString(),
+                    "footer": {
+                        "icon_url": "https://cdn.discordapp.com/embed/avatars/0.png",
+                        "text": "Shopify Monitor by dzt"
                     },
-                    {
-                        "name": "Stock Count",
-                        "value": stock,
-                        "inline": true
+                    "thumbnail": {
+                        "url": res.img
                     },
-                    {
-                        "name": "Brand",
-                        "value": base,
-                        "inline": true
+                    "author": {
+                        "name": "Shopify Monitor",
+                        "url": "https://discordapp.com",
+                        "icon_url": "https://cdn.discordapp.com/embed/avatars/0.png"
                     },
-                    {
-                        "name": "Price",
-                        "value": price,
-                        "inline": true
-                    },
-                    {
-                        "name": "Links",
-                        "value": links
-                    }
-                ]
-            }];
+                    "fields": [
+                        {
+                            "name": "Notification Type",
+                            "value": pretext,
+                            "inline": true
+                        }, {
+                            "name": "Stock Count",
+                            "value": stock,
+                            "inline": true
+                        }, {
+                            "name": "Brand",
+                            "value": base,
+                            "inline": true
+                        }, {
+                            "name": "Price",
+                            "value": price,
+                            "inline": true
+                        }, {
+                            "name": "Links",
+                            "value": links
+                        }
+                    ]
+                }
+            ];
 
             const message = {
                 embeds
             };
-
-            console.log(JSON.stringify(message));
 
             const opts = {
                 url: config.discord.webhook_url,
@@ -231,30 +224,20 @@ async function discordNotification(url, pretext, base) {
                 simple: false
             }
 
-            console.log('sending webhook');
-
             try {
                 const response = await request(opts);
 
-                console.log(response.statusCode);
-
                 if ((/^2/.test('' + response.statusCode))) {
-                    // response was successful
-                    console.log('Sent webhook request successfully.');
                     return;
                 }
 
                 if (response.statusCode === 429) {
-                    console.log(`Discord ratelimit, sending in ${response.body.retry_after}ms`);
-                    setTimeout(async () => {
+                    setTimeout(async() => {
                         return await send(res);
                     }, response.body.retry_after);
                 }
-
-                console.log('Unable to send webhook: ', response.body);
             } catch (e) {
-                console.log('Error sending webhook: ', e);
-                setTimeout(async () => {
+                setTimeout(async() => {
                     return await send(res);
                 }, 1500);
             }
@@ -298,37 +281,41 @@ function slackNotification(url, color, pretext, base) {
             var params = {
                 username: config.slackBot.settings.username,
                 icon_url: config.slackBot.settings.icon_url,
-                attachments: [{
-                    "fallback": `${res.title}`,
-                    "title": res.title,
-                    "title_link": url,
-                    "color": color,
-                    "fields": [{
-                        "title": "Stock Count",
-                        "value": stock,
-                        "short": "false"
-                    }, {
-                        "title": "Brand",
-                        "value": base,
-                        "short": "false"
-                    }, {
-                        "title": "Notification Type",
-                        "value": pretext,
-                        "short": "false"
-                    }, {
-                        "title": "Price",
-                        "value": price,
-                        "short": "false"
-                    }, {
-                        "title": "Add Cart Links 🚪",
-                        "value": links,
-                        "short": "false"
-                    }],
-                    "thumb_url": res.img,
-                    "footer": "Shopify Monitor",
-                    "ts": Math.floor(Date.now() / 1000),
-                    "footer_icon": "https://platform.slack-edge.com/img/default_application_icon.png"
-                }]
+                attachments: [
+                    {
+                        "fallback": `${res.title}`,
+                        "title": res.title,
+                        "title_link": url,
+                        "color": color,
+                        "fields": [
+                            {
+                                "title": "Stock Count",
+                                "value": stock,
+                                "short": "false"
+                            }, {
+                                "title": "Brand",
+                                "value": base,
+                                "short": "false"
+                            }, {
+                                "title": "Notification Type",
+                                "value": pretext,
+                                "short": "false"
+                            }, {
+                                "title": "Price",
+                                "value": price,
+                                "short": "false"
+                            }, {
+                                "title": "Add Cart Links 🚪",
+                                "value": links,
+                                "short": "false"
+                            }
+                        ],
+                        "thumb_url": res.img,
+                        "footer": "Shopify Monitor",
+                        "ts": Math.floor(Date.now() / 1000),
+                        "footer_icon": "https://platform.slack-edge.com/img/default_application_icon.png"
+                    }
+                ]
             }
             slackBot.postMessage(config.slackBot.channel, null, params);
         }
