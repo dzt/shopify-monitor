@@ -38,7 +38,7 @@ function formatProxy(str) {
 
 function getProxy() {
     if (!config.proxies) return null;
-    proxies[Math.floor(Math.random() * proxies.length)]
+    return proxies[Math.floor(Math.random() * proxies.length)];
 }
 
 // TODO: Keywords
