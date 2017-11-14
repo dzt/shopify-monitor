@@ -40,8 +40,7 @@ $ npm start
 
 | [@dzt](https://github.com/dzt) | [@cameronb23](https://github.com/cameronb23) |
 |---|---|
-| [![](https://avatars1.githubusercontent.com/u/6421443?v=3&s=100)](https://github.com/dzt) |
-[![](https://avatars1.githubusercontent.com/u/7783071?v=3&s=100)](https://github.com/cameronb23) |
+| [![](https://avatars1.githubusercontent.com/u/6421443?v=3&s=100)](https://github.com/dzt) | [![](https://avatars1.githubusercontent.com/u/7783071?v=3&s=100)](https://github.com/cameronb23) |
 
 ### Some more screenshots to flex
 
