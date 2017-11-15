@@ -124,7 +124,16 @@ function init() {
 function matchKeywords(data) {
   // TODO: do :)
 
-  return true;
+  // check each keyword
+  for(let i = 0; i < config.keywords.list.length; i += 1) {
+    const kw = config.keywords.list[i].toLowerCase();
+
+    if (data.title.toLowerCase().includes(kw)) {
+      return true;
+    }
+  }
+
+  return false;
 }
 
 events.on('initCheck', (data) => {});
@@ -132,18 +141,14 @@ events.on('initCheck', (data) => {});
 events.on('newItem', (data) => {
     console.log(`new item: \n ${JSON.stringify(data)}`);
 
-    if (matchKeywords(data)) {
-      slackNotification(data.url[0], '#36a64f', 'Newly Added Item', data.base);
-      discordNotification(data.url[0], "Newly Added Item", data.base);
-    }
+    slackNotification(data.url[0], '#36a64f', 'Newly Added Item', data.base);
+    discordNotification(data.url[0], "Newly Added Item", data.base);
 });
 
 events.on('restock', (data) => {
     console.log(`restock: \n ${JSON.stringify(data)}`);
-    if (matchKeywords(data)) {
-      slackNotification(data.url[0], '#4FC3F7', "Restock", data.base);
-      discordNotification(data.url[0], "Restock", data.base);
-    }
+    slackNotification(data.url[0], '#4FC3F7', "Restock", data.base);
+    discordNotification(data.url[0], "Restock", data.base);
 });
 
 // TODO: Flow type checking ?
@@ -158,6 +163,10 @@ async function discordNotification(url, pretext, base) {
         });
 
         async function send(res) {
+            if (config.keywords.active && !matchKeywords(res)) {
+              return;
+            }
+
             if (isNaN(res.stock)) {
                 var stock = 'Unavailable'
             } else {
@@ -269,6 +278,10 @@ function slackNotification(url, color, pretext, base) {
         })
 
         function send(res) {
+            if (config.keywords.active && !matchKeywords(res)) {
+              return;
+            }
+
             if (isNaN(res.stock)) {
                 var stock = 'Unavailable'
             } else {

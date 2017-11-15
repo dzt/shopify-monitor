@@ -89,12 +89,15 @@ var getStockData = function(url, callback) {
 
             var data = {
                 title: jsonBodyProduct.product.title,
+                handle: jsonBodyProduct.product.handle,
                 stock: finalStock,
                 status: status,
                 links: data,
                 img: image,
                 price: '$' + jsonBodyProduct.product.variants[0].price
             }
+
+            console.log(data);
 
             return callback(data, null)
 
