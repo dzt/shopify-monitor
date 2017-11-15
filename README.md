@@ -26,6 +26,28 @@ Run After Setup:
 $ npm start
 ```
 
+## Configuration
+Most things in the configuration are self explanatory. However, with the newly added keywords feature, there _are_ some details to know.
+
+- Keywords are _only_ checked against titles.
+- There is no 'negative keyword' support at the moment.
+- Finally, it will STILL fetch the product details before checking keywords. Keep this in mind.
+
+To modify keywords, simply modify the `keywords` section of the configuration and set active to true. Then you can list your keywords as such:
+
+```json
+"keywords": {
+  "active": true,
+  "list": [
+    "adidas",
+    "yeezy",
+    "nmd"
+  ]
+}
+```
+
+More information on configuration will be added soon.
+
 ## Todo List
 - [ ] Twitter.
 - [x] Discord
