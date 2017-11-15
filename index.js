@@ -121,18 +121,29 @@ function init() {
 
 }
 
+function matchKeywords(data) {
+  // TODO: do :)
+
+  return true;
+}
+
 events.on('initCheck', (data) => {});
 
 events.on('newItem', (data) => {
     console.log(`new item: \n ${JSON.stringify(data)}`);
-    slackNotification(data.url[0], '#36a64f', 'Newly Added Item', data.base);
-    discordNotification(data.url[0], "Newly Added Item", data.base);
+
+    if (matchKeywords(data)) {
+      slackNotification(data.url[0], '#36a64f', 'Newly Added Item', data.base);
+      discordNotification(data.url[0], "Newly Added Item", data.base);
+    }
 });
 
 events.on('restock', (data) => {
     console.log(`restock: \n ${JSON.stringify(data)}`);
-    slackNotification(data.url[0], '#4FC3F7', "Restock", data.base);
-    discordNotification(data.url[0], "Restock", data.base);
+    if (matchKeywords(data)) {
+      slackNotification(data.url[0], '#4FC3F7', "Restock", data.base);
+      discordNotification(data.url[0], "Restock", data.base);
+    }
 });
 
 // TODO: Flow type checking ?
@@ -237,6 +248,7 @@ async function discordNotification(url, pretext, base) {
                     }, response.body.retry_after);
                 }
             } catch (e) {
+                console.log('Error sending notification. Retrying in 1.5s');
                 setTimeout(async() => {
                     return await send(res);
                 }, 1500);

@@ -30,6 +30,10 @@
         "acquireConnectionTimeout": 600000,
         "useNullAsDefault": true
     },
+    "keywords": {
+      "active": false,
+      "list": []
+    },
     "sites": [
         "fuckthepopulation.com",
         "fuckingawesomestore.com",
