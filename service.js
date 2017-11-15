@@ -86,6 +86,11 @@ var init = function(og, siteName, firstRun) {
             }
 
             const products = result['urlset']['url'];
+
+            if (products == undefined || products == null) {
+                return finalizeCheck(false);
+            }
+
             productCount = products.length;
 
             if (productCount <= 1) {
