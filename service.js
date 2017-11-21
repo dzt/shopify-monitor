@@ -70,9 +70,25 @@ var init = function(og, siteName, firstRun) {
             //console.log(err)
         }
 
+        if (body.includes('Try again in a couple minutes by refreshing the page.')) {
+            // soft banned
+            console.log(`Banned. Trying again in ${config.pollTimeMs}ms`);
+            return finalizeCheck(false);
+        }
+
         const parsed = xml2js.parseString(body, (err, result) => {
 
             if (err) {
+                const timeStamp = new Date().toISOString();
+
+                fs.writeFile(`./logs/${timeStamp}.err`, body, (err) => {
+                    if (err) {
+                        console.log('Error saving log to file.');
+                    } else {
+                        console.log(`Wrote response data to ./logs/${timeStamp}.err`);
+                    }
+                });
+
                 log(chalk.bgBlack.red(`Parsing Error @ ${siteName}, polling again in ${config.pollTimeMs}ms`));
                 if (firstRun) {
                     return finalizeCheck(false);
