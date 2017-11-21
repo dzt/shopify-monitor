@@ -15,31 +15,33 @@ var productCount = 0;
 
 var proxies = [];
 
-var readline = require('linebyline'),
-    rl = readline('./proxies.txt');
-rl.on('line', function(line, lineCount, byteCount) {
-        // do something with the line of text
-        proxies.push(formatProxy(line));
-    })
-    .on('error', function(e) {});
 
-function formatProxy(str) {
-    let data = str.split(':');
-
-    if (data.length === 2) {
-        return 'http://' + data[0] + ':' + data[1];
-    } else if (data.length === 4) {
-        return 'http://' + data[2] + ':' + data[3] + '@' + data[0] + ':' + data[1];
-    } else {
-        console.log('Unable to parse proxy');
-        return null;
-    }
+function formatProxy(proxy) {
+    if (proxy && ['localhost', ''].indexOf(proxy) < 0) {
+        proxy = proxy.replace(' ', '_');
+        const proxySplit = proxy.split(':');
+        if (proxySplit.length > 3)
+            return "http://" + proxySplit[2] + ":" + proxySplit[3] + "@" + proxySplit[0] + ":" + proxySplit[1];
+        else
+            return "http://" + proxySplit[0] + ":" + proxySplit[1];
+    } else
+        return undefined;
 }
 
 function getProxy() {
     if (!config.proxies) return null;
     return proxies[Math.floor(Math.random() * proxies.length)];
 }
+
+const proxyInput = fs.readFileSync('proxies.txt').toString().split('\n');
+const proxyList = [];
+for (let p = 0; p < proxyInput.length; p++) {
+    proxyInput[p] = proxyInput[p].replace('\r', '').replace('\n', '');
+    if (proxyInput[p] != '')
+        proxyList.push(proxyInput[p]);
+}
+
+console.log(proxyList);
 
 // TODO: Keywords
 
@@ -53,7 +55,7 @@ var init = function(og, siteName, firstRun) {
     request({
         method: 'get',
         url: url,
-        proxy: proxy,
+        proxy: formatProxy(proxyList[Math.floor(Math.random() * proxyList.length)]),
         gzip: true,
         headers: {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3107.4 Safari/537.36'
