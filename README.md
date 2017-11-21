@@ -64,16 +64,15 @@ More information on configuration will be added soon.
 |---|---|
 | [![](https://avatars1.githubusercontent.com/u/6421443?v=3&s=100)](https://github.com/dzt) | [![](https://avatars1.githubusercontent.com/u/7783071?v=3&s=100)](https://github.com/cameronb23) |
 
-### Some more screenshots to flex
-
-- Shout out to [@WashedEllis](https://twitter.com/WashedEllis) who plugged me with proxies for testing.
-
-
-### Troubleshooting
+## Troubleshooting
 There are a few common errors you may encounter that you have questions about. The most common include connection timeouts and parsing errors. Fixes and explanations for both of these errors are listed below.
 
 - Knex timeout error: [Fix](https://github.com/dzt/shopify-monitor/issues/72)
 - Parsing error: [Explanation](https://github.com/dzt/shopify-monitor/issues/82#issuecomment-343574150)
+
+### Some more screenshots to flex
+
+- Shout out to [@WashedEllis](https://twitter.com/WashedEllis) who plugged me with proxies for testing.
 
 ## License
 
