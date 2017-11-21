@@ -15,7 +15,7 @@ $ cd shopify-monitor
 $ npm install # "sudo npm install" if you're on macOS or Linux
 ```
 
-Configure information inside the `config.example.json` be sure to rename it to `config.json` when you're done. More information about configuring your monitor can be found <a href="https://github.com/dzt/shopify-monitor/wiki/Configuring-your-monitor">here</a>.
+Configure information inside the `config.example.json` but be sure to rename it to `config.json` when you're done. More information about configuring your monitor can be found <a href="https://github.com/dzt/shopify-monitor/wiki/Configuring-your-monitor">here</a>.
 
 If you end up getting a lot of errors in regards to SQL in the setup process run `sudo npm install sqlite3 --save` (macOS/Linux) or `npm install sqlite3 --save` on Windows.
 
@@ -67,6 +67,13 @@ More information on configuration will be added soon.
 ### Some more screenshots to flex
 
 - Shout out to [@WashedEllis](https://twitter.com/WashedEllis) who plugged me with proxies for testing.
+
+
+### Troubleshooting
+There are a few common errors you may encounter that you have questions about. The most common include connection timeouts and parsing errors. Fixes and explanations for both of these errors are listed below.
+
+- Knex timeout error: [Fix](https://github.com/dzt/shopify-monitor/issues/72)
+- Parsing error: [Explanation](https://github.com/dzt/shopify-monitor/issues/82#issuecomment-343574150)
 
 ## License
 
