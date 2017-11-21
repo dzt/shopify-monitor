@@ -1,0 +1,7 @@
+host:port:username:password
+
+or
+
+host:port
+
+line by line

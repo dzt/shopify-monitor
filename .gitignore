@@ -1,5 +1,4 @@
 config.json
-proxies.txt
 monitor-database.sqlite3
 monitor-database.sqlite3-journal
 gs
