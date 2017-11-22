@@ -81,9 +81,9 @@ var init = function(og, siteName, firstRun) {
         const parsed = xml2js.parseString(body, (err, result) => {
 
             if (err) {
-                const timeStamp = new Date().toISOString();
+                const timeStamp = new Date().toString();
 
-                fs.writeFile(`./logs/${timeStamp}.err`, body, (err) => {
+                fs.writeFile(`./logs/${og}_${timeStamp}.err`, body, (err) => {
                     if (err) {
                         console.log('Error saving log to file.');
                     } else {
