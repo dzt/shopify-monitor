@@ -1,6 +1,10 @@
 # shopify-monitor 2.0
 Monitor for Shopify based brands
 
+[YouTube Tutorial](https://youtu.be/QMDi6_u6wn4)
+
+[Community Discord Server](https://discord.gg/BkDxcjT)
+
 ### Installation
 
 shopify-monitor requires [Node.js (LTS Version)](http://nodejs.org/).
