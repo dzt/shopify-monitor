@@ -29,8 +29,11 @@ function formatProxy(proxy) {
 }
 
 function getProxy() {
-    if (!config.proxies) return null;
-    return proxies[Math.floor(Math.random() * proxies.length)];
+    if (!config.proxies) {
+        return null;
+    } else {
+        return proxies[Math.floor(Math.random() * proxies.length)];
+    }
 }
 
 const proxyInput = fs.readFileSync('proxies.txt').toString().split('\n');
@@ -40,8 +43,6 @@ for (let p = 0; p < proxyInput.length; p++) {
     if (proxyInput[p] != '')
         proxyList.push(proxyInput[p]);
 }
-
-console.log(proxyList);
 
 // TODO: Keywords
 
