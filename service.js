@@ -13,9 +13,6 @@ var events = require('./events');
 var checkCount = 0;
 var productCount = 0;
 
-var proxies = [];
-
-
 function formatProxy(proxy) {
     if (proxy && ['localhost', ''].indexOf(proxy) < 0) {
         proxy = proxy.replace(' ', '_');
@@ -32,7 +29,7 @@ function getProxy() {
     if (!config.proxies) {
         return null;
     } else {
-        return proxies[Math.floor(Math.random() * proxies.length)];
+        return proxyInput[Math.floor(Math.random() * proxyInput.length)];
     }
 }
 
