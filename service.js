@@ -13,6 +13,9 @@ var events = require('./events');
 var checkCount = 0;
 var productCount = 0;
 
+const proxyInput = fs.readFileSync('proxies.txt').toString().split('\n');
+const proxyList = [];
+
 function formatProxy(proxy) {
     if (proxy && ['localhost', ''].indexOf(proxy) < 0) {
         proxy = proxy.replace(' ', '_');
@@ -29,12 +32,10 @@ function getProxy() {
     if (!config.proxies) {
         return null;
     } else {
-        return proxyInput[Math.floor(Math.random() * proxyInput.length)];
+        return formatProxy(proxyInput[Math.floor(Math.random() * proxyInput.length)]);
     }
 }
 
-const proxyInput = fs.readFileSync('proxies.txt').toString().split('\n');
-const proxyList = [];
 for (let p = 0; p < proxyInput.length; p++) {
     proxyInput[p] = proxyInput[p].replace('\r', '').replace('\n', '');
     if (proxyInput[p] != '')
@@ -49,6 +50,8 @@ var init = function(og, siteName, firstRun) {
 
     const url = siteName + '/sitemap_products_1.xml';
     var proxy = getProxy();
+
+    console.log(`${url} - ${proxy}`);
 
     request({
         method: 'get',
@@ -72,7 +75,7 @@ var init = function(og, siteName, firstRun) {
 
         if (body.includes('Try again in a couple minutes by refreshing the page.')) {
             // soft banned
-            console.log(`Banned. Trying again in ${config.pollTimeMs}ms`);
+            console.log(`Banned. Trying again in ${config.pollTimeMs}ms - ${url}`);
             return finalizeCheck(false);
         }
 
