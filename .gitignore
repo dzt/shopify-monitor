@@ -1,4 +1,4 @@
-proxies.example.txt
+proxies.txt
 config.json
 monitor-database.sqlite3
 monitor-database.sqlite3-journal
