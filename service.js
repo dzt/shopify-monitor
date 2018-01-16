@@ -51,7 +51,7 @@ var init = function(og, siteName, firstRun) {
     const url = siteName + '/sitemap_products_1.xml';
     var proxy = getProxy();
 
-    console.log(`${url} - ${proxy}`);
+    //console.log(`${url} - ${proxy}`);
 
     request({
         method: 'get',
