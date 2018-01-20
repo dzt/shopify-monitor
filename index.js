@@ -66,6 +66,18 @@ function tranformConfig() {
         taskArr.push(config["sites"][i]);
     }
 
+
+    // Reset Database for Initial Run
+
+    // db('topChange').del().then((ret) => {
+    //     setTimeout(function() {
+    //
+    //     }, 500);
+    // }).catch((err) => {
+    //     return console.log('err', err);
+    // });
+
+
     db('products').del().then((ret) => {
         setTimeout(function() {
             init();

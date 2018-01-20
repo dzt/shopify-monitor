@@ -17,6 +17,7 @@ Setup:
 $ git clone https://github.com/dzt/shopify-monitor.git
 $ cd shopify-monitor
 $ npm install # "sudo npm install" if you're on macOS or Linux
+$ sudo npm install sqlite3 --save  # this command is essential only if you're on macOS
 $ npm install pm2 -g
 ```
 
