@@ -11,6 +11,7 @@ let init = function(db) {
 		table.increments()
 		table.string('site')
 		table.string('productURL')
+		table.string('productCount')
 	}).then(() => {})
 
 }
