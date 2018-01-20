@@ -12,8 +12,13 @@ var events = require('./events');
 
 var checkCount = 0;
 var productCount = 0;
+var initProductCount = 0;
 
-const proxyInput = fs.readFileSync('proxies.txt').toString().split('\n');
+var proxyInput = null;
+
+if (config.proxies) {
+    proxyInput = fs.readFileSync('proxies.txt').toString().split('\n');
+}
 const proxyList = [];
 
 function formatProxy(proxy) {
@@ -36,10 +41,12 @@ function getProxy() {
     }
 }
 
-for (let p = 0; p < proxyInput.length; p++) {
-    proxyInput[p] = proxyInput[p].replace('\r', '').replace('\n', '');
-    if (proxyInput[p] != '')
-        proxyList.push(proxyInput[p]);
+if (config.proxies) {
+    for (let p = 0; p < proxyInput.length; p++) {
+        proxyInput[p] = proxyInput[p].replace('\r', '').replace('\n', '');
+        if (proxyInput[p] != '')
+            proxyList.push(proxyInput[p]);
+    }
 }
 
 // TODO: Keywords
@@ -84,14 +91,6 @@ var init = function(og, siteName, firstRun) {
             if (err) {
                 const timeStamp = new Date().toString();
 
-                fs.writeFile(`./logs/${og}_${timeStamp}.err`, body, (err) => {
-                    if (err) {
-                        console.log('Error saving log to file.');
-                    } else {
-                        console.log(`Wrote response data to ./logs/${timeStamp}.err`);
-                    }
-                });
-
                 log(chalk.bgBlack.red(`Parsing Error @ ${siteName}, polling again in ${config.pollTimeMs}ms`));
                 if (firstRun) {
                     return finalizeCheck(false);
@@ -112,6 +111,16 @@ var init = function(og, siteName, firstRun) {
 
             productCount = products.length;
 
+            if (firstRun) {
+                console.log(`${siteName} / Items: ${products.length}`)
+            }
+
+            fs.writeFile(`logs/${og}.json`, JSON.stringify(products, null, 4), function(err) {
+                if (err) {
+                    console.error('Error Occured Saving Log File: ' + err);
+                }
+            });
+
             if (productCount <= 1) {
                 return finalizeCheck(true);
             }
@@ -120,6 +129,8 @@ var init = function(og, siteName, firstRun) {
             var queryURLs = [];
             var insertPromises = [];
             var updatePromises = [];
+
+            initProductCount = products.length;
 
             if (firstRun) {
                 for (var i = 0; i < products.length; i++) {
@@ -223,7 +234,7 @@ var init = function(og, siteName, firstRun) {
 
             if (successful) {
                 if (firstRun) {
-                    log(chalk.bgBlack.green(`Initial Check (Successful):  ${og}`));
+                    log(chalk.bgBlack.green(`Initial data added to database:  ${og}`));
                 }
                 return setTimeout(function() {
                     return init(og, siteName, false);

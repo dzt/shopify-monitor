@@ -8,6 +8,8 @@ logs
 npm-debug.log*
 config.json
 
+logs
+
 # Runtime data
 pids
 *.pid
