@@ -58,6 +58,12 @@ if (config.proxies) {
     });
 }
 
+var dir = './logs';
+
+if (!fs.existsSync(dir)){
+    fs.mkdirSync(dir);
+}
+
 tranformConfig();
 
 function tranformConfig() {
@@ -69,13 +75,13 @@ function tranformConfig() {
 
     // Reset Database for Initial Run
 
-    // db('topChange').del().then((ret) => {
-    //     setTimeout(function() {
-    //
-    //     }, 500);
-    // }).catch((err) => {
-    //     return console.log('err', err);
-    // });
+    db('topChange').del().then((ret) => {
+        setTimeout(function() {
+
+        }, 500);
+    }).catch((err) => {
+        return console.log('err', err);
+    });
 
 
     db('products').del().then((ret) => {
