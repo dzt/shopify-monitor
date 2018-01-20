@@ -171,7 +171,9 @@ var init = function(og, siteName, firstRun) {
 
                     var finalPromises = [];
 
-                    for (var i = 0; i < ret.length; i++) {
+                    // TODO: Check top item
+
+                    for (var i = 1; i < ret.length; i++) {
 
                         /* Check if its actually a new item (seeing if it doessnt exist in database)
                         by seeing SQLIte3 File for testing */
@@ -179,14 +181,14 @@ var init = function(og, siteName, firstRun) {
                         if (ret[i] == null) {
 
                             events.emit('newItem', {
-                                url: products[i + 1].loc,
+                                url: products[i].loc,
                                 base: og
                             });
 
                             finalPromises.push(db.table('products').insert({
                                 'site': og,
-                                'productURL': products[i + 1].loc[0],
-                                'lastmod': products[i + 1].lastmod[0]
+                                'productURL': products[1].loc[0],
+                                'lastmod': products[1].lastmod[0]
                             }));
 
                         } else {
@@ -198,16 +200,16 @@ var init = function(og, siteName, firstRun) {
                             if (ret[i].productURL != compare.loc[0]) {
 
                                 events.emit('restock', {
-                                    url: products[i + 1].loc,
+                                    url: products[i].loc,
                                     base: og
                                 });
 
                                 // TODO: Update Database with latest mod!!!!
 
                                 finalPromises.push(db('products').where({
-                                    productURL: products[i + 1].loc
+                                    productURL: products[i].loc
                                 }).update({
-                                    mod: products[i + 1].lastmod
+                                    mod: products[i].lastmod
                                 }));
 
                             }
