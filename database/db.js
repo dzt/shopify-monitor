@@ -7,6 +7,12 @@ let init = function(db) {
     table.string('lastmod')
 	}).then(() => {})
 
+	db.schema.createTableIfNotExists('topChange', function (table) {
+		table.increments()
+		table.string('site')
+		table.string('productURL')
+	}).then(() => {})
+
 }
 
 module.exports = init

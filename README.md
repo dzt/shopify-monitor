@@ -20,6 +20,8 @@ $ npm install # "sudo npm install" if you're on macOS or Linux
 $ npm install pm2 -g
 ```
 
+Create a folder called "logs" in your shopify-monitor directory.
+
 Configure information inside the `config.example.json` but be sure to rename it to `config.json` when you're done. More information about configuring your monitor can be found <a href="https://github.com/dzt/shopify-monitor/wiki/Configuring-your-monitor">here</a>.
 
 If you end up getting a lot of errors in regards to SQL in the setup process run `sudo npm install sqlite3 --save` (macOS/Linux) or `npm install sqlite3 --save` on Windows.
