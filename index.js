@@ -76,9 +76,7 @@ function tranformConfig() {
     // Reset Database for Initial Run
 
     db('topChange').del().then((ret) => {
-        setTimeout(function() {
-
-        }, 500);
+        setTimeout(function() {}, 500);
     }).catch((err) => {
         return console.log('err', err);
     });

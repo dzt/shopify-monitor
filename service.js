@@ -19,7 +19,9 @@ var proxyInput = null;
 if (config.proxies) {
     proxyInput = fs.readFileSync('proxies.txt').toString().split('\n');
 }
+
 const proxyList = [];
+var products = [];
 
 function formatProxy(proxy) {
     if (proxy && ['localhost', ''].indexOf(proxy) < 0) {
@@ -103,7 +105,7 @@ var init = function(og, siteName, firstRun) {
                 return finalizeCheck(false);
             }
 
-            const products = result['urlset']['url'];
+            products = result['urlset']['url'];
 
             if (products == undefined || products == null) {
                 return finalizeCheck(false);
@@ -133,6 +135,13 @@ var init = function(og, siteName, firstRun) {
             initProductCount = products.length;
 
             if (firstRun) {
+
+              insertPromises.push(db.table('topChange').insert({
+                  'site': og,
+                  'productURL': products[1].loc[0],
+                  'productCount': products.length
+              }));
+
                 for (var i = 0; i < products.length; i++) {
                     if (i != 0) {
                         insertPromises.push(db.table('products').insert({
@@ -148,32 +157,55 @@ var init = function(og, siteName, firstRun) {
                     console.log('err', e);
                 });
             } else {
-                persistentRun(products);
+
+                db('topChange').where({
+                  site: og
+                }).first().then(function(topChange) {
+                  persistentRun(topChange);
+                })
+                .catch(function(error) {
+                  console.error(error);
+                });
+
             }
 
-            function persistentRun(products) {
-                for (var i = 0; i < products.length; i++) {
-                    if (i != 0) {
-                        queryPromises.push(db('products').where({
-                            productURL: products[i].loc[0]
-                        }).first());
-                    }
-                }
+            function persistentRun(topChange) {
 
-                Promise.all(queryPromises).then((ret) => {
-                    execPersistent(ret);
-                }).catch((e) => {
-                    console.log('err', e);
-                });
+                // Changes mades
+                if (topChange.productURL != products[1].loc[0]) {
+                  console.log('Changes were made: ' + og);
+                  for (var i = 0; i < products.length; i++) {
+                      if (i != 0) {
+                          queryPromises.push(db('products').where({
+                              productURL: products[i].loc[0]
+                          }).first());
+                      }
+                  }
+
+                  // TODO: Change top item thing in event where it needs to query all items
+
+
+                  db('topChange').where('site', og).update({
+                    productURL: products[1].loc[0],
+                    productCount: products.length
+                  })
+
+                  Promise.all(queryPromises).then((ret) => {
+                      execPersistent(ret);
+                  }).catch((e) => {
+                      console.error(e);
+                  });
+                } else {
+                  // No changes made
+                  return finalizeCheck(true);
+                }
 
 
                 function execPersistent(ret) {
 
                     var finalPromises = [];
 
-                    // TODO: Check top item
-
-                    for (var i = 1; i < ret.length; i++) {
+                    for (var i = 0; i < ret.length; i++) {
 
                         /* Check if its actually a new item (seeing if it doessnt exist in database)
                         by seeing SQLIte3 File for testing */
@@ -181,31 +213,30 @@ var init = function(og, siteName, firstRun) {
                         if (ret[i] == null) {
 
                             events.emit('newItem', {
-                                url: products[i].loc,
+                                url: products[i+1].loc,
                                 base: og
                             });
 
                             finalPromises.push(db.table('products').insert({
                                 'site': og,
-                                'productURL': products[1].loc[0],
-                                'lastmod': products[1].lastmod[0]
+                                'productURL': products[i+1].loc[0],
+                                'lastmod': products[i+1].lastmod[0]
                             }));
 
                         } else {
 
                             var compare = products.find(function(o) {
-                                return o.loc[0] == [ret[i].productURL];
+                                return o.loc[0] == ret[i].productURL;
                             });
 
-                            if (ret[i].productURL != compare.loc[0]) {
+                            if (compare) {
 
                                 events.emit('restock', {
-                                    url: products[i].loc,
+                                    url: products[i+1].loc,
                                     base: og
                                 });
 
-                                // TODO: Update Database with latest mod!!!!
-
+                                // Update database with last modification
                                 finalPromises.push(db('products').where({
                                     productURL: products[i].loc
                                 }).update({
@@ -221,6 +252,8 @@ var init = function(og, siteName, firstRun) {
                     Promise.all(finalPromises).then((ret) => {
                         return finalizeCheck(true);
                     }).catch((e) => {
+                        console.error(e);
+                        finalPromises = [];
                         return finalizeCheck(true);
                     });
 
