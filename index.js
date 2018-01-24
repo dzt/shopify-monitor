@@ -155,7 +155,8 @@ function matchKeywords(data) {
 events.on('initCheck', (data) => {});
 
 events.on('newItem', (data) => {
-    console.log(`new item: \n ${JSON.stringify(data)}`);
+
+    console.log(`NEW ITEM: \n ${JSON.stringify(data)}`);
 
     slackNotification(data.url[0], '#36a64f', 'Newly Added Item', data.base);
     discordNotification(data.url[0], "Newly Added Item", data.base);

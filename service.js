@@ -221,29 +221,9 @@ var init = function(og, siteName, firstRun) {
                                 'lastmod': products[i].lastmod[0]
                             }));
 
-                        } else {
-
-                            var compare = products.find(function(o) {
-                                return o.loc[0] == ret[i].productURL;
-                            });
-
-                            if (compare) {
-
-                                events.emit('restock', {
-                                    url: products[i].loc,
-                                    base: og
-                                });
-
-                                // Update database with last modification
-                                finalPromises.push(db('products').where({
-                                    productURL: products[i].loc
-                                }).update({
-                                    mod: products[i].lastmod
-                                }));
-
-                            }
-
                         }
+
+                        // TODO: Check for Restocks
 
                     }
 
