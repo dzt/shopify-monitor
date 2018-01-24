@@ -171,6 +171,8 @@ var init = function(og, siteName, firstRun) {
             function persistentRun(topChange) {
 
                 // Changes mades
+                console.log(`${topChange.productURL} != ${products[0].loc[0]}`)
+
                 if (topChange.productURL != products[0].loc[0]) {
                   console.log('Changes were made: ' + og);
                   for (var i = 0; i < products.length; i++) {
@@ -211,7 +213,7 @@ var init = function(og, siteName, firstRun) {
                         if (ret[i] == null) {
 
                             events.emit('newItem', {
-                                url: products[i+1].loc,
+                                url: products[i].loc,
                                 base: og
                             });
 
