@@ -171,7 +171,6 @@ var init = function(og, siteName, firstRun) {
             function persistentRun(topChange) {
 
                 // Changes mades
-                console.log(`${topChange.productURL} != ${products[0].loc[0]}`)
 
                 if (topChange.productURL != products[0].loc[0]) {
                   console.log('Changes were made: ' + og);
