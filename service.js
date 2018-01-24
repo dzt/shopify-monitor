@@ -139,7 +139,7 @@ var init = function(og, siteName, firstRun) {
 
               insertPromises.push(db.table('topChange').insert({
                   'site': og,
-                  'productURL': products[1].loc[0],
+                  'productURL': products[0].loc[0],
                   'productCount': products.length
               }));
 
