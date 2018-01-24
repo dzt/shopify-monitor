@@ -111,6 +111,7 @@ var init = function(og, siteName, firstRun) {
                 return finalizeCheck(false);
             }
 
+            products.splice(0, 1)
             productCount = products.length;
 
             if (firstRun) {
@@ -143,13 +144,11 @@ var init = function(og, siteName, firstRun) {
               }));
 
                 for (var i = 0; i < products.length; i++) {
-                    if (i != 0) {
                         insertPromises.push(db.table('products').insert({
                             'site': og,
                             'productURL': products[i].loc[0],
                             'lastmod': products[i].lastmod[0]
                         }));
-                    }
                 }
                 Promise.all(insertPromises).then((ret) => {
                     return finalizeCheck(true);
@@ -172,21 +171,19 @@ var init = function(og, siteName, firstRun) {
             function persistentRun(topChange) {
 
                 // Changes mades
-                if (topChange.productURL != products[1].loc[0]) {
+                if (topChange.productURL != products[0].loc[0]) {
                   console.log('Changes were made: ' + og);
                   for (var i = 0; i < products.length; i++) {
-                      if (i != 0) {
                           queryPromises.push(db('products').where({
                               productURL: products[i].loc[0]
                           }).first());
-                      }
                   }
 
                   // TODO: Change top item thing in event where it needs to query all items
 
 
                   db('topChange').where('site', og).update({
-                    productURL: products[1].loc[0],
+                    productURL: products[0].loc[0],
                     productCount: products.length
                   })
 
@@ -195,6 +192,7 @@ var init = function(og, siteName, firstRun) {
                   }).catch((e) => {
                       console.error(e);
                   });
+
                 } else {
                   // No changes made
                   return finalizeCheck(true);
@@ -219,8 +217,8 @@ var init = function(og, siteName, firstRun) {
 
                             finalPromises.push(db.table('products').insert({
                                 'site': og,
-                                'productURL': products[i+1].loc[0],
-                                'lastmod': products[i+1].lastmod[0]
+                                'productURL': products[i].loc[0],
+                                'lastmod': products[i].lastmod[0]
                             }));
 
                         } else {
@@ -232,7 +230,7 @@ var init = function(og, siteName, firstRun) {
                             if (compare) {
 
                                 events.emit('restock', {
-                                    url: products[i+1].loc,
+                                    url: products[i].loc,
                                     base: og
                                 });
 
