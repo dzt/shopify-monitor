@@ -246,8 +246,6 @@ var init = function(og, siteName, firstRun) {
 
         function finalizeCheck(successful) {
 
-          log(chalk.bgBlack.green(`test:  ${og}`));
-
             if (successful) {
                 if (firstRun) {
                     log(chalk.bgBlack.green(`Initial data added to database:  ${og}`));
