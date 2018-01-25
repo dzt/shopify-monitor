@@ -139,7 +139,7 @@ var init = function(og, siteName, firstRun) {
 
               insertPromises.push(db.table('topChange').insert({
                   'site': og,
-                  'productURL': products[0].loc[0],
+                  'productURL': products[products.length - 1].loc[0],
                   'productCount': products.length
               }));
 
@@ -172,7 +172,7 @@ var init = function(og, siteName, firstRun) {
 
                 // Changes mades
 
-                if (topChange.productURL != products[0].loc[0]) {
+                if (topChange.productURL != products[products.length - 1].loc[0]) {
                   console.log('Changes were made: ' + og);
                   for (var i = 0; i < products.length; i++) {
                           queryPromises.push(db('products').where({
@@ -184,7 +184,7 @@ var init = function(og, siteName, firstRun) {
 
 
                   db('topChange').where('site', og).update({
-                    productURL: products[0].loc[0],
+                    productURL: products[products.length - 1].loc[0],
                     productCount: products.length
                   })
 
@@ -245,6 +245,8 @@ var init = function(og, siteName, firstRun) {
         });
 
         function finalizeCheck(successful) {
+
+          log(chalk.bgBlack.green(`test:  ${og}`));
 
             if (successful) {
                 if (firstRun) {

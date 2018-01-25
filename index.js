@@ -160,6 +160,7 @@ events.on('newItem', (data) => {
 
     slackNotification(data.url[0], '#36a64f', 'Newly Added Item', data.base);
     discordNotification(data.url[0], "Newly Added Item", data.base);
+    
 });
 
 events.on('restock', (data) => {
