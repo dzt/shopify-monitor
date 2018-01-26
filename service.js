@@ -163,46 +163,47 @@ var init = function(og, siteName, firstRun) {
                   persistentRun(topChange);
                 })
                 .catch(function(error) {
-                  console.error(error);
+                  console.error('topChange Error: ' + error);
                 });
 
             }
 
             function persistentRun(topChange) {
 
-                // Changes mades
-
-                if (topChange.productURL != products[products.length - 1].loc[0]) {
-
-                  console.log('Changes were made: ' + og);
-
-                  for (var i = 0; i < products.length; i++) {
-                          queryPromises.push(db('products').where({
-                              productURL: products[i].loc[0]
-                          }).first());
-                  }
-
-                  db('topChange').where({site: og}).update({
-                    productURL: products[products.length - 1].loc[0],
-                    productCount: products.length
-                  }).then(function(res) {
-                    console.log('Appending Changes');
-                  })
-                  .catch(function(error) {
-                    console.error(error);
-                  });
-
-                  Promise.all(queryPromises).then((ret) => {
-                      execPersistent(ret);
-                  }).catch((e) => {
-                      console.error(e);
-                  });
-
-                } else {
-                  // No changes made
+                if (topChange == undefined) {
                   return finalizeCheck(true);
-                }
+                } else {
+                  if (topChange.productURL != products[products.length - 1].loc[0]) {
 
+                    console.log('Changes were made: ' + og);
+
+                    for (var i = 0; i < products.length; i++) {
+                            queryPromises.push(db('products').where({
+                                productURL: products[i].loc[0]
+                            }).first());
+                    }
+
+                    db('topChange').where({site: og}).update({
+                      productURL: products[products.length - 1].loc[0],
+                      productCount: products.length
+                    }).then(function(res) {
+                      console.log('Appending Changes');
+                    })
+                    .catch(function(error) {
+                      console.error(error);
+                    });
+
+                    Promise.all(queryPromises).then((ret) => {
+                        execPersistent(ret);
+                    }).catch((e) => {
+                        console.error(e);
+                    });
+
+                  } else {
+                    // No changes made
+                    return finalizeCheck(true);
+                  }
+                }
 
                 function execPersistent(ret) {
 
