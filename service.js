@@ -173,20 +173,24 @@ var init = function(og, siteName, firstRun) {
                 // Changes mades
 
                 if (topChange.productURL != products[products.length - 1].loc[0]) {
+
                   console.log('Changes were made: ' + og);
+
                   for (var i = 0; i < products.length; i++) {
                           queryPromises.push(db('products').where({
                               productURL: products[i].loc[0]
                           }).first());
                   }
 
-                  // TODO: Change top item thing in event where it needs to query all items
-
-
-                  db('topChange').where('site', og).update({
+                  db('topChange').where({site: og}).update({
                     productURL: products[products.length - 1].loc[0],
                     productCount: products.length
+                  }).then(function(res) {
+                    console.log('Appending Changes');
                   })
+                  .catch(function(error) {
+                    console.error(error);
+                  });
 
                   Promise.all(queryPromises).then((ret) => {
                       execPersistent(ret);
