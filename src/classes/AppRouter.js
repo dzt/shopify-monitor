@@ -277,6 +277,22 @@ class AppRouter {
 			return res.redirect('/logs');
 		});
 
+		app.get('/store/delete/:id', (req, res, next) => {
+			Seller.findOneAndRemove({
+				_id: req.params.id
+			}, function(err) {
+				if (err) {
+					return res.json({
+						message: 'Seller not found',
+						error: true
+					})
+				} else {
+					global.stopTasks();
+					return res.redirect('/');
+				}
+			});
+		});
+
 	}
 
 }

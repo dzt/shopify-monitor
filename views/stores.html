@@ -95,7 +95,7 @@
         <div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
           <div class="d-flex justify-content-between align-items-center w-100">
             <strong class="text-gray-dark">{{ store.url }}</strong>
-            <a href="#">Edit</a>
+            <a href="/store/delete/{{ store._id }}" style="color: red;">Delete</a>
           </div>
             <span class="d-block">{{ store.lastItemCount }} Total Items Stored</span>
         </div>
