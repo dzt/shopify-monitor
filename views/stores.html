@@ -1,0 +1,118 @@
+{% include "partials/header.html" %}
+<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+   <span class="navbar-toggler-icon"></span>
+   </button>
+  <div class="collapse navbar-collapse" id="navbarCollapse">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item active">
+        <a class="nav-link" href="/stores">Stores</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/products">Products</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/logs">Logs</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/settings">Settings</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+<main role="main" class="container">
+
+  {% if needsRestart %}
+  <div class="d-flex align-items-center p-3 my-3 text-white-50 bg-purple rounded box-shadow" style="background-color: #efac0fcf;">
+    <a class="btn btn-sm btn btn-outline-light" href="/restart" style="margin-right: 20px;">Restart</a>
+    <div class="lh-100">
+      <h6 class="mb-0 text-white lh-100">Restart Required</h6>
+      <small>In order to apply changes on your tasks, you must restart.</small>
+    </div>
+  </div>
+  {% endif %}
+
+  <div class="d-flex align-items-center p-3 my-3 text-white-50 bg-purple rounded box-shadow" style="
+      background-color: #0fb9efcf;
+      ">
+    <a class="btn btn-sm btn btn-outline-light" href="#" data-toggle="modal" data-target="#addModal" style="margin-right: 20px;">Add Store</a>
+
+
+    <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <form action="/stores/add" method="post">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" style="color: black;">New Store</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+          </div>
+          <div class="modal-body">
+              <div class="form-group">
+                <label for="recipient-name" class="col-form-label" style="color: gray;">Store URL</label>
+                <input type="text" class="form-control" name="url" placeholder="Example: kith.com">
+              </div>
+              <div class="form-group">
+                <label for="recipient-name" class="col-form-label" style="color: gray;">Poll Time (ms)</label>
+                <input type="number" class="form-control" name="pollMS" placeholder="Example: 30000">
+              </div>
+
+
+              <div class="form-group">
+                <label for="message-text" class="col-form-label" style="color: gray;">Proxies (Optional)</label>
+                <textarea class="form-control" name="proxies" placeholder="ip:port&#10;ip:port:username:password" style="margin-top: 0px; margin-bottom: 0px; height: 92px;"></textarea>
+              </div>
+              <div class="form-group">
+                <label for="message-text" class="col-form-label" style="color: gray;">Keywords (Optional)</label>
+                <textarea class="form-control" name="keywords" placeholder="Yeezy&#10;Vans&#10;Jordan" style="margin-top: 0px; margin-bottom: 0px; height: 89px;"></textarea>
+              </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Add Store</button>
+          </div>
+        </div>
+      </div>
+      </form>
+    </div>
+
+
+    <div class="lh-100">
+      <h6 class="mb-0 text-white lh-100">Want to add something new?</h6>
+      <small>Monitor specific stores with desired keywords and options to maximize performance.</small>
+    </div>
+  </div>
+  <div class="my-3 p-3 bg-white rounded box-shadow">
+    <h6 class="border-bottom border-gray pb-2 mb-0">{{ count }}</h6>
+
+    {% for store in stores %}
+      <div class="media text-muted pt-3">
+        <div alt="32x32" class="mr-2 rounded" style="width: 32px; height: 32px; background-color: {{ store.color }};"></div>
+        <div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+          <div class="d-flex justify-content-between align-items-center w-100">
+            <strong class="text-gray-dark">{{ store.url }}</strong>
+            <a href="#">Edit</a>
+          </div>
+            <span class="d-block">{{ store.lastItemCount }} Total Items Stored</span>
+        </div>
+      </div>
+    {% endfor %}
+
+    <small class="d-block text-right mt-3">
+      </small>
+  </div>
+</main>
+<!-- Bootstrap core JavaScript
+   ================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script>
+  window.jQuery || document.write('<script src="../../../../assets/js/vendor/jquery-slim.min.js"><\/script>')
+</script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+{% include "partials/footer.html" %}

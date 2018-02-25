@@ -1,0 +1,95 @@
+{% include "partials/header.html" %}
+<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+   <span class="navbar-toggler-icon"></span>
+   </button>
+  <div class="collapse navbar-collapse" id="navbarCollapse">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/stores">Stores</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/products">Products</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/logs">Logs</a>
+      </li>
+      <li class="nav-item active">
+        <a class="nav-link" href="/settings">Settings</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+<div class="container" style="padding-top: 30px;">
+   <div class="row">
+      <div class="col-md-12 order-md-1">
+         <h4 class="mb-3">Discord</h4>
+         <form action="/settings/update" method="post">
+            <div class="row">
+               <div class="col-md-12 mb-3">
+                  <label for="firstName">Webhook URL</label>
+                  <input type="text" class="form-control" name="webhook_url" placeholder="" value="{{settings.discord.webhook_url}}">
+                  <a href="/settings/discord/test" style="margin-top: 30px; float: right;">Test Webhook</a>
+               </div>
+            </div>
+            <hr class="mb-4">
+            <h4 class="mb-3">Slack (Broken)</h4>
+            <div class="row">
+               <div class="col-md-12 mb-3">
+                  <div class="row">
+                     <div class="col-md-6 mb-3">
+                        <label for="firstName">Token</label>
+                        <input type="text" class="form-control" name="token" placeholder="" value="{{settings.slackBot.token}}">
+                     </div>
+                     <div class="col-md-6 mb-3">
+                        <label for="lastName">Channel Name</label>
+                        <input type="text" class="form-control" name="channel" placeholder="general" value="{{settings.slackBot.channel}}">
+                     </div>
+                  </div>
+                  <div class="row">
+                     <div class="col-md-6 mb-3">
+                        <label for="firstName">Bot Username</label>
+                        <input type="text" class="form-control" name="username" placeholder="Joe's Shopify Bot" value="{{settings.slackBot.settings.username}}">
+                     </div>
+                     <div class="col-md-6 mb-3">
+                        <label for="lastName">Bot Icon URL</label>
+                        <input type="text" class="form-control" name="icon_url" value="{{settings.slackBot.settings.icon_url}}" placeholder="https://i.imgur.com/E0BubGr.png">
+                     </div>
+                  </div>
+               </div>
+            </div>
+
+            <hr class="mb-4">
+
+            <div class="custom-control custom-checkbox">
+               <input type="checkbox" class="custom-control-input" name="discordActive" id="discordActive" {{settings.discord.active}}>
+               <label class="custom-control-label" for="discordActive">Discord</label>
+            </div>
+            <div class="custom-control custom-checkbox">
+               <input type="checkbox" class="custom-control-input" name="slackBotActive" id="slackBotActive" {{settings.slackBot.active}}>
+               <label class="custom-control-label" name="slackBotActive" for="slackBotActive">Slack</label>
+            </div>
+
+
+            <hr class="mb-4">
+
+            <input name="port" type="hidden" value="{{settings.port}}" />
+            <input name="mongodb_uri" type="hidden" value="{{settings.mongodb_uri}}" />
+
+            <button class="btn btn-primary btn-lg btn-block" type="submit">Save Changes</button>
+         </form>
+      </div>
+   </div>
+</div>
+<!-- Bootstrap core JavaScript
+   ================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script>
+  window.jQuery || document.write('<script src="../../../../assets/js/vendor/jquery-slim.min.js"><\/script>')
+</script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+{% include "partials/footer.html" %}

@@ -1,9 +1,0 @@
-rename this file to proxies.txt
-
-host:port:username:password
-
-or
-
-host:port
-
-line by line

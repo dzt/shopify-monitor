@@ -1,7 +1,5 @@
-# shopify-monitor 2.0
+# shopify-monitor v3
 Monitor for Shopify based brands
-
-[YouTube Tutorial](https://youtu.be/QMDi6_u6wn4)
 
 [Community Discord Server](https://discord.gg/BkDxcjT)
 
@@ -9,76 +7,36 @@ Monitor for Shopify based brands
 
 shopify-monitor requires [Node.js (LTS Version)](http://nodejs.org/).
 
-![slack](https://i.imgur.com/34ziNVQ.png)
+![webapp](https://i.imgur.com/ZTGlrfq.png)
 
 Setup:
 
 ```sh
-$ git clone https://github.com/dzt/shopify-monitor.git
-$ cd shopify-monitor
-$ npm install # "sudo npm install" if you're on macOS or Linux
-$ sudo npm install sqlite3 --save  # this command is essential only if you're on macOS
-$ npm install pm2 -g
+git clone https://github.com/dzt/shopify-monitor.git
+cd shopify-monitor
+npm install # "sudo npm install" if you're on macOS or Linux
 ```
 
-Configure information inside the `config.example.json` but be sure to rename it to `config.json` when you're done. More information about configuring your monitor can be found <a href="https://github.com/dzt/shopify-monitor/wiki/Configuring-your-monitor">here</a>.
-
-If you end up getting a lot of errors in regards to SQL in the setup process run `sudo npm install sqlite3 --save` (macOS/Linux) or `npm install sqlite3 --save` on Windows.
-
+Configure information inside the `config.example.json` but be sure to rename it to `config.json` when you're done. Be sure to ONLY modify `port` and `mongodb_uri` fields.
 
 Run After Setup:
 
 ```sh
-$ pm2 start app.js --name "shopify-monitor"
-```
-
-## Configuration
-Most things in the configuration are self explanatory. However, with the newly added keywords feature, there _are_ some details to know.
-
-- Keywords are _only_ checked against titles.
-- There is no 'negative keyword' support at the moment.
-- Finally, it will STILL fetch the product details before checking keywords. Keep this in mind.
-
-To modify keywords, simply modify the `keywords` section of the configuration and set active to true. Then you can list your keywords as such:
-
-```json
-"keywords": {
-  "active": true,
-  "list": [
-    "adidas",
-    "yeezy",
-    "nmd"
-  ]
-}
+node server.js
 ```
 
 More information on configuration will be added soon.
 
 ## Todo List
-- [ ] Twitter.
-- [x] Discord
-- [ ] Removed/Sold Out Items.
-- [ ] Better Docs
-
-### What does this thing monitor?
-- Newly added items
-- Restocks
-
-## Core Team
-
-| [@dzt](https://github.com/dzt) | [@cameronb23](https://github.com/cameronb23) |
-|---|---|
-| [![](https://avatars1.githubusercontent.com/u/6421443?v=3&s=100)](https://github.com/dzt) | [![](https://avatars1.githubusercontent.com/u/7783071?v=3&s=100)](https://github.com/cameronb23) |
-
-## Troubleshooting
-There are a few common errors you may encounter that you have questions about. The most common include connection timeouts and parsing errors. Fixes and explanations for both of these errors are listed below.
-
-- Knex timeout error: [Fix](https://github.com/dzt/shopify-monitor/issues/72)
-- Parsing error: [Explanation](https://github.com/dzt/shopify-monitor/issues/82#issuecomment-343574150)
+- [ ] Products Search Page.
+- [ ] Slack
+- [ ] Edit Tasks
 
 ### Some more screenshots to flex
 
-- Shout out to [@WashedEllis](https://twitter.com/WashedEllis) who plugged me with proxies for testing.
+![1](https://i.imgur.com/WbOxrBO.png)
+![2](https://i.imgur.com/IUSU8b8.png)
+![3](https://i.imgur.com/SVEh07S.png)
 
 ## License
 

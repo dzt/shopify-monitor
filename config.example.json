@@ -1,61 +1,17 @@
 {
-    "pollTimeMs": 300000,
-    "proxies": false,
+    "port": 3000,
+    "mongodb_uri": "mongodb://127.0.0.1:27017",
     "slackBot": {
         "active": false,
-        "token": "slack token here",
-        "channel": "shopify-monitor",
+        "token": "",
+        "channel": "",
         "settings": {
-            "username": "Monitor",
-            "icon_url": "https://i.imgur.com/E0BubGr.png"
+            "username": "",
+            "icon_url": ""
         }
     },
     "discord": {
-      "active": true,
-      "webhook_url": "xxxx"
-    },
-    "twitter": {
         "active": false,
-        "encodeImages": false,
-        "consumer_key": "consumer key goes here",
-        "consumer_secret": "consumer secret goes here",
-        "access_token": "access token over here",
-        "access_token_secret": "access token secret here"
-    },
-    "database": {
-        "client": "sqlite3",
-        "connection": {
-            "filename": "./monitor-database.sqlite3"
-        },
-        "acquireConnectionTimeout": 600000,
-        "useNullAsDefault": true
-    },
-    "keywords": {
-      "active": false,
-      "list": []
-    },
-    "sites": [
-        "fuckthepopulation.com",
-        "fuckingawesomestore.com",
-        "store.illegalcivilization.com",
-        "shop.dertbag.us",
-        "shop-usa.palaceskateboards.com",
-        "offthehook.ca",
-        "shop.extrabutterny.com",
-        "shop.bdgastore.com",
-        "commonwealth-ftgg.com",
-        "kith.com",
-        "sneakerpolitics.com",
-        "notre-shop.com",
-        "rockcitykicks.com",
-        "rsvpgallery.com",
-        "saintalfred.com",
-        "wishatl.com",
-        "xhibition.co",
-        "beatniconline.com",
-        "lapstoneandhammer.com",
-        "shop.exclucitylife.com",
-        "burnrubbersneakers.com",
-        "socialstatuspgh.com"
-    ]
+        "webhook_url": ""
+    }
 }
