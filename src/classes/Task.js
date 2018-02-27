@@ -8,6 +8,7 @@ const Seller = require('../models/Seller');
 const Product = require('../models/Product');
 const NewProduct = require('../models/NewProduct');
 const moment = require('moment');
+const _ = require('lodash');
 
 class Task {
 
@@ -71,15 +72,19 @@ class Task {
 						this.log('Initial Check Done');
 
 					} else {
+
+						//console.log(`stringify (${this.url}): ` + JSON.stringify(products));
+
 						Seller.findOne({
 							url: this.url
 						}, (err, sellerQuery) => {
 
 							let lastItemCompare;
+
 							if (products.length == 0) {
 								lastItemCompare = null;
 							} else {
-								lastItemCompare = products[products.length - 1].loc[0];
+								lastItemCompare = _.last(products).loc[0];
 							}
 
 							/* Check if any new items were added */
