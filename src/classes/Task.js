@@ -45,7 +45,6 @@ class Task {
 					}
 
 					if (err == 'Temp Ban Occured.') {
-						this.log('Temp Ban Occured.')
 						this.restart();
 					}
 
@@ -78,6 +77,10 @@ class Task {
 						Seller.findOne({
 							url: this.url
 						}, (err, sellerQuery) => {
+
+							if (err) {
+								this.log('Query Error - ' + err);
+							}
 
 							let lastItemCompare;
 
@@ -186,7 +189,7 @@ class Task {
 
 		}, this.poll);
 
-		//f();
+		f();
 
 	}
 
