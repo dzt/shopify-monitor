@@ -4,86 +4,79 @@ let Notify = {};
 
 Notify.discord = function(webhook_url, url, brand, metadata) {
 
-  console.log({
-    webhook_url: webhook_url,
-    url: url,
-    brand: brand,
-    metadata: metadata
-  })
+	let myWebhook = new DiscordWebhook(webhook_url);
+	if (isNaN(metadata.stock)) {
+		var stock = 'Unavailable'
+	} else {
+		var stock = metadata.stock
+	}
 
-  let myWebhook = new DiscordWebhook(webhook_url);
-  if (isNaN(metadata.stock)) {
-    var stock = 'Unavailable'
-  } else {
-    var stock = metadata.stock
-  }
+	var price = metadata.price
 
-  var price = metadata.price
+	var links;
+	if (Array.isArray(metadata.links)) {
+		const set = [];
+		for (let i = 0; i < metadata.links.length; i++) {
+			const variant = metadata.links[i];
+			let baseUrl = variant.baseUrl;
+			set.push(`[${variant.title}](${baseUrl}/cart/${variant.id}:1)`);
+		}
+		links = set.join('\n');
+	} else {
+		links = 'Unavailable'
+	}
 
-  var links;
-  if (Array.isArray(metadata.links)) {
-    const set = [];
-    for (let i = 0; i < metadata.links.length; i++) {
-      const variant = metadata.links[i];
-      let baseUrl = variant.baseUrl;
-      set.push(`[${variant.title}](${baseUrl}/cart/${variant.id}:1)`);
-    }
-    links = set.join('\n');
-  } else {
-    links = 'Unavailable'
-  }
-
-  myWebhook.on("ready", () => {
-    myWebhook.execute({
-      embeds: [{
-        "title": metadata.title,
-        "url": url,
-        "color": 1609224,
-        "timestamp": new Date().toISOString(),
-        "footer": {
-          "icon_url": "https://cdn.discordapp.com/embed/avatars/0.png",
-          "text": "Shopify Monitor by dzt"
-        },
-        "thumbnail": {
-          "url": metadata.img
-        },
-        "author": {
-          "name": "Shopify Monitor",
-          "url": "https://discordapp.com",
-          "icon_url": "https://cdn.discordapp.com/embed/avatars/0.png"
-        },
-        "fields": [{
-          "name": "Notification Type",
-          "value": 'Newly Added Item',
-          "inline": true
-        }, {
-          "name": "Stock Count",
-          "value": stock,
-          "inline": true
-        }, {
-          "name": "Brand",
-          "value": brand,
-          "inline": true
-        }, {
-          "name": "Price",
-          "value": price,
-          "inline": true
-        }, {
-          "name": "Links",
-          "value": links
-        }]
-      }]
-    });
-  });
+	myWebhook.on("ready", () => {
+		myWebhook.execute({
+			embeds: [{
+				"title": metadata.title,
+				"url": url,
+				"color": 1609224,
+				"timestamp": new Date().toISOString(),
+				"footer": {
+					"icon_url": "https://cdn.discordapp.com/embed/avatars/0.png",
+					"text": "Shopify Monitor by dzt"
+				},
+				"thumbnail": {
+					"url": metadata.img
+				},
+				"author": {
+					"name": "Shopify Monitor",
+					"url": "https://discordapp.com",
+					"icon_url": "https://cdn.discordapp.com/embed/avatars/0.png"
+				},
+				"fields": [{
+					"name": "Notification Type",
+					"value": 'Newly Added Item',
+					"inline": true
+				}, {
+					"name": "Stock Count",
+					"value": stock,
+					"inline": true
+				}, {
+					"name": "Brand",
+					"value": brand,
+					"inline": true
+				}, {
+					"name": "Price",
+					"value": price,
+					"inline": true
+				}, {
+					"name": "Links",
+					"value": links
+				}]
+			}]
+		});
+	});
 }
 
 Notify.discordTest = function(webhook_url) {
-  let myWebhook = new DiscordWebhook(webhook_url);
-  myWebhook.on("ready", () => {
-    myWebhook.execute({
-      content: "Shopify Monitor Test"
-    });
-  });
+	let myWebhook = new DiscordWebhook(webhook_url);
+	myWebhook.on("ready", () => {
+		myWebhook.execute({
+			content: "Shopify Monitor Test"
+		});
+	});
 }
 
 module.exports = Notify;
