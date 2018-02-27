@@ -15,7 +15,7 @@ Shopify.parseSitemap = function(url, proxy, userAgent, callback) {
 		}
 	}, (err, resp, body) => {
 
-		if (err) return callback(null, err);
+		if (err) return callback(err, null);
 
 		if (body.indexOf('Please try again in a couple minutes by refreshing the page') > -1) {
 

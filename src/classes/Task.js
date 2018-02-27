@@ -72,8 +72,6 @@ class Task {
 
 					} else {
 
-						//console.log(`stringify (${this.url}): ` + JSON.stringify(products));
-
 						Seller.findOne({
 							url: this.url
 						}, (err, sellerQuery) => {
