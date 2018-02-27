@@ -99,8 +99,6 @@ Shopify.getStockData = function(url, proxy, callback) {
 				price: '$' + jsonBodyProduct.product.variants[0].price
 			}
 
-			console.log(data);
-
 			return callback(product, null)
 
 		} else {
