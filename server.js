@@ -38,7 +38,11 @@ mongoose.Promise = Promise;
 mongoose.connect(global.config.mongodb_uri, (err) => {
 	if (!err) {
 
-		Product.collection.drop();
+		Product.remove({}, function(err) {
+			if (!err) {
+				console.log('All items in the Product collection have been removed.')
+			}
+		});
 
 		nunjucks.configure('views', {
 			autoescape: true,
@@ -69,15 +73,19 @@ mongoose.connect(global.config.mongodb_uri, (err) => {
 
 global.startTasks = function() {
 
-	Seller.find({}, (err, tasksQuery) => {
-		for (let i = 0; i < tasksQuery.length; i++) {
-			global.tasks.push(new Task(tasksQuery[i]));
-			global.tasks[i].start();
+	Product.remove({}, function(err) {
+		if (!err) {
+			Seller.find({}, (err, tasksQuery) => {
+				for (let i = 0; i < tasksQuery.length; i++) {
+					global.tasks.push(new Task(tasksQuery[i]));
+					global.tasks[i].start();
+				}
+				global.status = 'Active';
+				global.startTime = moment().format('x');
+				global.needsRestart = false;
+				global.stoppedTime = null
+			});
 		}
-		global.status = 'Active';
-		global.startTime = moment().format('x');
-		global.needsRestart = false;
-		global.stoppedTime = null
 	});
 }
 
