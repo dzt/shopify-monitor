@@ -63,7 +63,7 @@ mongoose.connect(global.config.mongodb_uri, (err) => {
 		new AppRouter(app);
 
 		app.server.listen(process.env.PORT || PORT, () => {
-			console.log(`App is running on port ${app.server.address().port}`);
+			console.log(`App is running on at http://127.0.0.1:${app.server.address().port}`);
 		});
 		return;
 	}
