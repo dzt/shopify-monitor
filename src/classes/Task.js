@@ -75,8 +75,6 @@ class Task {
 							url: this.url
 						}, (err, sellerQuery) => {
 
-							console.log(JSON.stringify(products));
-
 							let lastItemCompare;
 							if (products.length == 0) {
 								lastItemCompare = null;
