@@ -31,6 +31,7 @@ More information on configuration will be added soon.
 - [ ] Products Search Page.
 - [ ] Slack
 - [ ] Edit Tasks
+- [ ] Presets
 
 ### Some more screenshots to flex
 
