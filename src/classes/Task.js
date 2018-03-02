@@ -123,7 +123,7 @@ class Task {
 
 													let newCop = new NewProduct({
 														url: products[i].loc[0],
-														image: res.image,
+														image: res.img,
 														dateAdded: moment(),
 														site: this.url,
 														title: res.title

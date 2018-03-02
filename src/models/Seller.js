@@ -1,12 +1,13 @@
 const mongoose = require('mongoose');
 
 const sellerSchema = new mongoose.Schema({
-  url: String,
-  lastItemAdded: String,
-  lastItemCount: Number,
-  proxies: [String],
-  keywords: [String],
-  pollMS: Number
+	url: String,
+	lastItemAdded: String,
+	lastItemCount: Number,
+	proxies: [String],
+	keywords: [String],
+	pollMS: Number,
+	dateAdded: Date
 });
 
 const Seller = mongoose.model('Seller', sellerSchema);

@@ -55,6 +55,7 @@ class AppRouter {
 			Seller
 				.find({})
 				.limit(3)
+				.sort('-dateAdded')
 				.exec(function(err, stores) {
 
 					for (let i = 0; i < stores.length; i++) {
@@ -72,6 +73,7 @@ class AppRouter {
 
 					NewProduct
 						.find({})
+						.sort('-dateAdded')
 						.limit(3)
 						.exec(function(err, products) {
 
@@ -152,7 +154,8 @@ class AppRouter {
 				lastItemCount: null,
 				proxies: (req.body.proxies == '') ? [] : proxyUtil.formatList(req.body.proxies.replace(/\r/g, '').split('\n')),
 				keywords: (req.body.keywords == '') ? [] : req.body.keywords.replace(/\r/g, '').split('\n'),
-				pollMS: req.body.pollMS
+				pollMS: req.body.pollMS,
+				dateAdded: moment()
 			});
 
 			newStore.save();
