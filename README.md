@@ -32,6 +32,7 @@ More information on configuration will be added soon.
 - [ ] Slack
 - [ ] Edit Tasks
 - [ ] Presets
+- [ ] Price Change Updates
 
 ### Some more screenshots to flex
 
