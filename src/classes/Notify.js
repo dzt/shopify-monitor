@@ -2,7 +2,7 @@ const DiscordWebhook = require("discord-webhooks");
 
 let Notify = {};
 
-Notify.discord = function(webhook_url, url, brand, metadata) {
+Notify.discord = function(webhook_url, url, brand, metadata, type, color) {
 
 	let myWebhook = new DiscordWebhook(webhook_url);
 	if (isNaN(metadata.stock)) {
@@ -31,7 +31,7 @@ Notify.discord = function(webhook_url, url, brand, metadata) {
 			embeds: [{
 				"title": metadata.title,
 				"url": url,
-				"color": 1609224,
+				"color": color,
 				"timestamp": new Date().toISOString(),
 				"footer": {
 					"icon_url": "https://cdn.discordapp.com/embed/avatars/0.png",
@@ -47,7 +47,7 @@ Notify.discord = function(webhook_url, url, brand, metadata) {
 				},
 				"fields": [{
 					"name": "Notification Type",
-					"value": 'Newly Added Item',
+					"value": type,
 					"inline": true
 				}, {
 					"name": "Stock Count",

@@ -134,7 +134,7 @@ class Task {
 													newCop.save();
 
 													if (global.config.discord.active) {
-														Notify.discord(global.config.discord.webhook_url, products[i].loc[0], this.url, res);
+														Notify.discord(global.config.discord.webhook_url, products[i].loc[0], this.url, res, 'Newly Added Item', 1609224);
 													}
 												});
 
@@ -143,21 +143,14 @@ class Task {
 
 											} else {
 
-												Product.findOne({
-													url: products[i].loc[0]
-												}, (err, productToCheck) => {});
-
-												if (products[i].lastmod != )
-
-													for (let x = 0; i < this.keywords.length; x++) {
-														const ky = this.keywords[x];
-														if (products[i].loc[0].indexOf(ky) > -1) {
-															this.log('New Item: ' + products[i].loc[0]);
-															Shopify.getStockData(products[i].loc[0], randomProxy, (res, err) => {
-																if (err) {
-																	this.log(err)
-																}
-
+												for (let x = 0; i < this.keywords.length; x++) {
+													const ky = this.keywords[x];
+													if (products[i].loc[0].indexOf(ky) > -1) {
+														this.log('New Item: ' + products[i].loc[0]);
+														Shopify.getStockData(products[i].loc[0], randomProxy, (res, err) => {
+															if (err) {
+																this.log(err)
+															} else {
 																let newCop = new NewProduct({
 																	url: products[i].loc[0],
 																	image: res.image,
@@ -169,39 +162,72 @@ class Task {
 																newCop.save();
 
 																if (global.config.discord.active) {
-																	Notify.discord(global.config.discord.webhook_url, products[i].loc[0], this.url, res);
+																	Notify.discord(global.config.discord.webhook_url, products[i].loc[0], this.url, res, 'Newly Added Item', 1609224);
 																}
-															});
+															}
+														});
 
-															foundProduct.save();
+														foundProduct.save();
 
-														}
 													}
+													break;
+												}
 
 											}
 
 										} else {
 
 											/* Check for Price Changes and Restocks */
+											// TODO: Keyword Support for Restocks and Price changes
 											if (this.keywords.length == 0) {
 
-												Shopify.getStockData(products[i].loc[0], randomProxy, (res, err) => {
-													if (err) {
-														this.log(err)
-													}
+												Product.findOne({
+													url: products[i].loc[0]
+												}, (err, productToCheck) => {
+													if (products[i].lastmod != productToCheck.lastModification) {
 
-													if (global.config.discord.active) {
-														Notify.discord(global.config.discord.webhook_url, products[i].loc[0], this.url, res);
+														Shopify.getStockData(products[i].loc[0], randomProxy, (res, err) => {
+															if (err) {
+																this.log(err)
+															} else {
+																this.log('Restock/Price Change: ' + products[i].loc[0]);
+
+																if (global.config.discord.active) {
+																	Notify.discord(global.config.discord.webhook_url, products[i].loc[0], this.url, res, 'Restock/Price Change', 2061822);
+																}
+															}
+
+														});
+														productToCheck.lastModification = products[i].lastmod;
+														productToCheck.save();
+
+
 													}
 												});
 
-
-												foundProduct.save();
-
 											} else {
+												for (let x = 0; i < this.keywords.length; x++) {
+													const ky = this.keywords[x];
+													if (products[i].loc[0].indexOf(ky) > -1) {
 
-												// For Keyword Folks
+														Shopify.getStockData(products[i].loc[0], randomProxy, (res, err) => {
+															if (err) {
+																this.log(err)
+															} else {
+																this.log('Restock/Price Change: ' + products[i].loc[0]);
 
+																if (global.config.discord.active) {
+																	Notify.discord(global.config.discord.webhook_url, products[i].loc[0], this.url, res, 'Restock/Price Change', 2061822);
+																}
+															}
+
+														});
+														productToCheck.lastModification = products[i].lastmod;
+														productToCheck.save();
+
+													}
+													break;
+												}
 											}
 
 										}
