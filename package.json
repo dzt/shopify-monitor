@@ -4,8 +4,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "dev": "nodemon server.js"
   },
   "repository": {
     "type": "git",
@@ -23,11 +22,15 @@
     "discord-webhooks": "^1.0.0",
     "express": "^4.16.2",
     "lodash": "^4.17.5",
+    "md5": "^2.2.1",
     "moment": "^2.20.1",
     "mongoose": "^5.0.6",
     "nunjucks": "^3.1.0",
     "parse-url": "^3.0.2",
     "request": "^2.83.0",
     "xml2js": "^0.4.19"
+  },
+  "devDependencies": {
+    "nodemon": "^1.17.1"
   }
 }

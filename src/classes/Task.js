@@ -9,6 +9,7 @@ const Product = require('../models/Product');
 const NewProduct = require('../models/NewProduct');
 const moment = require('moment');
 const _ = require('lodash');
+const md5 = require('md5');
 
 class Task {
 
@@ -53,9 +54,9 @@ class Task {
 					/* Add Items to Data store (First Run) */
 					if (this.firstRun) {
 						if (products.length > 0) {
-							this.updateSeller(products[products.length - 1].loc[0], products.length);
+							this.updateSeller(products[products.length - 1].loc[0], products.length, md5(JSON.stringify(products)));
 						} else {
-							this.updateSeller(null, products.length);
+							this.updateSeller(null, products.length, md5(JSON.stringify(products)));
 						}
 
 						for (let i = 0; i < products.length; i++) {
@@ -89,14 +90,16 @@ class Task {
 							}
 
 							/* Check if any new items were added */
-							if (sellerQuery.lastItemAdded != lastItemCompare || sellerQuery.lastItemCount != products.length) {
+							if (sellerQuery.lastItemAdded != lastItemCompare ||
+								sellerQuery.lastItemCount != products.length ||
+								sellerQuery.storeHash != md5(JSON.stringify(products))) {
 
 								console.log(`[${this.url}] Changes were made`);
 
 								if (products.length == 0) {
-									this.updateSeller(null, products.length);
+									this.updateSeller(null, products.length, md5(JSON.stringify(products)));
 								} else {
-									this.updateSeller(products[products.length - 1].loc[0], products.length);
+									this.updateSeller(products[products.length - 1].loc[0], products.length, md5(JSON.stringify(products)));
 								}
 
 								for (let i = 0; i < products.length; i++) {
@@ -140,34 +143,64 @@ class Task {
 
 											} else {
 
-												for (let x = 0; i < this.keywords.length; x++) {
-													const ky = this.keywords[x];
-													if (products[i].loc[0].indexOf(ky) > -1) {
-														this.log('New Item: ' + products[i].loc[0]);
-														Shopify.getStockData(products[i].loc[0], randomProxy, (res, err) => {
-															if (err) {
-																this.log(err)
-															}
+												Product.findOne({
+													url: products[i].loc[0]
+												}, (err, productToCheck) => {});
 
-															let newCop = new NewProduct({
-																url: products[i].loc[0],
-																image: res.image,
-																dateAdded: moment(),
-																site: this.url,
-																title: res.title
+												if (products[i].lastmod != )
+
+													for (let x = 0; i < this.keywords.length; x++) {
+														const ky = this.keywords[x];
+														if (products[i].loc[0].indexOf(ky) > -1) {
+															this.log('New Item: ' + products[i].loc[0]);
+															Shopify.getStockData(products[i].loc[0], randomProxy, (res, err) => {
+																if (err) {
+																	this.log(err)
+																}
+
+																let newCop = new NewProduct({
+																	url: products[i].loc[0],
+																	image: res.image,
+																	dateAdded: moment(),
+																	site: this.url,
+																	title: res.title
+																});
+
+																newCop.save();
+
+																if (global.config.discord.active) {
+																	Notify.discord(global.config.discord.webhook_url, products[i].loc[0], this.url, res);
+																}
 															});
 
-															newCop.save();
+															foundProduct.save();
 
-															if (global.config.discord.active) {
-																Notify.discord(global.config.discord.webhook_url, products[i].loc[0], this.url, res);
-															}
-														});
-
-														foundProduct.save();
-
+														}
 													}
-												}
+
+											}
+
+										} else {
+
+											/* Check for Price Changes and Restocks */
+											if (this.keywords.length == 0) {
+
+												Shopify.getStockData(products[i].loc[0], randomProxy, (res, err) => {
+													if (err) {
+														this.log(err)
+													}
+
+													if (global.config.discord.active) {
+														Notify.discord(global.config.discord.webhook_url, products[i].loc[0], this.url, res);
+													}
+												});
+
+
+												foundProduct.save();
+
+											} else {
+
+												// For Keyword Folks
 
 											}
 
@@ -211,11 +244,12 @@ class Task {
 
 
 
-	async updateSeller(lastItemAdded, lastItemCount) {
+	async updateSeller(lastItemAdded, lastItemCount, storeHash) {
 		try {
 			await Seller.findByIdAndUpdate(this.sellerID, {
 				lastItemAdded: lastItemAdded,
-				lastItemCount: lastItemCount
+				lastItemCount: lastItemCount,
+				storeHash: storeHash
 			});
 		} catch (e) {
 			this.log(e, 'error');

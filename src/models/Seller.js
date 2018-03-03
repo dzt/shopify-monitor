@@ -7,7 +7,8 @@ const sellerSchema = new mongoose.Schema({
 	proxies: [String],
 	keywords: [String],
 	pollMS: Number,
-	dateAdded: Date
+	dateAdded: Date,
+	storeHash: String
 });
 
 const Seller = mongoose.model('Seller', sellerSchema);

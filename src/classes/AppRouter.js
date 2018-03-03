@@ -155,7 +155,8 @@ class AppRouter {
 				proxies: (req.body.proxies == '') ? [] : proxyUtil.formatList(req.body.proxies.replace(/\r/g, '').split('\n')),
 				keywords: (req.body.keywords == '') ? [] : req.body.keywords.replace(/\r/g, '').split('\n'),
 				pollMS: req.body.pollMS,
-				dateAdded: moment()
+				dateAdded: moment(),
+				storeHash: null
 			});
 
 			newStore.save();
@@ -291,7 +292,7 @@ class AppRouter {
 					})
 				} else {
 					global.stopTasks();
-					return res.redirect('/');
+					return res.redirect('/stores');
 				}
 			});
 		});
