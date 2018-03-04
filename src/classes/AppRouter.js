@@ -12,6 +12,10 @@ const proxyUtil = require('../utils/proxy');
 const moment = require('moment');
 const fs = require('fs');
 const parseUrl = require("parse-url");
+const multer = require('multer')
+const upload = multer({
+	dest: 'uploads/'
+})
 
 let randomColors = [
 	'#007bff',
@@ -297,6 +301,37 @@ class AppRouter {
 					return res.redirect('/stores');
 				}
 			});
+		});
+
+		app.post('/stores/addFile', upload.single('sitelist'), (req, res, next) => {
+
+			if (req.body.file == '' || req.body.pollMS == '') {
+				return res.json(200, {
+					message: 'Missing important fields to add store, please try again',
+					error: true
+				})
+			}
+
+			const siteList = fs.readFileSync(req.file.path).toString().split('\n');
+
+			for (let i = 0; i < siteList.length; i++) {
+				if (siteList[i] != '') {
+					let newStore = new Seller({
+						url: siteList[i],
+						lastItemAdded: null,
+						lastItemCount: null,
+						proxies: (req.body.proxies == '') ? [] : proxyUtil.formatList(req.body.proxies.replace(/\r/g, '').split('\n')),
+						keywords: (req.body.keywords == '') ? [] : req.body.keywords.replace(/\r/g, '').split('\n'),
+						pollMS: req.body.pollMS,
+						dateAdded: moment(),
+						storeHash: null
+					});
+					newStore.save();
+				}
+			}
+
+			return res.redirect('/stores');
+
 		});
 
 	}
