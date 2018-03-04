@@ -50,6 +50,8 @@ mongoose.connect(global.config.mongodb_uri, (err) => {
 			express: app
 		});
 
+		app.use('/public', express.static(__dirname + '/public'));
+
 		app.use(bodyParser.json({
 			limit: '50mb'
 		}));

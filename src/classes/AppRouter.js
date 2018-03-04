@@ -317,7 +317,7 @@ class AppRouter {
 			for (let i = 0; i < siteList.length; i++) {
 				if (siteList[i] != '') {
 					let newStore = new Seller({
-						url: siteList[i],
+						url: parseUrl(siteList[i]).resource,
 						lastItemAdded: null,
 						lastItemCount: null,
 						proxies: (req.body.proxies == '') ? [] : proxyUtil.formatList(req.body.proxies.replace(/\r/g, '').split('\n')),
