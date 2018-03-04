@@ -225,6 +225,8 @@ class AppRouter {
 					}
 				}
 
+				global.config = newConfig;
+
 				fs.writeFile(__dirname + '/../../config.json', JSON.stringify(newConfig, null, 4), function(err) {
 					return res.redirect('/settings');
 				});
