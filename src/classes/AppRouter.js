@@ -329,7 +329,7 @@ class AppRouter {
 					newStore.save();
 				}
 			}
-
+			global.stopTasks();
 			return res.redirect('/stores');
 
 		});
