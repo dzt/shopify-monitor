@@ -54,57 +54,61 @@ Shopify.getStockData = function(url, proxy, callback) {
 		}
 	}, function(err, res, body) {
 
-		if (tryParseJSON(body)) {
-			let jsonBodyProduct = JSON.parse(body)
-			let data = []
-			for (let i = 0; i < jsonBodyProduct.product.variants.length; i++) {
-				totalStock += jsonBodyProduct.product.variants[i].inventory_quantity
-				const baseUrl = url.split('/products')[0] // remove the product path from url
-
-				const variantData = {
-					baseUrl,
-					id: jsonBodyProduct.product.variants[i].id,
-					title: jsonBodyProduct.product.variants[i].option1
-				};
-
-				// data.push('<' + baseUrl + '/cart/' + jsonBodyProduct.product.variants[i].id + ':1' + '|' + jsonBodyProduct.product.variants[i].option1 +'>')
-				data.push(variantData);
-			}
-
-			if (totalStock > 0) {
-				status = 'Available'
-			} else {
-				status = 'Sold Out'
-			}
-
-			if (isNaN(totalStock)) {
-				var finalStock = 'Unavailable'
-			} else {
-				var finalStock = totalStock
-			}
-
-			let image = "https://i.imgur.com/FpYrCaS.png";
-
-			if (jsonBodyProduct.product.image != null) {
-				image = jsonBodyProduct.product.image.src
-			}
-
-			let product = {
-				title: jsonBodyProduct.product.title,
-				handle: jsonBodyProduct.product.handle,
-				stock: finalStock,
-				status: status,
-				links: data,
-				img: image,
-				price: '$' + jsonBodyProduct.product.variants[0].price
-			}
-
-			return callback(product, null)
-
+		if (err) {
+			return callback(null, 'An error has occured while trying to establish a connection when collecting stock data.');
 		} else {
-			// console.log('error', 'No valid JSON was returned.')
-			//return process.exit()
+			if (tryParseJSON(body)) {
+				let jsonBodyProduct = JSON.parse(body)
+				let data = []
+				for (let i = 0; i < jsonBodyProduct.product.variants.length; i++) {
+					totalStock += jsonBodyProduct.product.variants[i].inventory_quantity
+					const baseUrl = url.split('/products')[0] // remove the product path from url
+
+					const variantData = {
+						baseUrl,
+						id: jsonBodyProduct.product.variants[i].id,
+						title: jsonBodyProduct.product.variants[i].option1
+					};
+
+					// data.push('<' + baseUrl + '/cart/' + jsonBodyProduct.product.variants[i].id + ':1' + '|' + jsonBodyProduct.product.variants[i].option1 +'>')
+					data.push(variantData);
+				}
+
+				if (totalStock > 0) {
+					status = 'Available'
+				} else {
+					status = 'Sold Out'
+				}
+
+				if (isNaN(totalStock)) {
+					var finalStock = 'Unavailable'
+				} else {
+					var finalStock = totalStock
+				}
+
+				let image = "https://i.imgur.com/FpYrCaS.png";
+
+				if (jsonBodyProduct.product.image != null) {
+					image = jsonBodyProduct.product.image.src
+				}
+
+				let product = {
+					title: jsonBodyProduct.product.title,
+					handle: jsonBodyProduct.product.handle,
+					stock: finalStock,
+					status: status,
+					links: data,
+					img: image,
+					price: '$' + jsonBodyProduct.product.variants[0].price
+				}
+
+				return callback(product, null)
+
+			} else {
+				return callback(null, 'An error has occured while trying to establish a connection when collecting stock data.');
+			}
 		}
+
 	})
 }
 
