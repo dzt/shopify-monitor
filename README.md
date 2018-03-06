@@ -30,7 +30,7 @@ More information on configuration will be added soon.
 ## Todo List
 - [ ] Products Search Page.
 - [ ] Slack
-- [ ] Edit Tasks
+- [x] Edit Tasks
 - [ ] Presets
 - [x] Price Change Updates
 
