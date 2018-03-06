@@ -334,6 +334,38 @@ class AppRouter {
 
 		});
 
+		app.get('/store/:id', (req, res) => {
+
+			Seller.findById(req.params.id, (err, s) => {
+
+				if (err) return res.json({
+					message: err,
+					error: true
+				});
+				return res.render('store', s);
+			});
+
+		});
+
+		app.post('/store/update/:id', (req, res) => {
+
+			Seller.findById(req.params.id, (err, s) => {
+
+				if (err) return res.redirect('/stores');
+
+				s.pollMS = parseInt(req.body.pollMS);
+				s.proxies = (req.body.proxies == '') ? [] : proxyUtil.formatList(req.body.proxies.replace(/\r/g, '').split('\n'))
+				s.keywords = (req.body.keywords == '') ? [] : req.body.keywords.replace(/\r/g, '').split('\n');
+
+				s.save();
+				global.stopTasks();
+				return res.redirect(`/store/${req.params.id}`);
+
+			});
+
+		});
+
+
 	}
 
 }

@@ -1,0 +1,131 @@
+{% include "partials/header.html" %}
+<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark" style="background-color: #5e6bbe!important;">
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+   <span class="navbar-toggler-icon"></span>
+   </button>
+  <div class="collapse navbar-collapse justify-content-md-center" id="navbarCollapse">
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item active">
+        <a class="nav-link" href="/stores">Stores</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/products">Products</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/logs">Logs</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/settings">Settings</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+<main role="main" class="container">
+
+  {% if needsRestart %}
+  <div class="d-flex align-items-center p-3 my-3 text-white-50 bg-purple rounded box-shadow" style="background-color: #efac0fcf;">
+    <a class="btn btn-sm btn btn-outline-light" href="/restart" style="margin-right: 20px;">Restart</a>
+    <div class="lh-100">
+      <h6 class="mb-0 text-white lh-100">Restart Required</h6>
+      <small>In order to apply changes on your tasks, you must restart.</small>
+    </div>
+  </div>
+  {% endif %}
+
+
+<main role="main" class="container">
+    <div class="my-3 p-3 bg-white rounded box-shadow">
+       <h4 class="border-bottom border-gray pb-2 mb-0" style="text-align: center;"> {{url}} </h4>
+       <div class="container" style="padding-top: 30px;">
+          <div class="row">
+             <div class="col-md-12 order-md-1">
+                <h4 class="mb-3">Task Information</h4>
+                <div class="d-flex align-items-center p-3 my-3 text-white-50 bg-purple rounded box-shadow" style="background-color: #4ea523cf;width: 100%;">
+                   <img src="https://i.imgur.com/fpNcFAu.png" style="width: 30px; margin-right: 10px;">
+                   <div class="lh-100">
+                      <h6 class="mb-0 text-white lh-100">Date Added</h6>
+                      <small id="uptime">{{dateAdded}}</small>
+                   </div>
+                </div>
+                <div class="d-flex align-items-center p-3 my-3 text-white-50 bg-purple rounded box-shadow" style="background-color: #3e6871cf;width: 100%;">
+                   <img src="https://i.imgur.com/3UtSvNm.png" style="
+                      width: 30px;
+                      margin-right: 10px;
+                      ">
+                   <div class="lh-100">
+                      <h6 class="mb-0 text-white lh-100">Last Item Count</h6>
+                      <small id="uptime">{{lastItemCount}}</small>
+                   </div>
+                </div>
+                <div class="d-flex align-items-center p-3 my-3 text-white-50 bg-purple rounded box-shadow" style="background-color: #713e3ecf;width: 100%;">
+                   <img src="https://i.imgur.com/Rylx7TP.png" style="
+                      width: 30px;
+                      margin-right: 10px;
+                      ">
+                   <div class="lh-100">
+                      <h6 class="mb-0 text-white lh-100">Last Item Added</h6>
+                      <a href="{{lastItemAdded}}" style="color: white;"><small id="uptime">{{lastItemAdded}}</small></a>
+                   </div>
+                </div>
+                <form action="/store/update/{{_id}}" method="post">
+                   <div class="row">
+                   </div>
+                   <hr class="mb-4">
+                   <h4 class="mb-3">Task Settings</h4>
+                   <div class="row">
+                      <div class="col-md-12 mb-3">
+                         <div class="row">
+                            <div class="col-md-6 mb-3">
+                               <label for="firstName">Poll Time </label>
+                               <input type="number" class="form-control" name="pollMS" placeholder="Example: 30000" value="{{pollMS}}">
+                            </div>
+                         </div>
+                         <div class="row">
+                            <div class="col-md-6 mb-3">
+                               <label for="firstName">Proxies (Optional)</label>
+                               <textarea class="form-control" name="proxies" placeholder="ip:port
+ip:port:username:password" style="margin-top: 0px; margin-bottom: 0px; height: 92px;" value="{{proxies}}">{{proxies}}</textarea>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                               <label for="lastName">Keywords (Optional)</label>
+                               <textarea class="form-control" value="{{keywords}}" name="keywords" placeholder="Yeezy
+Vans
+Jordan" style="margin-top: 0px; margin-bottom: 0px; height: 89px;">{{keywords}}</textarea>
+                            </div>
+                         </div>
+                      </div>
+                   </div>
+                   <hr class="mb-4">
+                   <input name="port" type="hidden" value="3000">
+                   <input name="mongodb_uri" type="hidden" value="mongodb://127.0.0.1:27017">
+                   <button class="btn btn-primary btn-lg btn-block" type="submit">Save Changes</button>
+                </form>
+                <form style="padding-top: 16px;" method="get" action="/store/delete/{{_id}}">
+                    <button class="btn btn-danger btn-lg btn-block" type="submit">Delete Store</button>
+                </form>
+             </div>
+          </div>
+       </div>
+       <small class="d-block text-right mt-3">
+       </small>
+    </div>
+ </main>
+
+<!-- Bootstrap core JavaScript
+   ================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script>
+  window.jQuery || document.write('<script src="../../../../assets/js/vendor/jquery-slim.min.js"><\/script>')
+</script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script>
+$('.custom-file-input').on('change',function(){
+  $('.custom-file-label').text($(this).val().replace(/\\/g, '/').replace(/.*\//, ''));
+})
+</script>
+
+{% include "partials/footer.html" %}
