@@ -338,11 +338,26 @@ class AppRouter {
 
 			Seller.findById(req.params.id, (err, s) => {
 
-				if (err) return res.json({
-					message: err,
-					error: true
-				});
-				return res.render('store', s);
+				if (s) {
+					s.keywords = s.keywords.join('\n');
+
+					for (let i = 0; i < s.proxies.length; i++) {
+						s.proxies[i] = s.proxies[i].replace("http://", "")
+					}
+
+					s.proxies = s.proxies.join('\n');
+
+					if (err) return res.json({
+						message: err,
+						error: true
+					});
+					return res.render('store', s);
+				} else {
+					return res.json({
+						message: 'Error Occured while trying to find: ' + req.params.id,
+						error: true
+					})
+				}
 			});
 
 		});
@@ -359,7 +374,10 @@ class AppRouter {
 
 				s.save();
 				global.stopTasks();
-				return res.redirect(`/store/${req.params.id}`);
+
+				setTimeout(() => {
+					return res.redirect(`/store/${req.params.id}`);
+				}, 1500);
 
 			});
 
