@@ -1,0 +1,17 @@
+{
+    "port": 3000,
+    "mongodb_uri": "mongodb://127.0.0.1:27017",
+    "slackBot": {
+        "active": false,
+        "token": "",
+        "channel": "",
+        "settings": {
+            "username": "",
+            "icon_url": ""
+        }
+    },
+    "discord": {
+        "active": false,
+        "webhook_url": ""
+    }
+}
