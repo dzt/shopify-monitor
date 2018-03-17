@@ -62,12 +62,23 @@ Shopify.fetchYS = function(userAgent, proxy, mode, callback) {
 		let $ = cheerio.load(body);
 		let data;
 
-		if (body.indexOf('ENTER EMAIL FOR UPDATES') > -1 && resp.request.uri.path == '/') {
+		if (body.toLowerCase().indexOf('TOMORROW') > -1 || body.toLowerCase().indexOf('TODAY') > -1) {
 			data = {
 				pageURL: resp.request.uri.href,
 				img: 'http:' + $('div[class="P__img_bg"] img').attr('src'),
-				title: (mode == null) ? `Monitor Initialized for "${$('div[itemprop="name"]').text()}"` : 'Page Live!',
-				mode: 'single'
+				title: (mode == null) ? "Monitor Started @ Upcoming Page" : `Upcoming Page Live for "${$('div[itemprop="name"]').text()}"!`,
+				mode: 'upcoming',
+				variants: null
+			}
+		}
+
+		if (body.toLowerCase().indexOf('/cart/add') > -1 && resp.request.uri.path == '/') {
+			data = {
+				pageURL: resp.request.uri.href,
+				img: 'http:' + $('div[class="P__img_bg"] img').attr('src'),
+				title: (mode == null) ? "Monitor Started @ Cart Page" : `Page Live for "${$('div[itemprop="name"]').text()}"!`,
+				mode: 'live',
+				variants: null
 			}
 		}
 
@@ -75,8 +86,9 @@ Shopify.fetchYS = function(userAgent, proxy, mode, callback) {
 			data = {
 				pageURL: resp.request.uri.href,
 				img: null,
-				title: (mode == null) ? 'Password Page Live' : 'Monior Started @ Password Page',
-				mode: 'pw'
+				title: (mode == null) ? 'Monior Started @ Password Page' : 'Password Page Live',
+				mode: 'pw',
+				variants: null
 			}
 		}
 
