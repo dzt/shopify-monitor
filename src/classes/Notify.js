@@ -2,7 +2,7 @@ const DiscordWebhook = require("discord-webhooks");
 
 let Notify = {};
 
-Notify.discord = function(webhook_url, url, brand, metadata, type, color) {
+Notify.discord = function (webhook_url, url, brand, metadata, type, color) {
 
 	let myWebhook = new DiscordWebhook(webhook_url);
 	if (isNaN(metadata.stock)) {
@@ -70,7 +70,7 @@ Notify.discord = function(webhook_url, url, brand, metadata, type, color) {
 	});
 }
 
-Notify.discordTest = function(webhook_url) {
+Notify.discordTest = function (webhook_url) {
 	let myWebhook = new DiscordWebhook(webhook_url);
 	myWebhook.on("ready", () => {
 		myWebhook.execute({
@@ -79,10 +79,10 @@ Notify.discordTest = function(webhook_url) {
 	});
 }
 
-Notify.ys = function(webhook_url, data) {
+Notify.ys = function (webhook_url, data) {
 	let myWebhook = new DiscordWebhook(webhook_url);
 	myWebhook.on("ready", () => {
-		myWebhook.execute({
+		let exec = {
 			embeds: [{
 				"title": "Yeezy Supply Monitor",
 				"description": data.title,
@@ -100,9 +100,15 @@ Notify.ys = function(webhook_url, data) {
 					"name": "Shopify Monitor",
 					"url": "https://discordapp.com",
 					"icon_url": "https://cdn.discordapp.com/embed/avatars/0.png"
-				}
+				},
+				"fields": [{
+					"name": "Sizes",
+					"value": (data.variants == null) ? 'Unavailable' : data.variants.map(x => x = x.options[0] + ` - ${x.id}`).join('\n'),
+					"inline": true
+				}]
 			}]
-		});
+		}
+		myWebhook.execute(exec);
 	});
 }
 

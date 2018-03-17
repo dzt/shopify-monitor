@@ -250,8 +250,9 @@ class Task {
 
 				/*
 
-				single - Single Product Page
-				pw - password page
+					upcoming - Single Product Page
+					pw - password page
+					live - product live
 
 				*/
 
@@ -260,19 +261,13 @@ class Task {
 					Shopify.fetchYS(this.userAgent, randomProxy, this.mode, (err, data) => {
 						if (!err) {
 
-							let notificationData = {
-								title: data.title,
-								img: data.img,
-								pageURL: data.pageURL
-							}
-
 							if (global.config.discord.active) {
 								Notify.ys(global.config.discord.webhook_url, data);
 							}
 
 							this.mode = data.mode;
 							this.firstRun = false;
-							this.log('Initial Check Done');
+							this.log('Initial Check Done @ ' + this.mode);
 
 						}
 					});
@@ -282,18 +277,13 @@ class Task {
 
 					Shopify.fetchYS(this.userAgent, randomProxy, this.mode, (err, data) => {
 						if (!err) {
-							if (this.mode == 'pw' && data.mode == 'single') {
-								if (global.config.discord.active) {
-									Notify.ys(global.config.discord.webhook_url, data);
-								}
-								this.mode = data.mode;
-							}
 
-							if (this.mode == 'single' && data.mode == 'pw') {
+							if (this.mode != data.mode) {
 								if (global.config.discord.active) {
 									Notify.ys(global.config.discord.webhook_url, data);
 								}
 								this.mode = data.mode;
+								this.log('Mode Changed: ' + this.mode);
 							}
 
 						}
@@ -323,7 +313,7 @@ class Task {
 		global.needsRestart = false;
 		clearInterval(this.intv);
 		var that = this;
-		setTimeout(function() {
+		setTimeout(function () {
 			that.start();
 		}, 60000);
 	}

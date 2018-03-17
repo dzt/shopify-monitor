@@ -37,6 +37,7 @@ More information on configuration will be added soon.
 - [x] Edit Tasks
 - [ ] Presets
 - [x] Price Change Updates
+- [x] YeezySupply
 
 ### Some more screenshots to flex
 
