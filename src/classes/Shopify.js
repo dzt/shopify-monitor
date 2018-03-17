@@ -44,10 +44,11 @@ Shopify.parseSitemap = function(url, proxy, userAgent, callback) {
 
 Shopify.fetchYS = function(userAgent, proxy, mode, callback) {
 
+	console.log('fetchYS')
+
 	request({
 		method: 'get',
 		url: 'https://yeezysupply.com/',
-		//url: 'http://127.0.0.1:3000/test',
 		proxy: proxy,
 		gzip: true,
 		followRedirect: true,
@@ -64,7 +65,7 @@ Shopify.fetchYS = function(userAgent, proxy, mode, callback) {
 		if (body.indexOf('ENTER EMAIL FOR UPDATES') > -1 && resp.request.uri.path == '/') {
 			data = {
 				pageURL: resp.request.uri.href,
-				img: $('div[class="P__img_bg"] img').attr('src'),
+				img: 'http://' + $('div[class="P__img_bg"] img').attr('src'),
 				title: (mode == null) ? `Monitor Initialized for "${$('div[itemprop="name"]').text()}"` : 'Page Live!',
 				mode: 'single'
 			}
