@@ -65,7 +65,7 @@ Shopify.fetchYS = function(userAgent, proxy, mode, callback) {
 		if (body.indexOf('ENTER EMAIL FOR UPDATES') > -1 && resp.request.uri.path == '/') {
 			data = {
 				pageURL: resp.request.uri.href,
-				img: 'http://' + $('div[class="P__img_bg"] img').attr('src'),
+				img: 'http:' + $('div[class="P__img_bg"] img').attr('src'),
 				title: (mode == null) ? `Monitor Initialized for "${$('div[itemprop="name"]').text()}"` : 'Page Live!',
 				mode: 'single'
 			}
