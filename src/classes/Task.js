@@ -9,6 +9,7 @@ const Product = require('../models/Product');
 const NewProduct = require('../models/NewProduct');
 const moment = require('moment');
 const _ = require('lodash');
+const cheerio = require('cheerio');
 const md5 = require('md5');
 
 class Task {
@@ -25,6 +26,7 @@ class Task {
 		this.intervalCount = 0;
 		this.poll = monitorData.pollMS;
 		this.sellerID = monitorData._id;
+		this.ysMode = null;
 	}
 
 	async start() {
@@ -35,212 +37,270 @@ class Task {
 
 			const randomProxy = (this.proxies.length > 0) ? this.proxies[Math.floor(Math.random() * this.proxies.length)] : null;
 
-			Shopify.parseSitemap(this.url, randomProxy, this.userAgent, (err, products) => {
-				if (err) {
+			if (this.url != 'yeezysupply.com') {
+				Shopify.parseSitemap(this.url, randomProxy, this.userAgent, (err, products) => {
 
-					this.log(err, 'error');
+					if (err) {
 
-					if (err == 'Invalid Shopify Site.') {
-						/* Stop Current Task */
-						this.stop();
-					}
+						this.log(err, 'error');
 
-					if (err == 'Temp Ban Occured.') {
-						this.restart();
-					}
-
-				} else {
-
-					/* Add Items to Data store (First Run) */
-					if (this.firstRun) {
-						if (products.length > 0) {
-							this.updateSeller(products[products.length - 1].loc[0], products.length, md5(JSON.stringify(products)));
-						} else {
-							this.updateSeller(null, products.length, md5(JSON.stringify(products)));
+						if (err == 'Invalid Shopify Site.') {
+							/* Stop Current Task */
+							this.stop();
 						}
 
-						for (let i = 0; i < products.length; i++) {
-							let newProduct = new Product({
-								url: products[i].loc[0],
-								seller: this.sellerID,
-								lastModification: products[i].lastmod
-							});
-							newProduct.save();
+						if (err == 'Temp Ban Occured.') {
+							this.restart();
 						}
-
-						this.firstRun = false;
-						this.log('Initial Check Done');
 
 					} else {
 
-						Seller.findOne({
-							url: this.url
-						}, (err, sellerQuery) => {
-
-							if (err) {
-								this.log('Query Error - ' + err);
-							}
-
-							let lastItemCompare;
-
-							if (products.length == 0) {
-								lastItemCompare = null;
+						/* Add Items to Data store (First Run) */
+						if (this.firstRun) {
+							if (products.length > 0) {
+								this.updateSeller(products[products.length - 1].loc[0], products.length, md5(JSON.stringify(products)));
 							} else {
-								lastItemCompare = _.last(products).loc[0];
+								this.updateSeller(null, products.length, md5(JSON.stringify(products)));
 							}
 
-							/* Check if any new items were added */
-							if (sellerQuery.lastItemAdded != lastItemCompare ||
-								sellerQuery.lastItemCount != products.length ||
-								sellerQuery.storeHash != md5(JSON.stringify(products))) {
+							for (let i = 0; i < products.length; i++) {
+								let newProduct = new Product({
+									url: products[i].loc[0],
+									seller: this.sellerID,
+									lastModification: products[i].lastmod
+								});
+								newProduct.save();
+							}
 
-								console.log(`[${this.url}] Changes were made`);
+							this.firstRun = false;
+							this.log('Initial Check Done');
+
+						} else {
+
+							Seller.findOne({
+								url: this.url
+							}, (err, sellerQuery) => {
+
+								if (err) {
+									this.log('Query Error - ' + err);
+								}
+
+								let lastItemCompare;
 
 								if (products.length == 0) {
-									this.updateSeller(null, products.length, md5(JSON.stringify(products)));
+									lastItemCompare = null;
 								} else {
-									this.updateSeller(products[products.length - 1].loc[0], products.length, md5(JSON.stringify(products)));
+									lastItemCompare = _.last(products).loc[0];
 								}
 
-								for (let i = 0; i < products.length; i++) {
+								/* Check if any new items were added */
+								if (sellerQuery.lastItemAdded != lastItemCompare ||
+									sellerQuery.lastItemCount != products.length ||
+									sellerQuery.storeHash != md5(JSON.stringify(products))) {
 
-									Product.findOne({
-										url: products[i].loc[0]
-									}, (err, p) => {
+									console.log(`[${this.url}] Changes were made`);
 
-										if (!p) {
+									if (products.length == 0) {
+										this.updateSeller(null, products.length, md5(JSON.stringify(products)));
+									} else {
+										this.updateSeller(products[products.length - 1].loc[0], products.length, md5(JSON.stringify(products)));
+									}
 
-											let foundProduct = new Product({
-												url: products[i].loc[0],
-												seller: this.sellerID,
-												lastModification: products[i].lastmod
-											});
+									for (let i = 0; i < products.length; i++) {
 
-											if (this.keywords.length == 0) {
+										Product.findOne({
+											url: products[i].loc[0]
+										}, (err, p) => {
 
-												this.log('New Item: ' + products[i].loc[0]);
-												Shopify.getStockData(products[i].loc[0], randomProxy, (res, err) => {
-													if (err) {
-														this.log(err)
-													}
+											if (!p) {
 
-													let newCop = new NewProduct({
-														url: products[i].loc[0],
-														image: res.img,
-														dateAdded: moment(),
-														site: this.url,
-														title: res.title
+												let foundProduct = new Product({
+													url: products[i].loc[0],
+													seller: this.sellerID,
+													lastModification: products[i].lastmod
+												});
+
+												if (this.keywords.length == 0) {
+
+													this.log('New Item: ' + products[i].loc[0]);
+													Shopify.getStockData(products[i].loc[0], randomProxy, (res, err) => {
+														if (err) {
+															this.log(err)
+														}
+
+														let newCop = new NewProduct({
+															url: products[i].loc[0],
+															image: res.img,
+															dateAdded: moment(),
+															site: this.url,
+															title: res.title
+														});
+														newCop.save();
+
+														if (global.config.discord.active) {
+															Notify.discord(global.config.discord.webhook_url, products[i].loc[0], this.url, res, 'Newly Added Item', 1609224);
+														}
 													});
-													newCop.save();
 
-													if (global.config.discord.active) {
-														Notify.discord(global.config.discord.webhook_url, products[i].loc[0], this.url, res, 'Newly Added Item', 1609224);
+
+													foundProduct.save();
+
+												} else {
+
+													for (let x = 0; i < this.keywords.length; x++) {
+														const ky = this.keywords[x];
+														if (products[i].loc[0].indexOf(ky) > -1) {
+															this.log('New Item: ' + products[i].loc[0]);
+															Shopify.getStockData(products[i].loc[0], randomProxy, (res, err) => {
+																if (err) {
+																	this.log(err)
+																} else {
+																	let newCop = new NewProduct({
+																		url: products[i].loc[0],
+																		image: res.image,
+																		dateAdded: moment(),
+																		site: this.url,
+																		title: res.title
+																	});
+
+																	newCop.save();
+
+																	if (global.config.discord.active) {
+																		Notify.discord(global.config.discord.webhook_url, products[i].loc[0], this.url, res, 'Newly Added Item', 1609224);
+																	}
+																}
+															});
+
+															foundProduct.save();
+
+														}
+														break;
 													}
-												});
 
-
-												foundProduct.save();
+												}
 
 											} else {
 
-												for (let x = 0; i < this.keywords.length; x++) {
-													const ky = this.keywords[x];
-													if (products[i].loc[0].indexOf(ky) > -1) {
-														this.log('New Item: ' + products[i].loc[0]);
-														Shopify.getStockData(products[i].loc[0], randomProxy, (res, err) => {
-															if (err) {
-																this.log(err)
-															} else {
-																let newCop = new NewProduct({
-																	url: products[i].loc[0],
-																	image: res.image,
-																	dateAdded: moment(),
-																	site: this.url,
-																	title: res.title
-																});
+												/* Check for Price Changes and Restocks */
+												// TODO: Keyword Support for Restocks and Price changes
+												if (this.keywords.length == 0) {
 
-																newCop.save();
+													Product.findOne({
+														url: products[i].loc[0]
+													}, (err, productToCheck) => {
+														if (products[i].lastmod != productToCheck.lastModification) {
 
-																if (global.config.discord.active) {
-																	Notify.discord(global.config.discord.webhook_url, products[i].loc[0], this.url, res, 'Newly Added Item', 1609224);
+															Shopify.getStockData(products[i].loc[0], randomProxy, (res, err) => {
+																if (err) {
+																	this.log(err)
+																} else {
+																	this.log('Restock/Price Change: ' + products[i].loc[0]);
+
+																	if (global.config.discord.active) {
+																		Notify.discord(global.config.discord.webhook_url, products[i].loc[0], this.url, res, 'Restock/Price Change', 2061822);
+																	}
 																}
-															}
-														});
 
-														foundProduct.save();
+															});
+															productToCheck.lastModification = products[i].lastmod;
+															productToCheck.save();
 
+
+														}
+													});
+
+												} else {
+													for (let x = 0; i < this.keywords.length; x++) {
+														const ky = this.keywords[x];
+														if (products[i].loc[0].indexOf(ky) > -1) {
+
+															Shopify.getStockData(products[i].loc[0], randomProxy, (res, err) => {
+																if (err) {
+																	this.log(err)
+																} else {
+																	this.log('Restock/Price Change: ' + products[i].loc[0]);
+
+																	if (global.config.discord.active) {
+																		Notify.discord(global.config.discord.webhook_url, products[i].loc[0], this.url, res, 'Restock/Price Change', 2061822);
+																	}
+																}
+
+															});
+															productToCheck.lastModification = products[i].lastmod;
+															productToCheck.save();
+
+														}
+														break;
 													}
-													break;
 												}
 
 											}
 
-										} else {
+										});
 
-											/* Check for Price Changes and Restocks */
-											// TODO: Keyword Support for Restocks and Price changes
-											if (this.keywords.length == 0) {
-
-												Product.findOne({
-													url: products[i].loc[0]
-												}, (err, productToCheck) => {
-													if (products[i].lastmod != productToCheck.lastModification) {
-
-														Shopify.getStockData(products[i].loc[0], randomProxy, (res, err) => {
-															if (err) {
-																this.log(err)
-															} else {
-																this.log('Restock/Price Change: ' + products[i].loc[0]);
-
-																if (global.config.discord.active) {
-																	Notify.discord(global.config.discord.webhook_url, products[i].loc[0], this.url, res, 'Restock/Price Change', 2061822);
-																}
-															}
-
-														});
-														productToCheck.lastModification = products[i].lastmod;
-														productToCheck.save();
-
-
-													}
-												});
-
-											} else {
-												for (let x = 0; i < this.keywords.length; x++) {
-													const ky = this.keywords[x];
-													if (products[i].loc[0].indexOf(ky) > -1) {
-
-														Shopify.getStockData(products[i].loc[0], randomProxy, (res, err) => {
-															if (err) {
-																this.log(err)
-															} else {
-																this.log('Restock/Price Change: ' + products[i].loc[0]);
-
-																if (global.config.discord.active) {
-																	Notify.discord(global.config.discord.webhook_url, products[i].loc[0], this.url, res, 'Restock/Price Change', 2061822);
-																}
-															}
-
-														});
-														productToCheck.lastModification = products[i].lastmod;
-														productToCheck.save();
-
-													}
-													break;
-												}
-											}
-
-										}
-
-									});
-
+									}
 								}
-							}
-						})
+							})
 
+						}
 					}
+				});
+			} else {
+				/* YeezySupply tings */
+
+				/*
+
+				single - Single Product Page
+				pw - password page
+
+				*/
+
+				if (this.firstRun) {
+
+					Shopify.fetchYS(this.userAgent, randomProxy, this.mode, (err, data) => {
+						if (!err) {
+
+							let notificationData = {
+								title: data.title,
+								img: data.img,
+								pageURL: data.pageURL
+							}
+
+							if (global.config.discord.active) {
+								Notify.ys(global.config.discord.webhook_url, data);
+							}
+
+							this.mode = data.mode;
+							this.firstRun = false;
+							this.log('Initial Check Done');
+
+						}
+					});
+
+
+				} else {
+
+					Shopify.fetchYS(this.userAgent, randomProxy, this.mode, (err, data) => {
+						if (!err) {
+							if (this.mode == 'pw' && data.mode == 'single') {
+								if (global.config.discord.active) {
+									Notify.ys(global.config.discord.webhook_url, data);
+								}
+								this.mode = data.mode;
+							}
+
+							if (this.mode == 'single' && data.mode == 'pw') {
+								if (global.config.discord.active) {
+									Notify.ys(global.config.discord.webhook_url, data);
+								}
+								this.mode = data.mode;
+							}
+
+						}
+					});
+
 				}
-			});
+			}
 
 			this.intervalCount++;
 

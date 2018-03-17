@@ -1,5 +1,6 @@
 const xml2js = require('xml2js');
 const request = require('request');
+const cheerio = require('cheerio');
 
 let Shopify = {};
 
@@ -41,9 +42,53 @@ Shopify.parseSitemap = function(url, proxy, userAgent, callback) {
 
 }
 
+Shopify.fetchYS = function(userAgent, proxy, mode, callback) {
+
+	request({
+		method: 'get',
+		url: 'https://yeezysupply.com/',
+		//url: 'http://127.0.0.1:3000/test',
+		proxy: proxy,
+		gzip: true,
+		followRedirect: true,
+		headers: {
+			'User-Agent': userAgent
+		}
+	}, (err, resp, body) => {
+
+		if (err) return callback(err, null);
+
+		let $ = cheerio.load(body);
+		let data;
+
+		if (body.indexOf('ENTER EMAIL FOR UPDATES') > -1 && resp.request.uri.path == '/') {
+			data = {
+				pageURL: resp.request.uri.href,
+				img: $('div[class="P__img_bg"] img').attr('src'),
+				title: (mode == null) ? `Monitor Initialized for "${$('div[itemprop="name"]').text()}"` : 'Page Live!',
+				mode: 'single'
+			}
+		}
+
+		if (resp.request.uri.path == '/password') {
+			data = {
+				pageURL: resp.request.uri.href,
+				img: null,
+				title: (mode == null) ? 'Password Page Live' : 'Monior Started @ Password Page',
+				mode: 'pw'
+			}
+		}
+
+		callback(null, data);
+
+	})
+
+}
+
 Shopify.getStockData = function(url, proxy, callback) {
+
 	let status;
-	let totalStock = 0
+	let totalStock = 0;
 
 	request({
 		url: url + '.json',

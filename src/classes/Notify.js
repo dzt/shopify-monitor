@@ -79,4 +79,31 @@ Notify.discordTest = function(webhook_url) {
 	});
 }
 
+Notify.ys = function(webhook_url, data) {
+	let myWebhook = new DiscordWebhook(webhook_url);
+	myWebhook.on("ready", () => {
+		myWebhook.execute({
+			embeds: [{
+				"title": "Yeezy Supply Monitor",
+				"description": data.title,
+				"url": "https://yeezysupply.com/",
+				"color": 15844367,
+				"timestamp": new Date().toISOString(),
+				"footer": {
+					"icon_url": "https://cdn.discordapp.com/embed/avatars/0.png",
+					"text": "Shopify Monitor by dzt"
+				},
+				"thumbnail": {
+					"url": data.img
+				},
+				"author": {
+					"name": "Shopify Monitor",
+					"url": "https://discordapp.com",
+					"icon_url": "https://cdn.discordapp.com/embed/avatars/0.png"
+				}
+			}]
+		});
+	});
+}
+
 module.exports = Notify;
