@@ -3,6 +3,10 @@ Monitor for Shopify based brands
 
 [Community Discord Server](https://discord.gg/BkDxcjT)
 
+[macOS Install Video Guide](https://youtu.be/rpO5wdudfpQ)
+
+[Windows Install Video Guide](https://youtu.be/KlgZdFRd5r4)
+
 ### Installation
 
 shopify-monitor requires [Node.js (LTS Version)](http://nodejs.org/).
@@ -33,6 +37,7 @@ More information on configuration will be added soon.
 - [x] Edit Tasks
 - [ ] Presets
 - [x] Price Change Updates
+- [x] YeezySupply
 
 ### Some more screenshots to flex
 

@@ -18,6 +18,7 @@
   "homepage": "https://github.com/dzt/shopify-monitor#readme",
   "dependencies": {
     "body-parser": "^1.18.2",
+    "cheerio": "^1.0.0-rc.2",
     "console-stamp": "^0.2.6",
     "discord-webhooks": "^1.0.0",
     "express": "^4.16.2",
