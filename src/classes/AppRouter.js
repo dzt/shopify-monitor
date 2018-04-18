@@ -182,9 +182,11 @@ class AppRouter {
 					dataToAppend.discord.active = 'checked'
 				}
 
-				if (dataToAppend.slackBot.active) {
-					dataToAppend.slackBot.active = 'checked'
+				if (dataToAppend.slack.active) {
+					dataToAppend.slack.active = 'checked'
 				}
+
+				console.log(dataToAppend)
 
 				return res.render('settings', {
 					settings: dataToAppend
@@ -198,7 +200,6 @@ class AppRouter {
 			fs.readFile(__dirname + '/../../config.json', function(err, data) {
 
 				let dataToAppend = JSON.parse(data);
-				console.log(req.body)
 
 				let discord = false;
 				let slack = false;
@@ -214,18 +215,13 @@ class AppRouter {
 				let newConfig = {
 					"port": dataToAppend.port,
 					"mongodb_uri": dataToAppend.mongodb_uri,
-					"slackBot": {
+					"slack": {
 						"active": slack,
-						"token": req.body.token,
-						"channel": req.body.channel,
-						"settings": {
-							"username": req.body.username,
-							"icon_url": req.body.icon_url
-						}
+						"webhook_url": req.body.webhook_url_slack
 					},
 					"discord": {
 						"active": discord,
-						"webhook_url": req.body.webhook_url
+						"webhook_url": req.body.webhook_url_discord
 					}
 				}
 
@@ -276,6 +272,16 @@ class AppRouter {
 
 			fs.readFile(__dirname + '/../../config.json', function(err, data) {
 				Notify.discordTest(JSON.parse(data).discord.webhook_url);
+			});
+
+			return res.redirect('/settings');
+
+		});
+
+		app.get('/settings/slack/test', (req, res, next) => {
+
+			fs.readFile(__dirname + '/../../config.json', function(err, data) {
+				Notify.slackTest(JSON.parse(data).slack.webhook_url);
 			});
 
 			return res.redirect('/settings');

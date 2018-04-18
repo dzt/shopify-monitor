@@ -32,6 +32,7 @@
     "nunjucks": "^3.1.0",
     "parse-url": "^3.0.2",
     "request": "^2.83.0",
+    "slack-webhook": "^1.0.0",
     "xml2js": "^0.4.19"
   },
   "devDependencies": {

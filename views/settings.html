@@ -1,12 +1,15 @@
 {% include "partials/header.html" %}
 <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark" style="background-color: #5e6bbe!important;">
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-   <span class="navbar-toggler-icon"></span>
-   </button>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse"
+    aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
   <div class="collapse navbar-collapse justify-content-md-center" id="navbarCollapse">
     <ul class="navbar-nav">
       <li class="nav-item">
-        <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+        <a class="nav-link" href="/">Home
+          <span class="sr-only">(current)</span>
+        </a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="/stores">Stores</a>
@@ -24,65 +27,48 @@
   </div>
 </nav>
 <div class="container" style="padding-top: 30px;">
-   <div class="row">
-      <div class="col-md-12 order-md-1">
-         <h4 class="mb-3">Discord</h4>
-         <form action="/settings/update" method="post">
-            <div class="row">
-               <div class="col-md-12 mb-3">
-                  <label for="firstName">Webhook URL</label>
-                  <input type="text" class="form-control" name="webhook_url" placeholder="" value="{{settings.discord.webhook_url}}">
-                  <a href="/settings/discord/test" style="margin-top: 30px; float: right;">Test Webhook</a>
-               </div>
-            </div>
-            <hr class="mb-4">
-            <h4 class="mb-3">Slack (Broken)</h4>
-            <div class="row">
-               <div class="col-md-12 mb-3">
-                  <div class="row">
-                     <div class="col-md-6 mb-3">
-                        <label for="firstName">Token</label>
-                        <input type="text" class="form-control" name="token" placeholder="" value="{{settings.slackBot.token}}">
-                     </div>
-                     <div class="col-md-6 mb-3">
-                        <label for="lastName">Channel Name</label>
-                        <input type="text" class="form-control" name="channel" placeholder="general" value="{{settings.slackBot.channel}}">
-                     </div>
-                  </div>
-                  <div class="row">
-                     <div class="col-md-6 mb-3">
-                        <label for="firstName">Bot Username</label>
-                        <input type="text" class="form-control" name="username" placeholder="Joe's Shopify Bot" value="{{settings.slackBot.settings.username}}">
-                     </div>
-                     <div class="col-md-6 mb-3">
-                        <label for="lastName">Bot Icon URL</label>
-                        <input type="text" class="form-control" name="icon_url" value="{{settings.slackBot.settings.icon_url}}" placeholder="https://i.imgur.com/E0BubGr.png">
-                     </div>
-                  </div>
-               </div>
-            </div>
+  <div class="row">
+    <div class="col-md-12 order-md-1">
+      <h4 class="mb-3">Discord</h4>
+      <form action="/settings/update" method="post">
+        <div class="row">
+          <div class="col-md-12 mb-3">
+            <label>Webhook URL</label>
+            <input type="text" class="form-control" name="webhook_url_discord" placeholder="" value="{{settings.discord.webhook_url}}">
+            <a href="/settings/discord/test" style="margin-top: 30px; float: right;">Test Webhook</a>
+          </div>
+        </div>
+        <hr class="mb-4">
+        <h4 class="mb-3">Slack</h4>
+        <div class="row">
+          <div class="col-md-12 mb-3">
+            <label>Webhook URL</label>
+            <input type="text" class="form-control" name="webhook_url_slack" placeholder="" value="{{settings.slack.webhook_url}}">
+            <a href="/settings/slack/test" style="margin-top: 30px; float: right;">Test Webhook</a>
+          </div>
+        </div>
 
-            <hr class="mb-4">
+        <hr class="mb-4">
 
-            <div class="custom-control custom-checkbox">
-               <input type="checkbox" class="custom-control-input" name="discordActive" id="discordActive" {{settings.discord.active}}>
-               <label class="custom-control-label" for="discordActive">Discord</label>
-            </div>
-            <div class="custom-control custom-checkbox">
-               <input type="checkbox" class="custom-control-input" name="slackBotActive" id="slackBotActive" {{settings.slackBot.active}}>
-               <label class="custom-control-label" name="slackBotActive" for="slackBotActive">Slack</label>
-            </div>
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" name="discordActive" id="discordActive" {{settings.discord.active}}>
+          <label class="custom-control-label" for="discordActive">Discord</label>
+        </div>
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" name="slackBotActive" id="slackBotActive" {{settings.slack.active}}>
+          <label class="custom-control-label" name="slackBotActive" for="slackBotActive">Slack</label>
+        </div>
 
 
-            <hr class="mb-4">
+        <hr class="mb-4">
 
-            <input name="port" type="hidden" value="{{settings.port}}" />
-            <input name="mongodb_uri" type="hidden" value="{{settings.mongodb_uri}}" />
+        <input name="port" type="hidden" value="{{settings.port}}" />
+        <input name="mongodb_uri" type="hidden" value="{{settings.mongodb_uri}}" />
 
-            <button class="btn btn-primary btn-lg btn-block" type="submit">Save Changes</button>
-         </form>
-      </div>
-   </div>
+        <button class="btn btn-primary btn-lg btn-block" type="submit">Save Changes</button>
+      </form>
+    </div>
+  </div>
 </div>
 <!-- Bootstrap core JavaScript
    ================================================== -->

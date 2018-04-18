@@ -1,4 +1,5 @@
 const DiscordWebhook = require("discord-webhooks");
+const SlackWebhook = require('slack-webhook')
 
 let Notify = {};
 
@@ -6,20 +7,20 @@ Notify.discord = function (webhook_url, url, brand, metadata, type, color) {
 
 	let myWebhook = new DiscordWebhook(webhook_url);
 	if (isNaN(metadata.stock)) {
-		var stock = 'Unavailable'
+		let stock = 'Unavailable'
 	} else {
-		var stock = metadata.stock
+		let stock = metadata.stock
 	}
 
-	var price = metadata.price
+	let price = metadata.price
 
-	var links;
+	let links;
 	if (Array.isArray(metadata.links)) {
 		const set = [];
 		for (let i = 0; i < metadata.links.length; i++) {
-			const variant = metadata.links[i];
-			let baseUrl = variant.baseUrl;
-			set.push(`[${variant.title}](${baseUrl}/cart/${variant.id}:1)`);
+			const letiant = metadata.links[i];
+			let baseUrl = letiant.baseUrl;
+			set.push(`[${letiant.title}](${baseUrl}/cart/${letiant.id}:1)`);
 		}
 		links = set.join('\n');
 	} else {
@@ -70,6 +71,67 @@ Notify.discord = function (webhook_url, url, brand, metadata, type, color) {
 	});
 }
 
+Notify.slack = function (webhook_url, url, brand, metadata, type, color) {
+
+	let webhook = new SlackWebhook(webhook_url);
+
+	if (isNaN(metadata.stock)) {
+		let stock = 'Unavailable'
+	} else {
+		let stock = metadata.stock
+	}
+
+	let price = metadata.price
+
+	let links;
+	if (Array.isArray(metadata.links)) {
+		const set = [];
+		for (let i = 0; i < metadata.links.length; i++) {
+			const letiant = metadata.links[i];
+			let baseUrl = letiant.baseUrl;
+			set.push(`[${letiant.title}](${baseUrl}/cart/${letiant.id}:1)`);
+		}
+		links = set.join('\n');
+	} else {
+		links = 'Unavailable'
+	}
+
+	webhook.send({
+		attachments: [
+			{
+			  "fallback": metadata.title,
+			  "title": metadata.title,
+			  "title_link": url,
+			  "color": color,
+			  "fields": [
+				{
+				  "title": "Stock Count",
+				  "value": stock,
+				  "short": "false"
+				}, {
+				  "title": "Brand",
+				  "value": brand,
+				  "short": "false"
+				}, {
+				  "title": "Notification Type",
+				  "value": type,
+				  "short": "false"
+				}, {
+				  "title": "Price",
+				  "value": price,
+				  "short": "false"
+				}, {
+				  "title": "Links 🚪",
+				  "value": links,
+				  "short": "false"
+				}
+			  ],
+			  "thumb_url": metadata.img
+			}
+		  ]
+	})
+}
+
 Notify.discordTest = function (webhook_url) {
 	let myWebhook = new DiscordWebhook(webhook_url);
 	myWebhook.on("ready", () => {
@@ -77,6 +139,11 @@ Notify.discordTest = function (webhook_url) {
 			content: "Shopify Monitor Test"
 		});
 	});
+}
+
+Notify.slackTest = function (webhook_url) {
+	let webhook = new SlackWebhook(webhook_url);
+	webhook.send('Shopify Monitor Test');
 }
 
 Notify.ys = function (webhook_url, data) {
@@ -103,7 +170,7 @@ Notify.ys = function (webhook_url, data) {
 				},
 				"fields": [{
 					"name": "Sizes",
-					"value": (data.variants == null) ? 'Unavailable' : data.variants.map(x => x = x.options[0] + ` - ${x.id}`).join('\n'),
+					"value": (data.letiants == null) ? 'Unavailable' : data.letiants.map(x => x = x.options[0] + ` - ${x.id}`).join('\n'),
 					"inline": true
 				}]
 			}]

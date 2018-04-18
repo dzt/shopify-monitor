@@ -140,6 +140,11 @@ class Task {
 														if (global.config.discord.active) {
 															Notify.discord(global.config.discord.webhook_url, products[i].loc[0], this.url, res, 'Newly Added Item', 1609224);
 														}
+
+														if (global.config.slack.active) {
+															Notify.slack(global.config.slack.webhook_url, products[i].loc[0], this.url, res, 'Newly Added Item', 1609224);
+														}
+
 													});
 
 
@@ -167,6 +172,10 @@ class Task {
 
 																	if (global.config.discord.active) {
 																		Notify.discord(global.config.discord.webhook_url, products[i].loc[0], this.url, res, 'Newly Added Item', 1609224);
+																	}
+
+																	if (global.config.slack.active) {
+																		Notify.slack(global.config.slack.webhook_url, products[i].loc[0], this.url, res, 'Newly Added Item', 1609224);
 																	}
 																}
 															});
@@ -199,6 +208,10 @@ class Task {
 																	if (global.config.discord.active) {
 																		Notify.discord(global.config.discord.webhook_url, products[i].loc[0], this.url, res, 'Restock/Price Change', 2061822);
 																	}
+
+																	if (global.config.slack.active) {
+																		Notify.slack(global.config.slack.webhook_url, products[i].loc[0], this.url, res, 'Restock/Price Change', 2061822);
+																	}
 																}
 
 															});
@@ -222,6 +235,10 @@ class Task {
 
 																	if (global.config.discord.active) {
 																		Notify.discord(global.config.discord.webhook_url, products[i].loc[0], this.url, res, 'Restock/Price Change', 2061822);
+																	}
+
+																	if (global.config.slack.active) {
+																		Notify.slack(global.config.discord.webhook_url, products[i].loc[0], this.url, res, 'Restock/Price Change', 2061822);
 																	}
 																}
 
