@@ -6,7 +6,7 @@ let Notify = {};
 Notify.discord = function (webhook_url, url, brand, metadata, type, color) {
 
 	let myWebhook = new DiscordWebhook(webhook_url);
-	if (isNaN(metadata.stock)) {
+	if (isNaN(metadata.stock) || metadata.stock === null) {
 		let stock = 'Unavailable'
 	} else {
 		let stock = metadata.stock
@@ -75,7 +75,7 @@ Notify.slack = function (webhook_url, url, brand, metadata, type, color) {
 
 	let webhook = new SlackWebhook(webhook_url);
 
-	if (isNaN(metadata.stock)) {
+	if (isNaN(metadata.stock) || metadata.stock === null) {
 		let stock = 'Unavailable'
 	} else {
 		let stock = metadata.stock
