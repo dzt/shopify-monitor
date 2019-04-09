@@ -16,7 +16,7 @@ shopify-monitor requires [Node.js (LTS Version)](http://nodejs.org/).
 Setup:
 
 ```sh
-git clone https://github.com/dzt/shopify-monitor.git
+git clone https://github.com/aabbccsmith/shopify-monitor.git
 cd shopify-monitor
 npm install # "sudo npm install" if you're on macOS or Linux
 ```
