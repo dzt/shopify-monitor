@@ -48,7 +48,7 @@ Notify.discord = function (webhook_url, url, brand, metadata, type, color) {
 	let price = metadata.price
 
 	let links;
-	let qtFormatted = "";
+	let qtFormatted = "| ";
 	
 	if (Array.isArray(metadata.links)) {
 		qtlinks.forEach(qtlink => {
