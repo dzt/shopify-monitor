@@ -1,22 +1,60 @@
 const DiscordWebhook = require("discord-webhooks");
-const SlackWebhook = require('slack-webhook')
 
 let Notify = {};
+
+// Quicktasks by aabbccsmith#6537, feel free to add your own!
+let qtlinks = [
+	{
+		url: "http://anb.adidas.com:54685/discorLink?url=",
+		bot: "[ANB]"
+	},
+	{
+		url: "http://api.destroyerbots.io/quicktask?url=",
+		bot: "[PD]" 
+	},
+	{
+		url: "https://thekickstationapi.com/quick-task.php?autostart=true&link=",
+		bot: "[TKS]" 
+	},
+	{
+		url: "https://activation.easycopbots.com/task/qt/?site=SITE&link=",
+		bot: "[EASYCOP]" 
+	},
+	{
+		url: "https://api.dashe.io/v1/actions/quicktask?url=",
+		bot: "[DASHE]" 
+	},
+	{
+		url: "https://atomaio.com/dashboard/quicktask?url=",
+		bot: "[ATOM]" 
+	},
+	{
+		url: "https://cybersole.io/dashboard/quicktask?url=",
+		bot: "[CYBER]" 
+	}
+];
 
 Notify.discord = function (webhook_url, url, brand, metadata, type, color) {
 
 	let myWebhook = new DiscordWebhook(webhook_url);
-	let stock;
-	if (isNaN(metadata.stock)) {
-		stock = 'Unavailable'
+	let stock = 'Stock not available';
+
+	if ((typeof metadata.stock).toLowerCase() === "number") {
+		stock = 'Unavailable';
 	} else {
-		stock = metadata.stock
+		stock = metadata.stock;
 	}
 
 	let price = metadata.price
 
 	let links;
+	let qtFormatted = "";
+	
 	if (Array.isArray(metadata.links)) {
+		qtlinks.forEach(qtlink => {
+			qtFormatted += `${qtlink.bot}(${qtlink.url}${url}) | `;
+		});
+		
 		const set = [];
 		for (let i = 0; i < metadata.links.length; i++) {
 			const letiant = metadata.links[i];
@@ -25,7 +63,7 @@ Notify.discord = function (webhook_url, url, brand, metadata, type, color) {
 		}
 		links = set.join('\n');
 	} else {
-		links = 'Unavailable'
+		links = 'Unavailable';
 	}
 
 	myWebhook.on("ready", () => {
@@ -36,7 +74,7 @@ Notify.discord = function (webhook_url, url, brand, metadata, type, color) {
 				"color": color,
 				"timestamp": new Date().toISOString(),
 				"footer": {
-					"icon_url": "https://cdn.discordapp.com/embed/avatars/0.png",
+					"icon_url":"https://cdn.discordapp.com/embed/avatars/0.png",
 					"text": "Shopify Monitor by dzt"
 				},
 				"thumbnail": {
@@ -56,7 +94,7 @@ Notify.discord = function (webhook_url, url, brand, metadata, type, color) {
 					"value": stock,
 					"inline": true
 				}, {
-					"name": "Brand",
+					"name": "Site",
 					"value": brand,
 					"inline": true
 				}, {
@@ -64,73 +102,21 @@ Notify.discord = function (webhook_url, url, brand, metadata, type, color) {
 					"value": price,
 					"inline": true
 				}, {
-					"name": "Links",
-					"value": links
+					"name": "Link",
+					"value": url,
+					"inline": true
+				}, {
+					"name": "ATC",
+					"value": links,
+					"inline": true
+				}, {
+					"name": "Quick Tasks",
+					"value": qtFormatted
+					
 				}]
 			}]
 		});
 	});
-}
-
-Notify.slack = function (webhook_url, url, brand, metadata, type, color) {
-
-	let webhook = new SlackWebhook(webhook_url);
-
-	if (isNaN(metadata.stock)) {
-		let stock = 'Unavailable'
-	} else {
-		let stock = metadata.stock
-	}
-
-	let price = metadata.price
-
-	let links;
-	if (Array.isArray(metadata.links)) {
-		const set = [];
-		for (let i = 0; i < metadata.links.length; i++) {
-			const letiant = metadata.links[i];
-			let baseUrl = letiant.baseUrl;
-			set.push(`[${letiant.title}](${baseUrl}/cart/${letiant.id}:1)`);
-		}
-		links = set.join('\n');
-	} else {
-		links = 'Unavailable'
-	}
-
-	webhook.send({
-		attachments: [
-			{
-			  "fallback": metadata.title,
-			  "title": metadata.title,
-			  "title_link": url,
-			  "color": color,
-			  "fields": [
-				{
-				  "title": "Stock Count",
-				  "value": stock,
-				  "short": "false"
-				}, {
-				  "title": "Brand",
-				  "value": brand,
-				  "short": "false"
-				}, {
-				  "title": "Notification Type",
-				  "value": type,
-				  "short": "false"
-				}, {
-				  "title": "Price",
-				  "value": price,
-				  "short": "false"
-				}, {
-				  "title": "Links 🚪",
-				  "value": links,
-				  "short": "false"
-				}
-			  ],
-			  "thumb_url": metadata.img
-			}
-		  ]
-	})
 }
 
 Notify.discordTest = function (webhook_url) {
@@ -140,11 +126,6 @@ Notify.discordTest = function (webhook_url) {
 			content: "Shopify Monitor Test"
 		});
 	});
-}
-
-Notify.slackTest = function (webhook_url) {
-	let webhook = new SlackWebhook(webhook_url);
-	webhook.send('Shopify Monitor Test');
 }
 
 Notify.ys = function (webhook_url, data) {
