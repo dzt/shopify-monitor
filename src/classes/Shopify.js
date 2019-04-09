@@ -8,9 +8,9 @@ Shopify.parseSitemap = function (url, proxy, userAgent, callback) {
 
 	request({
 		method: 'get',
-		url: 'https://' + url + '/sitemap_products_1.xml',
+		url: 'https://' + url + '/sitemap.xml',
 		proxy: proxy,
-		gzip: true,
+		gzip: true,	
 		headers: {
 			'User-Agent': userAgent
 		}
@@ -22,26 +22,58 @@ Shopify.parseSitemap = function (url, proxy, userAgent, callback) {
 
 			return callback('Temp Ban Occured.', null);
 
-		} else if (body.indexOf('http://www.sitemaps.org/schemas') > -1) {
+		}else if (body.indexOf('http://www.sitemaps.org/schemas') > -1) {
 
-			const parsed = xml2js.parseString(body, (error, result) => {
+			const parsedsitemap = xml2js.parseString(body, (error, result) => {
 
-				if (err || result == undefined) return callback(error, true);
+			if (error || result == undefined) return callback(error, true);
 
-				let products = result['urlset']['url'];
-				products.shift()
-				return callback(null, products);
+			let sitemapurl = result['sitemapindex']['sitemap'][0]['loc'][0];
 
-			})
+			request({
+				method: 'get',
+				url: sitemapurl,
+				proxy: proxy,
+				gzip: true,
+				headers: {
+					'User-Agent': userAgent
+				}
+			}, (errr, respp, bodyy) => {
+				if (typeof bodyy != undefined && !errr && bodyy.indexOf()) {
+					if (bodyy.indexOf('Please try again in a couple minutes by refreshing the page') > -1) {
+						return callback('Temp Ban Occured.', null);
+					} else if (bodyy.indexOf('http://www.sitemaps.org/schemas') > -1) {
 
-		} else {
-			return callback('Invalid Shopify Site.', null);
+						const parsed = xml2js.parseString(bodyy, (errorr, resultt) => {
+
+							if (errr || result == undefined) return callback(errorr, true);
+
+							let products = resultt['urlset']['url'];
+							products.shift()
+							return callback(null, products);
+
+						})
+
+					} else if (bodyy.indexOf('Please try again in 5 or 10 minutes by refreshing the page.') > -1){
+						return callback('Temp Ban Occured or Technical problem', null);
+					} else {
+						return callback('Invalid Shopify Site.', null);
+					}
+				} else {
+					return callback('An error occured whilst trying to check the site.', null);
+				}
+
+			});
+
+		});
+
+		}else if (body.indexOf('Please try again in 5 or 10 minutes by refreshing the page.') > -1){
+			return callback('Temp Ban Occured or Technical problem', null);
 		}
 
 	})
 
 }
-
 Shopify.fetchYS = function (userAgent, proxy, mode, callback) {
 
 	request({
@@ -97,7 +129,7 @@ Shopify.fetchYS = function (userAgent, proxy, mode, callback) {
 			return callback(null, data);
 		}
 
-	})
+	});
 
 }
 
