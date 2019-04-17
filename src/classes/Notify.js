@@ -78,7 +78,7 @@ Notify.discord = function (webhook_url, url, brand, metadata, type, color) {
 				"color": color,
 				"timestamp": new Date().toISOString(),
 				"footer": {
-					"icon_url":"https://cdn.discordapp.com/embed/avatars/0.png",
+					"icon_url":"https://source.unsplash.com/random/500x500",
 					"text": "Shopify Monitor by aabbccsmith"
 				},
 				"thumbnail": {
@@ -86,8 +86,8 @@ Notify.discord = function (webhook_url, url, brand, metadata, type, color) {
 				},
 				"author": {
 					"name": "Shopify Monitor",
-					"url": "https://discordapp.com",
-					"icon_url": "https://cdn.discordapp.com/embed/avatars/0.png"
+					"url": "https://majorcraft.xyz",
+					"icon_url": "https://source.unsplash.com/random/500x500"
 				},
 				"fields": [{
 					"name": "Notification Type",
@@ -127,7 +127,7 @@ Notify.discordTest = function (webhook_url) {
 	let myWebhook = new DiscordWebhook(webhook_url);
 	myWebhook.on("ready", () => {
 		myWebhook.execute({
-			content: "Shopify Monitor Test"
+			content: "This shopify monitor, works!"
 		});
 	});
 }
@@ -144,7 +144,7 @@ Notify.ys = function (webhook_url, data) {
 				"timestamp": new Date().toISOString(),
 				"footer": {
 					"icon_url": "https://cdn.discordapp.com/embed/avatars/0.png",
-					"text": "Shopify Monitor by dzt"
+					"text": "Shopify Monitor by aabbccsmith"
 				},
 				"thumbnail": {
 					"url": data.img
