@@ -6,31 +6,35 @@ let Notify = {};
 let qtlinks = [
 	{
 		url: "http://anb.adidas.com:54685/discorLink?url=",
-		bot: "[ANB]"
+		bot: "[ [ANB] ]"
 	},
 	{
 		url: "http://api.destroyerbots.io/quicktask?url=",
-		bot: "[PD]" 
+		bot: "[ [PD] ]" 
 	},
 	{
 		url: "https://thekickstationapi.com/quick-task.php?autostart=true&link=",
-		bot: "[TKS]" 
+		bot: "[ [TKS] ]" 
 	},
 	{
 		url: "https://activation.easycopbots.com/task/qt/?site=SITE&link=",
-		bot: "[EASYCOP]" 
+		bot: " [ [EASYCOP] ]" 
 	},
 	{
 		url: "https://api.dashe.io/v1/actions/quicktask?url=",
-		bot: "[DASHE]" 
+		bot: "[ [DASHE] ]" 
 	},
 	{
 		url: "https://atomaio.com/dashboard/quicktask?url=",
-		bot: "[ATOM]" 
+		bot: "[ [ATOM] ]" 
 	},
 	{
 		url: "https://cybersole.io/dashboard/quicktask?url=",
-		bot: "[CYBER]" 
+		bot: "[ [CYBER] ]" 
+	},
+	{
+		url: "http://127.0.0.1:36721/zoom/qt/add?qturl=",
+		bot: "[ [ZOOM] ]"
 	}
 ];
 
@@ -75,7 +79,7 @@ Notify.discord = function (webhook_url, url, brand, metadata, type, color) {
 				"timestamp": new Date().toISOString(),
 				"footer": {
 					"icon_url":"https://cdn.discordapp.com/embed/avatars/0.png",
-					"text": "Shopify Monitor by dzt"
+					"text": "Shopify Monitor by aabbccsmith"
 				},
 				"thumbnail": {
 					"url": metadata.img
