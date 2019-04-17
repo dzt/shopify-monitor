@@ -31,6 +31,30 @@ let qtlinks = [
 	{
 		url: "https://cybersole.io/dashboard/quicktask?url=",
 		bot: "[ [CYBER] ]" 
+	},
+	{
+		url: "http://remote.eve-backend.net/api/quick_task?link=",
+		bot: "[ [EVE] ]"
+	},
+	{
+		url: "http://localhost:5000/?quicktask=",
+		bot: "[ [DIAMOND] ]"
+	},
+	{
+		url: "pazaio://start?url=",
+		bot: "[ [PAZ] ]
+	},
+	{
+		url: "https://proton.grandstreet.io/dashboard/fasttask?link=",
+		bot: "[ [PROTON] ]"
+	},
+	{
+		url: "https://whatbot.club/redirect-qt?qt=whatbot://",
+		bot: "[ [WHATBOT] ]"
+	},
+	{
+		url: "http://127.0.0.1:8598/createTask?url=",
+		bot: "[ [WOP] ]"
 	}
 ];
 
