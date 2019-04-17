@@ -52,11 +52,11 @@ Notify.discord = function (webhook_url, url, brand, metadata, type, color) {
 	let price = metadata.price
 
 	let links;
-	let qtFormatted = "| ";
+	let qtFormatted = "";
 	
 	if (Array.isArray(metadata.links)) {
 		qtlinks.forEach(qtlink => {
-			qtFormatted += `${qtlink.bot}(${qtlink.url}${url}) | `;
+			qtFormatted += `${qtlink.bot}(${qtlink.url}${url})`;
 		});
 		
 		const set = [];
