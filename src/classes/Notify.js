@@ -31,10 +31,6 @@ let qtlinks = [
 	{
 		url: "https://cybersole.io/dashboard/quicktask?url=",
 		bot: "[ [CYBER] ]" 
-	},
-	{
-		url: "http://127.0.0.1:36721/zoom/qt/add?qturl=",
-		bot: "[ [ZOOM] ]"
 	}
 ];
 
