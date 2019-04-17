@@ -42,7 +42,7 @@ let qtlinks = [
 	},
 	{
 		url: "pazaio://start?url=",
-		bot: "[ [PAZ] ]
+		bot: "[ [PAZ] ]"
 	},
 	{
 		url: "https://proton.grandstreet.io/dashboard/fasttask?link=",
