@@ -2,7 +2,6 @@ const DiscordWebhook = require("discord-webhooks");
 
 let Notify = {};
 
-// Quicktasks by aabbccsmith#6537, feel free to add your own!
 let qtlinks = [
 	{
 		url: "http://anb.adidas.com:54685/discorLink?url=",
