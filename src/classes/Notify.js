@@ -146,7 +146,21 @@ Notify.discordTest = function (webhook_url) {
 	let myWebhook = new DiscordWebhook(webhook_url);
 	myWebhook.on("ready", () => {
 		myWebhook.execute({
-			content: "This shopify monitor, works!"
+			embeds: [{
+				"title": "Webhook Testing",
+				"url": "https://majorcraft.xyz",
+				"color": "#ff0000",
+				"timestamp": new Date().toISOString(),
+				"footer": {
+					"icon_url":"https://source.unsplash.com/random/500x500",
+					"text": "Shopify Monitor by aabbccsmith"
+				},
+				"fields": [{
+					"name": "Success",
+					"value": "This webhook works!",
+					"inline": true
+				}]
+			}]
 		});
 	});
 }
@@ -162,7 +176,7 @@ Notify.ys = function (webhook_url, data) {
 				"color": 15844367,
 				"timestamp": new Date().toISOString(),
 				"footer": {
-					"icon_url": "https://cdn.discordapp.com/embed/avatars/0.png",
+					"icon_url":"https://source.unsplash.com/random/500x500",
 					"text": "Shopify Monitor by aabbccsmith"
 				},
 				"thumbnail": {
@@ -171,7 +185,7 @@ Notify.ys = function (webhook_url, data) {
 				"author": {
 					"name": "Shopify Monitor",
 					"url": "https://discordapp.com",
-					"icon_url": "https://cdn.discordapp.com/embed/avatars/0.png"
+					"icon_url":"https://source.unsplash.com/random/500x500",
 				},
 				"fields": [{
 					"name": "Sizes",
