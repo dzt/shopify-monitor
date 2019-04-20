@@ -9,27 +9,27 @@ let qtlinks = [
 	},
 	{
 		url: "http://api.destroyerbots.io/quicktask?url=",
-		bot: "[[PD]]" 
+		bot: "[[PD]]"
 	},
 	{
 		url: "https://thekickstationapi.com/quick-task.php?autostart=true&link=",
-		bot: "[[TKS]]" 
+		bot: "[[TKS]]"
 	},
 	{
 		url: "https://activation.easycopbots.com/task/qt/?site=SITE&link=",
-		bot: "[ [EASYCOP]]" 
+		bot: "[[EASYCOP]]"
 	},
 	{
 		url: "https://api.dashe.io/v1/actions/quicktask?url=",
-		bot: "[[DASHE]]" 
+		bot: "[[DASHE]]"
 	},
 	{
 		url: "https://atomaio.com/dashboard/quicktask?url=",
-		bot: "[[ATOM]]" 
+		bot: "[[ATOM]]"
 	},
 	{
 		url: "https://cybersole.io/dashboard/quicktask?url=",
-		bot: "[[CYBER]]" 
+		bot: "[[CYBER]]"
 	},
 	{
 		url: "http://remote.eve-backend.net/api/quick_task?link=",
@@ -68,7 +68,7 @@ Notify.discord = function (webhook_url, url, brand, metadata, type, color) {
 		stock = metadata.stock;
 	}
 
-	let price = metadata.price
+	let price = metadata.price;
 
 	let links;
 	let qtFormatted = "";
