@@ -2,6 +2,7 @@ const DiscordWebhook = require("discord-webhooks");
 
 let Notify = {};
 
+// Quicktasks by aabbccsmith#6537, feel free to add your own!
 let qtlinks = [
 	{
 		url: "http://anb.adidas.com:54685/discorLink?url=",
@@ -9,51 +10,27 @@ let qtlinks = [
 	},
 	{
 		url: "http://api.destroyerbots.io/quicktask?url=",
-		bot: "[PD]"
+		bot: "[PD]" 
 	},
 	{
 		url: "https://thekickstationapi.com/quick-task.php?autostart=true&link=",
-		bot: "[TKS]"
+		bot: "[TKS]" 
 	},
 	{
 		url: "https://activation.easycopbots.com/task/qt/?site=SITE&link=",
-		bot: "[EASYCOP]"
+		bot: "[EASYCOP]" 
 	},
 	{
 		url: "https://api.dashe.io/v1/actions/quicktask?url=",
-		bot: "[DASHE]"
+		bot: "[DASHE]" 
 	},
 	{
 		url: "https://atomaio.com/dashboard/quicktask?url=",
-		bot: "[ATOM]"
+		bot: "[ATOM]" 
 	},
 	{
 		url: "https://cybersole.io/dashboard/quicktask?url=",
-		bot: "[CYBER]"
-	},
-	{
-		url: "http://remote.eve-backend.net/api/quick_task?link=",
-		bot: "[EVE]"
-	},
-	{
-		url: "http://localhost:5000/?quicktask=",
-		bot: "[DIAMOND]"
-	},
-	{
-		url: "pazaio://start?url=",
-		bot: "[PAZ]"
-	},
-	{
-		url: "https://proton.grandstreet.io/dashboard/fasttask?link=",
-		bot: "[PROTON]"
-	},
-	{
-		url: "https://whatbot.club/redirect-qt?qt=whatbot://",
-		bot: "[WHATBOT]"
-	},
-	{
-		url: "http://127.0.0.1:8598/createTask?url=",
-		bot: "[WOP]"
+		bot: "[CYBER]" 
 	}
 ];
 
@@ -68,10 +45,10 @@ Notify.discord = function (webhook_url, url, brand, metadata, type, color) {
 		stock = metadata.stock;
 	}
 
-	let price = metadata.price;
+	let price = metadata.price
 
 	let links;
-	let qtFormatted = "| ";
+	let qtFormatted = "";
 	
 	if (Array.isArray(metadata.links)) {
 		qtlinks.forEach(qtlink => {
@@ -97,16 +74,16 @@ Notify.discord = function (webhook_url, url, brand, metadata, type, color) {
 				"color": color,
 				"timestamp": new Date().toISOString(),
 				"footer": {
-					"icon_url":"https://source.unsplash.com/random/500x500",
-					"text": "Shopify Monitor by aabbccsmith"
+					"icon_url":"https://cdn.discordapp.com/embed/avatars/0.png",
+					"text": "Shopify Monitor by dzt"
 				},
 				"thumbnail": {
 					"url": metadata.img
 				},
 				"author": {
 					"name": "Shopify Monitor",
-					"url": "https://majorcraft.xyz",
-					"icon_url": "https://source.unsplash.com/random/500x500"
+					"url": "https://discordapp.com",
+					"icon_url": "https://cdn.discordapp.com/embed/avatars/0.png"
 				},
 				"fields": [{
 					"name": "Notification Type",
@@ -146,21 +123,7 @@ Notify.discordTest = function (webhook_url) {
 	let myWebhook = new DiscordWebhook(webhook_url);
 	myWebhook.on("ready", () => {
 		myWebhook.execute({
-			embeds: [{
-				"title": "Webhook Testing",
-				"url": "https://majorcraft.xyz",
-				"color": "#ff0000",
-				"timestamp": new Date().toISOString(),
-				"footer": {
-					"icon_url":"https://source.unsplash.com/random/500x500",
-					"text": "Shopify Monitor by aabbccsmith"
-				},
-				"fields": [{
-					"name": "Success",
-					"value": "This webhook works!",
-					"inline": true
-				}]
-			}]
+			content: "Shopify Monitor Test"
 		});
 	});
 }
@@ -176,8 +139,8 @@ Notify.ys = function (webhook_url, data) {
 				"color": 15844367,
 				"timestamp": new Date().toISOString(),
 				"footer": {
-					"icon_url":"https://source.unsplash.com/random/500x500",
-					"text": "Shopify Monitor by aabbccsmith"
+					"icon_url": "https://cdn.discordapp.com/embed/avatars/0.png",
+					"text": "Shopify Monitor by dzt"
 				},
 				"thumbnail": {
 					"url": data.img
@@ -185,7 +148,7 @@ Notify.ys = function (webhook_url, data) {
 				"author": {
 					"name": "Shopify Monitor",
 					"url": "https://discordapp.com",
-					"icon_url":"https://source.unsplash.com/random/500x500",
+					"icon_url": "https://cdn.discordapp.com/embed/avatars/0.png"
 				},
 				"fields": [{
 					"name": "Sizes",
