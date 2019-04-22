@@ -5,55 +5,55 @@ let Notify = {};
 let qtlinks = [
 	{
 		url: "http://anb.adidas.com:54685/discorLink?url=",
-		bot: "[[ANB]]"
+		bot: "[ANB]"
 	},
 	{
 		url: "http://api.destroyerbots.io/quicktask?url=",
-		bot: "[[PD]]"
+		bot: "[PD]"
 	},
 	{
 		url: "https://thekickstationapi.com/quick-task.php?autostart=true&link=",
-		bot: "[[TKS]]"
+		bot: "[TKS]"
 	},
 	{
 		url: "https://activation.easycopbots.com/task/qt/?site=SITE&link=",
-		bot: "[[EASYCOP]]"
+		bot: "[EASYCOP]"
 	},
 	{
 		url: "https://api.dashe.io/v1/actions/quicktask?url=",
-		bot: "[[DASHE]]"
+		bot: "[DASHE]"
 	},
 	{
 		url: "https://atomaio.com/dashboard/quicktask?url=",
-		bot: "[[ATOM]]"
+		bot: "[ATOM]"
 	},
 	{
 		url: "https://cybersole.io/dashboard/quicktask?url=",
-		bot: "[[CYBER]]"
+		bot: "[CYBER]"
 	},
 	{
 		url: "http://remote.eve-backend.net/api/quick_task?link=",
-		bot: "[[EVE]]"
+		bot: "[EVE]"
 	},
 	{
 		url: "http://localhost:5000/?quicktask=",
-		bot: "[[DIAMOND]]"
+		bot: "[DIAMOND]"
 	},
 	{
 		url: "pazaio://start?url=",
-		bot: "[[PAZ]]"
+		bot: "[PAZ]"
 	},
 	{
 		url: "https://proton.grandstreet.io/dashboard/fasttask?link=",
-		bot: "[[PROTON]]"
+		bot: "[PROTON]"
 	},
 	{
 		url: "https://whatbot.club/redirect-qt?qt=whatbot://",
-		bot: "[[WHATBOT]]"
+		bot: "[WHATBOT]"
 	},
 	{
 		url: "http://127.0.0.1:8598/createTask?url=",
-		bot: "[[WOP]]"
+		bot: "[WOP]"
 	}
 ];
 
@@ -71,11 +71,11 @@ Notify.discord = function (webhook_url, url, brand, metadata, type, color) {
 	let price = metadata.price;
 
 	let links;
-	let qtFormatted = "";
+	let qtFormatted = "| ";
 	
 	if (Array.isArray(metadata.links)) {
 		qtlinks.forEach(qtlink => {
-			qtFormatted += `${qtlink.bot}(${qtlink.url}${url})`;
+			qtFormatted += `${qtlink.bot}(${qtlink.url}${url}) | `;
 		});
 		
 		const set = [];
