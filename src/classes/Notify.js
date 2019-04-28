@@ -48,11 +48,11 @@ Notify.discord = function (webhook_url, url, brand, metadata, type, color) {
 	let price = metadata.price
 
 	let links;
-	let qtFormatted = "";
+	let qtFormatted = "- ";
 	
 	if (Array.isArray(metadata.links)) {
 		qtlinks.forEach(qtlink => {
-			qtFormatted += `${qtlink.bot}(${qtlink.url}${url}) | `;
+			qtFormatted += `${qtlink.bot}(${qtlink.url}${url}) - `;
 		});
 		
 		const set = [];
@@ -75,7 +75,7 @@ Notify.discord = function (webhook_url, url, brand, metadata, type, color) {
 				"timestamp": new Date().toISOString(),
 				"footer": {
 					"icon_url":"https://cdn.discordapp.com/embed/avatars/0.png",
-					"text": "Shopify Monitor by dzt"
+					"text": "Shopify Monitor by aabbccsmith"
 				},
 				"thumbnail": {
 					"url": metadata.img
@@ -140,7 +140,7 @@ Notify.ys = function (webhook_url, data) {
 				"timestamp": new Date().toISOString(),
 				"footer": {
 					"icon_url": "https://cdn.discordapp.com/embed/avatars/0.png",
-					"text": "Shopify Monitor by dzt"
+					"text": "Shopify Monitor by aabbccsmith"
 				},
 				"thumbnail": {
 					"url": data.img
