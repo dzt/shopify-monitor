@@ -1,0 +1,22 @@
+body {
+  background-color: #0000000a;
+}
+
+.btn-primary {
+    color: #fff;
+    background-color: #5e6bbe;
+    border-color: #5e6bbe;
+}
+
+.btn-primary:hover {
+    color: #fff;
+    background-color: #5e6bbe;
+    border-color: #5e6bbe;
+}
+
+pre {
+    background-color: #d2d2d25c;
+    color: maroon;
+    height: 130px;
+    padding: 15px 15px 15px 15px;
+}

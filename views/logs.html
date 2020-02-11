@@ -1,0 +1,68 @@
+{% include "partials/header.html" %}
+<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark" style="background-color: #5e6bbe!important;">
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+   <span class="navbar-toggler-icon"></span>
+   </button>
+  <div class="collapse navbar-collapse justify-content-md-center" id="navbarCollapse">
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/stores">Stores</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/products">Products</a>
+      </li>
+      <li class="nav-item active">
+        <a class="nav-link" href="/logs">Logs</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/settings">Settings</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+<main role="main" class="container">
+
+
+
+  <div class="d-flex align-items-center p-3 my-3 text-white-50 bg-purple rounded box-shadow" style="
+      background-color: #9b0fefcf;
+      ">
+    <a class="btn btn-sm btn btn-outline-light" href="/logs/clear" data-toggle="modal" data-target="#addModal" style="margin-right: 20px;">Clear Logs</a>
+
+
+    <div class="lh-100">
+      <h6 class="mb-0 text-white lh-100">Too Cluttered?</h6>
+      <small>Don't like all this "mumbo jumbo" on your screen? Clear your logs to get a better view of your tasks.</small>
+    </div>
+  </div>
+  <div class="my-3 p-3 bg-white rounded box-shadow">
+    <h6 class="border-bottom border-gray pb-2 mb-0">Task Logs</h6>
+
+    <pre style="background-color: #d2d2d25c;
+    margin-top: 25px;
+    color: maroon;
+    height: 400px;
+    padding: 15px 15px 15px 15px;">{{logs}}</pre>
+
+    <small class="d-block text-right mt-3"></small>
+  </div>
+</main>
+<!-- Bootstrap core JavaScript
+   ================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script>
+  window.jQuery || document.write('<script src="../../../../assets/js/vendor/jquery-slim.min.js"><\/script>')
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js"></script>
+<script>
+  setInterval(function() {
+    var dataStamp = $('#startTime').text();
+
+    $('#uptime').text('Started ' + moment(dataStamp, 'x').fromNow())
+  }, 1000);
+</script>
+{% include "partials/footer.html" %}

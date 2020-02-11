@@ -1,98 +1,57 @@
-# I AM AWARE OF THE BUGS AND PLANNING ON FIXING THEM I HAVE A LIFE AND SCHOOL TO TAKE CARE OF SO BE PATIENT OR SOMEBODY SHOULD CONTRIBUTE FOR A CHANGE
-
-# shopify-monitor
+# shopify-monitor v3
 Monitor for Shopify based brands
 
-![term](http://i.imgur.com/baiwk9f.png)
+[Community Discord Server](https://discord.gg/BkDxcjT)
 
+[macOS Install Video Guide](https://youtu.be/rpO5wdudfpQ)
 
+[Windows Install Video Guide](https://youtu.be/KlgZdFRd5r4)
 
 ### Installation
 
-<a href="https://youtu.be/oIDPuyMBwvI">Screencast</a>
+shopify-monitor requires [Node.js (LTS Version)](http://nodejs.org/).
 
-shopify-monitor requires [Node.js](http://nodejs.org/).
+![webapp](https://i.imgur.com/ZTGlrfq.png)
 
 Setup:
 
 ```sh
-$ git clone https://github.com/dzt/shopify-monitor.git
-$ cd shopify-monitor
-$ npm install
+git clone https://github.com/aabbccsmith/shopify-monitor.git
+cd shopify-monitor
+npm install # "sudo npm install" if you're on macOS or Linux
 ```
 
-Configure information inside the `config.example.json` be sure to rename it to `config.json` when you're done. More information about configuring your monitor can be found <a href="https://github.com/dzt/shopify-monitor/wiki/Configuring-your-monitor">here</a>.
-
-
-<a href="https://github.com/dzt/shopify-monitor/wiki/Configuring-your-monitor">General Configuration Guide</a>
-
-<a href="https://github.com/dzt/shopify-monitor/wiki/Twitter">Twitter Configuration Guide</a>
-
-<a href="https://github.com/dzt/shopify-monitor/wiki/Slack">Slack Configuration Guide</a>
-
-<a href="https://github.com/dzt/shopify-monitor/wiki/Slack">Deploying on a Linux Server</a>
-
+Configure information inside the `config.example.json` but be sure to rename it to `config.json` when you're done. Be sure to ONLY modify `port` and `mongodb_uri` fields.
 
 Run After Setup:
 
 ```sh
-$ npm start
+node server.js
 ```
 
-<a href="https://www.youtube.com/watch?v=oirJnCmtfQY&feature=youtu.be">Video Demo</a>
+More information on configuration will be added soon.
 
 ## Todo List
-- [x] Integrate restock monitor.
-- [x] Multiple brand support on the demands of the people.
-- [x] Add Sitemap feature to search sitemap instead of site DOM for finding early links.
-- [x] Add Twitter API Settings to Tweet/Send out notifications to timeline.
-- [x] Have results return item stock
-- [x] Slack bot commands.
-- [x] Add Brands via main link.
-- [x] Better wiki/docs.
-- [ ] Web Interface to modify sites, keywords, etc. (config)
-- [x] Garbage collection to prevent heap error after running the monitor over time.
-- [ ] Proxy Support
-- [ ] Redis Storage for Cache
-- [ ] Unique Panel to access stock data, graphs, etc.
-
-### What does this thing monitor?
-- Newly added items
-- Items that become Sold Out
-- Items that get restocked
-- Items that get removed from stores.
-- Early Links.
-
-**Note: If you add a site link to your config you will only be updated on newly dropped items. I'm working on finding a way to add all functionality to people using links instead of built in brands.**
-
-### Brands???
-- Palace USA (`palace`)
-- AntiSocialSocialClub (`assc`)
-- More to come soon inside of the box, but you can simply add a site domain into the `sites` array in your `config.json` file or you can add a sitemap url that ends in `.xml`.
-
-**Note: each site link should have http:// or https:// at the beginning or shopify-monitor won't pick it up.**
-
-### Who
-
-Written by <a href="http://petersoboyejo.com/">@dzt</a>, made better by you.
+- [ ] Products Search Page.
+- [ ] Slack
+- [x] Edit Tasks
+- [ ] Presets
+- [x] Price Change Updates
+- [x] YeezySupply
+- [x] Quick Tasks
 
 ### Some more screenshots to flex
 
-![new](https://i.imgur.com/86GnKHD.jpg)
-- Shout out to [@lucidhyped](https://twitter.com/lucidhyped) who helped me spot a minor bug and suggested adding the add cart stock.
-
-![slack](http://i.imgur.com/h7Jt0wT.png)
-
-![hyper](http://i.imgur.com/TME8GvF.png)
-- Beating HyperSniper by 37 seconds :^)
-
+![1](https://i.imgur.com/WbOxrBO.png)
+![2](https://i.imgur.com/IUSU8b8.png)
+![3](https://i.imgur.com/SVEh07S.png)
 
 ## License
 
 ```
 The MIT License (MIT)
 
-Copyright (c) 2017 Peter Soboyejo <http://petersoboyejo.com/>
+Copyright (c) 2017 Peter Soboyejo <http://petersoboyejo.com/> and aabbccsmith <https://majorcraft.xyz>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 

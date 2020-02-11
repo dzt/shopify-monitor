@@ -1,8 +1,14 @@
+proxies.txt
 config.json
+monitor-database.sqlite3
+monitor-database.sqlite3-journal
 gs
 logs
 *.log
 npm-debug.log*
+config.json
+
+logs
 
 # Runtime data
 pids
@@ -43,6 +49,5 @@ out
 # macOS
 .DS_Store
 
-# SQLite Stuff
-database
-
+uploads
+package-lock.json
