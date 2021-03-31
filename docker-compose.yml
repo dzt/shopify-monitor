@@ -1,0 +1,29 @@
+version: '3'
+
+volumes:
+    local_mongo_data: {}
+
+services:
+
+    frontend:
+        build: .
+        image: shopify_monitor_v3_frontend
+        container_name: frontend
+        links:
+            - "db:database"
+        volumes:
+            - .:/app
+        depends_on:
+            - db
+        ports:
+            - "3000:3000"
+        command: node server.js
+
+    db:
+        image: mongo:latest
+        restart: always
+        environment:
+            MONGO_INITDB_ROOT_USERNAME:     
+            MONGO_INITDB_ROOT_PASSWORD: 
+        ports:
+            - "27017:27017"

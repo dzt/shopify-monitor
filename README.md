@@ -1,37 +1,47 @@
 # shopify-monitor v3
+
 Monitor for Shopify based brands
-
-[Community Discord Server](https://discord.gg/BkDxcjT)
-
-[macOS Install Video Guide](https://youtu.be/rpO5wdudfpQ)
-
-[Windows Install Video Guide](https://youtu.be/KlgZdFRd5r4)
-
-### Installation
-
-shopify-monitor requires [Node.js (LTS Version)](http://nodejs.org/).
 
 ![webapp](https://i.imgur.com/ZTGlrfq.png)
 
-Setup:
+[Community Discord Server](https://discord.gg/BkDxcjT)
 
-```sh
-git clone https://github.com/aabbccsmith/shopify-monitor.git
+
+## Requirements
+
+- [Docker](https://docs.docker.com/get-docker/)
+
+## Installation
+
+1.
+
+
+```shell
+git clone https://github.com/dzt/shopify-monitor.git
+```
+
+1.
+
+
+```shell
 cd shopify-monitor
-npm install # "sudo npm install" if you're on macOS or Linux
 ```
 
-Configure information inside the `config.example.json` but be sure to rename it to `config.json` when you're done. Be sure to ONLY modify `port` and `mongodb_uri` fields.
+1.
 
-Run After Setup:
 
-```sh
-node server.js
+```shell
+docker-compose up --detach
 ```
 
-More information on configuration will be added soon.
+1.
 
-## Todo List
+
+Go to <127.0.0.1:3000>
+
+
+## Project Roadmap
+
 - [ ] Products Search Page.
 - [ ] Slack
 - [x] Edit Tasks
@@ -40,22 +50,8 @@ More information on configuration will be added soon.
 - [x] YeezySupply
 - [x] Quick Tasks
 
-### Some more screenshots to flex
+## Screenshots
 
 ![1](https://i.imgur.com/WbOxrBO.png)
 ![2](https://i.imgur.com/IUSU8b8.png)
 ![3](https://i.imgur.com/SVEh07S.png)
-
-## License
-
-```
-The MIT License (MIT)
-
-Copyright (c) 2017 Peter Soboyejo <http://petersoboyejo.com/> and aabbccsmith <https://majorcraft.xyz>
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-```
